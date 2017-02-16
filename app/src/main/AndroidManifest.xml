@@ -6,10 +6,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.GET_TASKS" />
 
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:allowBackup="true"
@@ -45,10 +41,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/Background"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity android:name=".RegistrationActivity"
+        <activity
+            android:name=".RegistrationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Background"
-            android:windowSoftInputMode="adjustResize|stateHidden" ></activity>
+            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
     </application>
 
 </manifest>

@@ -201,7 +201,7 @@
                 android:background="@color/gray" />
 
             <Button
-                android:id="@+id/btn_login"
+                android:id="@+id/btn_let_me_in"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_30"

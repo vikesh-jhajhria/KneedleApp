@@ -16,6 +16,10 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     private ProgressDialog dialog;
     public String TAG = "KNEEDLE";
 
+    public enum BottomBarTab {
+        HOME, FEEd, POST, NOTIFICATION, PROFILE;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

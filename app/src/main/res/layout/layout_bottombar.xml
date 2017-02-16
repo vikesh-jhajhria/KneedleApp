@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?actionBarSize"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/textColorPrimary" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/rl_home"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/left_unselected"
+            android:onClick="onClick">
+
+            <ImageView
+                android:id="@+id/home_unselected"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/margin_10"
+                android:scaleType="fitCenter"
+                android:src="@drawable/home_gray" />
+
+            <RelativeLayout
+                android:id="@+id/rl_home_selected"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/bottombar_black"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/glow_circle" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="@dimen/margin_10"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/home_white" />
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_feed"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/unselected"
+            android:onClick="onClick">
+
+            <ImageView
+                android:id="@+id/feed_unselected"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/margin_10"
+                android:scaleType="fitCenter"
+                android:src="@drawable/newsfeed_gray" />
+
+            <RelativeLayout
+                android:id="@+id/rl_feed_selected"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/bottombar_black"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/glow_circle" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="@dimen/margin_10"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/newsfeed_white" />
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_post"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/unselected"
+            android:onClick="onClick">
+
+            <ImageView
+                android:id="@+id/post_unselected"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/margin_10"
+                android:scaleType="fitCenter"
+                android:src="@drawable/newpost_gray" />
+
+            <RelativeLayout
+                android:id="@+id/rl_post_selected"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/bottombar_black"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/glow_circle" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="@dimen/margin_10"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/newpost_white" />
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_notification"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/unselected"
+            android:onClick="onClick">
+
+            <ImageView
+                android:id="@+id/notification_unselected"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/margin_10"
+                android:scaleType="fitCenter"
+                android:src="@drawable/notification_gray" />
+
+            <RelativeLayout
+                android:id="@+id/rl_notification_selected"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/bottombar_black"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/glow_circle" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="@dimen/margin_10"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/notification_white" />
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_profile"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/right_unselected"
+            android:onClick="onClick">
+
+            <ImageView
+                android:id="@+id/profile_unselected"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/margin_10"
+                android:scaleType="fitCenter"
+                android:src="@drawable/profie_gray" />
+
+            <RelativeLayout
+                android:id="@+id/rl_profile_selected"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/bottombar_black"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/glow_circle" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="@dimen/margin_10"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/profie_white" />
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>
