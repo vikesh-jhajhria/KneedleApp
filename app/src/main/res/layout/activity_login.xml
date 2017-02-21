@@ -6,6 +6,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:fillViewport="true"
         android:scrollbars="none"
         tools:context="com.kneedleapp.LoginActivity">
@@ -49,7 +51,6 @@
                 android:layout_height="1dp"
                 android:background="@color/gray" />
 
-
             <EditText
                 android:id="@+id/txt_password"
                 android:layout_width="match_parent"
@@ -91,6 +92,17 @@
                 android:text="@string/forgot_password"
                 android:textColor="@color/textColorPrimary"
                 android:textSize="@dimen/font_18" />
+
+            <TextView
+                android:id="@+id/txt_register_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_25"
+                android:gravity="center"
+                android:text="@string/register_user"
+                android:textColor="@color/textColorPrimary"
+                android:textSize="@dimen/font_18" />
+
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
