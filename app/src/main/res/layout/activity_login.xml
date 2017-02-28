@@ -80,6 +80,7 @@
                 android:layout_marginTop="@dimen/margin_30"
                 android:background="@drawable/rect_round_corner"
                 android:text="@string/login"
+                android:imeOptions="actionGo"
                 android:textColor="@color/textColorPrimary"
                 android:textSize="@dimen/font_18" />
 

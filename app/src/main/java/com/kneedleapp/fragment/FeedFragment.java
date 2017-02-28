@@ -1,10 +1,17 @@
 package com.kneedleapp.fragment;
 
 
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.ChangeImageTransform;
+import android.transition.ChangeTransform;
+import android.transition.Fade;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.kneedleapp.BaseActivity;
+import com.kneedleapp.MainActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.adapter.FeedItemAdapter;
 import com.kneedleapp.utils.Config;
@@ -33,7 +41,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class FeedFragment extends Fragment {
+public class FeedFragment extends Fragment implements FeedItemAdapter.FeedItemListener{
 
     private RecyclerView mRecyclerView;
     private FeedItemAdapter mAdapter;
@@ -70,14 +78,12 @@ public class FeedFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new FeedItemAdapter(getContext(), mList);
+        mAdapter = new FeedItemAdapter(getContext(), mList, ((MainActivity) getActivity()),this);
         mRecyclerView.setAdapter(mAdapter);
         FeedData();
 
 
         return view;
-
-
     }
 
     public void FeedData() {
@@ -142,7 +148,69 @@ public class FeedFragment extends Fragment {
 
         RequestQueue feedqueue = Volley.newRequestQueue(getContext());
         feedqueue.add(requestFeed);
-
-
     }
+
+    @Override
+    public void getItem(int position, FeedItemAdapter.ViewHolder holder) {
+        FullImageViewFragment fragment = new FullImageViewFragment();
+        FeedFragment feedFragment = new FeedFragment();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+
+
+            fragment.setSharedElementEnterTransition(new DetailsTransition());
+            fragment.setEnterTransition(new Fade());
+            setExitTransition(new Fade());
+            setSharedElementReturnTransition(new DetailsTransition());
+
+
+
+            Bundle bundle = new Bundle();
+            bundle.putString("USERNAME", mList.get(position).getmUserTitle());
+            bundle.putString("IMAGE", mList.get(position).getmContentImage());
+            bundle.putString("USERIMAGE", mList.get(position).getmUserImage());
+            bundle.putString("LIKES", mList.get(position).getmLikes());
+
+            fragment.setArguments(bundle);
+
+
+            FragmentManager fragmentManager = ((MainActivity) context).getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .addSharedElement(holder.imgContent, "image")
+                    .addSharedElement(holder.tvTitle, "title")
+                    .addSharedElement(holder.imgUser,"userimage")
+                    .addSharedElement(holder.imgHeart,"heart")
+                    .addSharedElement(holder.tvLikes,"likes")
+                    .add(R.id.main_frame, fragment)
+                    .addToBackStack(null)
+                    .commit();
+
+
+        }
+    }
+
+
+    public class DetailsTransition extends android.transition.TransitionSet {
+        public DetailsTransition() {
+            init();
+        }
+
+        /**
+         * This constructor allows us to use this transition in XML
+         */
+        public DetailsTransition(Context context, AttributeSet attrs) {
+            super(context, attrs);
+            init();
+        }
+
+        private void init() {
+            setOrdering(ORDERING_TOGETHER);
+            addTransition(new android.transition.ChangeBounds()).
+                    addTransition(new ChangeTransform()).
+                    addTransition(new ChangeImageTransform());
+        }
+    }
+
 }
+

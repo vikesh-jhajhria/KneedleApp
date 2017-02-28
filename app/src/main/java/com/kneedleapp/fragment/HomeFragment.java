@@ -1,14 +1,19 @@
 package com.kneedleapp.fragment;
 
 
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.kneedleapp.R;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,20 +29,9 @@ public class HomeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private View view;
 
 
-    public HomeFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
     // TODO: Rename and change types and number of parameters
     public static HomeFragment newInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
@@ -57,19 +51,27 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.v("Home","resume");
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        Log.v("Home","create");
-        return inflater.inflate(R.layout.fragment_home, container, false);
+
+        view = inflater.inflate(R.layout.fragment_home, container, false);
+        ((Spinner) view.findViewById(R.id.spinner_home)).getBackground().setColorFilter(getResources().getColor(R.color.textColorPrimary), PorterDuff.Mode.SRC_ATOP);
+
+        setSpinnerAdapter();
+
+        return view;
     }
 
+    private void setSpinnerAdapter() {
+        ArrayList<String> dataList = new ArrayList<>();
+        dataList.add("One");
+        dataList.add("Two");
+        dataList.add("Three");
+
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, R.id.txt_spinner_item, dataList);
+        spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
+        ((Spinner) view.findViewById(R.id.spinner_home)).setAdapter(spinnerAdapter);
+    }
 }

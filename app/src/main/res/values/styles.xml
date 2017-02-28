@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowContentTransitions">true</item>
 
     </style>
 
@@ -20,8 +21,34 @@
     <style name="Background" parent="AppTheme.NoActionBar">
         <item name="android:windowBackground">@drawable/bg</item>
     </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="TextLabel" parent="Widget.Design.TextInputLayout">
+        <!-- Hint color and label color in FALSE state -->
+        <item name="android:textColorHint">#000</item>
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorControlNormal">#C3C3C3</item>
+        <item name="colorControlActivated">#C3C3C3</item>
+    </style>
 
+
+    <style name="SpinnerTheme" parent="android:Widget.Spinner">
+        <item name="android:background">@drawable/bg_spinner</item>
+    </style>
+
+    <style name="MyRadioButtonStyleHomme" parent="@android:style/Widget.CompoundButton.RadioButton">
+        <item name="android:button">@drawable/custombtn_radio_homme</item>
+    </style>
+
+    <style name="MyRadioButtonStyleFemme" parent="@android:style/Widget.CompoundButton.RadioButton">
+        <item name="android:button">@drawable/custombtn_radio_femme</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

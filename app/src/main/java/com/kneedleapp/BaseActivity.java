@@ -2,6 +2,7 @@ package com.kneedleapp;
 
 import android.app.ActivityManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.IdRes;
@@ -10,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import java.util.List;
@@ -19,6 +21,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     private boolean isExit;
     private ProgressDialog dialog;
     public String TAG = "KNEEDLE";
+    private Context mContext;
 
     public enum BottomBarTab {
         HOME, FEEd, POST, NOTIFICATION, PROFILE;
@@ -27,6 +30,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this;
         dialog = new ProgressDialog(this);
         dialog.setMessage("Please wait...");
         dialog.setCancelable(false);
@@ -143,4 +147,13 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
             hideFragment(fragment);
         }
     }
+
+    public void hideKeyboard() {
+        View v = getWindow().getCurrentFocus();
+        if (v != null) {
+            InputMethodManager imm = (InputMethodManager) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
+    }
+
 }

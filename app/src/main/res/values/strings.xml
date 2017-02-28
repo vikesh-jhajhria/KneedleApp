@@ -27,6 +27,22 @@
     <string name="error_password_empty">Please enter password</string>
     <string name="error_email_empty">Please enter email</string>
     <string name="error_email_valid">Please enter valid email</string>
+    <string name="comments">COMMENTS</string>
+    <string name="post">POST</string>
+    <string name="add_comment">Add Comment</string>
+    <string-array name="spinner_data">
+
+        <item>One</item>
+        <item>Two</item>
+        <item>Three</item>
+    </string-array>
+    <string name="title_activity_edit_profile">EditProfileActivity</string>
+    <string name="title_activity_full_image_view">FullImageViewActivity</string>
+
+    <string name="new_post">NEW POST</string>
+    <string name="library">LIBRARY</string>
+    <string name="photo">PHOTO</string>
+    <string name="add_caption">ADD CAPTION...</string>
 
 
 </resources>

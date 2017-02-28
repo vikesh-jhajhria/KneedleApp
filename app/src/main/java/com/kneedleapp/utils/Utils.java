@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AlertDialog;
@@ -24,7 +25,6 @@ import java.util.regex.Pattern;
 
 public class Utils {
 
-
     public static HashMap getDeviceSize(Activity activity) {
         HashMap hashMap = new HashMap();
         DisplayMetrics displaymetrics = new DisplayMetrics();
@@ -34,16 +34,12 @@ public class Utils {
         return hashMap;
     }
 
-    public static void setTypeface(Context context, TextView textview, String fontName, String style) {
-        /*if (fontName.equalsIgnoreCase(Config.NEXA)) {
-            if (style != null && style.equalsIgnoreCase(Config.BOLD)) {
-                Typeface face = Typeface.createFromAsset(context.getAssets(), "fonts/Nexa Bold.otf");
-                textview.setTypeface(face);
-            } else {
-                Typeface face = Typeface.createFromAsset(context.getAssets(), "fonts/Nexa Light.otf");
-                textview.setTypeface(face);
-            }
-        }*/
+    public static void setTypeface(Context context, TextView textview, String fontName) {
+        if (fontName.equalsIgnoreCase(Config.CENTURY_GOTHIC)) {
+            Typeface face = Typeface.createFromAsset(context.getAssets(), "fonts/century_gothic.ttf");
+            textview.setTypeface(face);
+        }
+
 
     }
 
@@ -78,6 +74,7 @@ public class Utils {
 
         return key;
     }
+
     public static boolean isNetworkConnected(Context context, boolean showToast) {
         ConnectivityManager conManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = conManager.getActiveNetworkInfo();
@@ -98,7 +95,6 @@ public class Utils {
         }
         return isValid;
     }
-
 
 
     public static void showAlertDialog(Context context, String title, String message, boolean isCancelable) {

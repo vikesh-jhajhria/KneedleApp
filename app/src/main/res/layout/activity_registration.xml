@@ -35,6 +35,7 @@
             android:paddingTop="@dimen/activity_vertical_margin">
 
             <TextView
+                android:id="@+id/textview_error_show"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -43,7 +44,8 @@
                 android:text="@string/warning_register"
                 android:textAllCaps="true"
                 android:textColor="@color/colorAccent"
-                android:textSize="@dimen/font_15" />
+                android:textSize="@dimen/font_15"
+                android:visibility="gone" />
 
             <EditText
                 android:id="@+id/txt_name"
@@ -72,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_10"
                 android:background="@null"
-                android:drawableLeft="@drawable/ic_username"
+                android:drawableLeft="@drawable/ic_name"
                 android:drawablePadding="@dimen/margin_15"
                 android:hint="User Name"
                 android:inputType="textCapWords|textPersonName"
@@ -94,7 +96,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_10"
                 android:background="@null"
-                android:drawableLeft="@drawable/ic_pass_white"
+                android:drawableLeft="@drawable/ic_pass"
                 android:drawablePadding="@dimen/margin_15"
                 android:hint="Password"
                 android:inputType="textCapWords|textPersonName"
@@ -118,8 +120,8 @@
                 android:background="@null"
                 android:drawableLeft="@drawable/ic_dob"
                 android:drawablePadding="@dimen/margin_15"
+                android:focusable="false"
                 android:hint="Month / Day / Year"
-                android:inputType="textCapWords|textPersonName"
                 android:maxLines="1"
                 android:paddingBottom="@dimen/margin_10"
                 android:paddingTop="@dimen/margin_15"
@@ -136,65 +138,79 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_30">
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="vertical">
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/ic_male"/>
+                        android:src="@drawable/ic_male" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_10"
                         android:text="@string/homme"
                         android:textAllCaps="true"
-                        android:layout_marginTop="@dimen/margin_10"
                         android:textColor="@color/textColorPrimary"
-                        android:textSize="@dimen/font_18"/>
+                        android:textSize="@dimen/font_18" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
                     android:layout_marginLeft="@dimen/margin_30"
+                    android:gravity="center"
                     android:orientation="vertical">
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/ic_female"/>
+                        android:src="@drawable/ic_female" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_10"
                         android:text="@string/femme"
                         android:textAllCaps="true"
-                        android:layout_marginTop="@dimen/margin_10"
                         android:textColor="@color/textColorPrimary"
-                        android:textSize="@dimen/font_18"/>
+                        android:textSize="@dimen/font_18" />
                 </LinearLayout>
             </LinearLayout>
 
-            <EditText
-                android:id="@+id/edt_profile_type"
+            <!-- <EditText
+                 android:id="@+id/edt_profile_type"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginTop="@dimen/margin_10"
+                 android:background="@null"
+                 android:drawablePadding="@dimen/margin_15"
+                 android:drawableRight="@drawable/ic_arrow_down"
+                 android:hint="PROFILE TYPE"
+                 android:inputType="textCapWords|textPersonName"
+                 android:maxLines="1"
+                 android:paddingBottom="@dimen/margin_10"
+                 android:paddingTop="@dimen/margin_15"
+                 android:textColor="@color/textColorPrimary"
+                 android:textColorHint="@color/gray"
+                 android:textSize="@dimen/font_18" />-->
+
+            <Spinner
+                android:id="@+id/spinner_profile_type"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/margin_10"
-                android:background="@null"
-                android:drawableRight="@drawable/ic_arrow_down"
-                android:drawablePadding="@dimen/margin_15"
-                android:hint="PROFILE TYPE"
-                android:inputType="textCapWords|textPersonName"
-                android:maxLines="1"
+                android:popupBackground="#a19b9b"
                 android:paddingBottom="@dimen/margin_10"
-                android:paddingTop="@dimen/margin_15"
-                android:textColor="@color/textColorPrimary"
-                android:textColorHint="@color/gray"
-                android:textSize="@dimen/font_18" />
+                android:paddingTop="@dimen/margin_15"></Spinner>
+
 
             <View
                 android:layout_width="match_parent"

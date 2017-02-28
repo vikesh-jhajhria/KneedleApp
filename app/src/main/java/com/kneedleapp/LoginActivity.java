@@ -14,6 +14,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 
@@ -26,14 +27,25 @@ import java.util.Map;
 public class LoginActivity extends BaseActivity {
 
     String username, password;
+    private AppPreferences mPrefernce;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        mPrefernce = AppPreferences.getAppPreferences(getApplicationContext());
+
+
         findViewById(R.id.txt_forgot_password).setOnClickListener(this);
         findViewById(R.id.btn_login).setOnClickListener(this);
         findViewById(R.id.txt_register_user).setOnClickListener(this);
+
+        if (!mPrefernce.getStringValue("USERNAME").isEmpty() && !mPrefernce.getStringValue("PASSWORD").isEmpty()) {
+
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        }
+
 
     }
 
@@ -46,11 +58,13 @@ public class LoginActivity extends BaseActivity {
                 break;
             case R.id.btn_login:
                 username = ((EditText) findViewById(R.id.txt_name)).getText().toString().trim();
+                mPrefernce.putStringValue("USERNAME", username);
                 if (username.isEmpty()) {
                     ((EditText) findViewById(R.id.txt_name)).setError(getString(R.string.error_username_empty));
                     break;
                 }
                 password = ((EditText) findViewById(R.id.txt_password)).getText().toString().trim();
+                mPrefernce.putStringValue("PASSWORD", password);
                 if (password.isEmpty()) {
                     ((EditText) findViewById(R.id.txt_password)).setError(getString(R.string.error_password_empty));
                     break;
@@ -72,7 +86,7 @@ public class LoginActivity extends BaseActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.v(TAG,"Response : "+response.toString());
+                        Log.v(TAG, "Response : " + response.toString());
                         dismissProgressDialog();
                         try {
                             final JSONObject jObject = new JSONObject(response);
@@ -100,7 +114,7 @@ public class LoginActivity extends BaseActivity {
                 params.put("username", username);
                 params.put("password", password);
                 params.put("devicekey", "fashion01");
-                Log.v(TAG,"Params : "+params.toString());
+                Log.v(TAG, "Params : " + params.toString());
                 return params;
             }
         };

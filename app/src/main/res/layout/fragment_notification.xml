@@ -2,14 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:clickable="true"
     tools:context="com.kneedleapp.fragment.NotificationFragment">
 
-    <de.halfbit.pinnedsection.PinnedSectionListView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/pinned_listview"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview_notification"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@null"
-        android:footerDividersEnabled="false"
-        android:headerDividersEnabled="false" />
+        android:layout_gravity="fill_vertical"
+        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>
