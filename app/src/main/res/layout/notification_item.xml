@@ -35,7 +35,6 @@
         android:src="@drawable/shahrukhkhan" />
 
     <View
-        android:id="@+id/view_notification"
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_1"
         android:layout_below="@+id/imgcircle_user"

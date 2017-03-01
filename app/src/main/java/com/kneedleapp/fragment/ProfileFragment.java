@@ -6,10 +6,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +59,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
 
+        ((RelativeLayout) getActivity().findViewById(R.id.rl_toolbar)).setVisibility(View.GONE);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         List = new ArrayList<>();
@@ -92,7 +97,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         });
 
 
-        view.findViewById(R.id.edit_profile).setOnClickListener(this);
+        view.findViewById(R.id.txt_edit_profile).setOnClickListener(this);
+        view.findViewById(R.id.img_back).setOnClickListener(this);
+        view.findViewById(R.id.img_chat).setOnClickListener(this);
 
 
         return view;
@@ -103,9 +110,44 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         switch (view.getId()) {
 
-            case R.id.edit_profile:
+            case R.id.txt_edit_profile:
+               // Fragment fragment = new EditProfileFragment();
+              //  getFragmentManager().beginTransaction().add(R.id.main_frame, fragment).addToBackStack(null).commit();
 
-                startActivity(new Intent(getActivity(), EditProfileActivity.class));
+                Fragment fragment = new UserFollowRequest();
+                getFragmentManager().beginTransaction().add(R.id.main_frame,fragment).addToBackStack(null).commit();
+
+
+                break;
+            case R.id.img_back:
+
+                break;
+            case R.id.img_chat:
+                final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                View view1 = LayoutInflater.from(getContext()).inflate(R.layout.unfollow_popup, null);
+                builder.setView(view1);
+
+                String text = "UNFOLLOW  ABIELKUNST?";
+                SpannableString spannableString = new SpannableString(text);
+                spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colourRed)), 0, 8, 0);
+                spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.textColorPrimary)), 9, text.length(), 0);
+                ((TextView) view1.findViewById(R.id.txt_unfollow)).setText(spannableString);
+                final AlertDialog alertDialog = builder.create();
+
+                ((TextView) view1.findViewById(R.id.txt_cancel)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        alertDialog.dismiss();
+                    }
+                });
+
+                ((TextView) view1.findViewById(R.id.txt_confirm)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        alertDialog.dismiss();
+                    }
+                });
+                alertDialog.show();
 
                 break;
 

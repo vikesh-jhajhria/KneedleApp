@@ -1,10 +1,6 @@
 <resources>
     <string name="app_name">KneedleApp</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <string name="action_settings">Settings</string>
     <string name="username">USER NAME</string>
     <string name="password">PASSWORD</string>
     <string name="login">LOG IN</string>
@@ -30,19 +26,29 @@
     <string name="comments">COMMENTS</string>
     <string name="post">POST</string>
     <string name="add_comment">Add Comment</string>
-    <string-array name="spinner_data">
-
-        <item>One</item>
-        <item>Two</item>
-        <item>Three</item>
-    </string-array>
-    <string name="title_activity_edit_profile">EditProfileActivity</string>
-    <string name="title_activity_full_image_view">FullImageViewActivity</string>
 
     <string name="new_post">NEW POST</string>
     <string name="library">LIBRARY</string>
     <string name="photo">PHOTO</string>
     <string name="add_caption">ADD CAPTION...</string>
+    <string name="posts">POSTS</string>
+    <string name="followers">FOLLOWERS</string>
+    <string name="following">FOLLOWING</string>
+    <string name="edit">EDIT</string>
+    <string name="follow">FOLLOW</string>
+    <string name="cancel">CANCEL</string>
+    <string name="confirm">CONFIRM</string>
+    <string name="editprofile">EDIT PROFILE</string>
+    <string name="location">LOCATION:</string>
+    <string name="state">STATE</string>
+    <string name="city">CITY</string>
+    <string name="zip">ZIP&#160;CODE</string>
+    <string name="location_info">DOES YOUR EMPLOYER OR COMPANY HAVE A PROFILE ON KNEEDLE?</string>
+    <string name="location_info_sub">IF SO YOU MAY LINK IT TO YOUR PROFILE BELOW:</string>
+    <string name="save">SAVE</string>
+    <string name="search_profile">SEARCH PROFILE</string>
+    <string name="follow_request">FOLLOW REQUESTS</string>
+    <string name="hide">HIDE</string>
 
 
 </resources>

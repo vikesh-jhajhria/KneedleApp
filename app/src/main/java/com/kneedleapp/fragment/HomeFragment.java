@@ -1,17 +1,20 @@
 package com.kneedleapp.fragment;
 
 
+import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.kneedleapp.R;
+import com.kneedleapp.utils.Config;
+import com.kneedleapp.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -59,19 +62,49 @@ public class HomeFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_home, container, false);
         ((Spinner) view.findViewById(R.id.spinner_home)).getBackground().setColorFilter(getResources().getColor(R.color.textColorPrimary), PorterDuff.Mode.SRC_ATOP);
 
-        setSpinnerAdapter();
+        spinnerDataList = new ArrayList<>();
+        spinnerDataList.add("PROFILE TYPE");
+        spinnerDataList.add("PROFILE 1");
+        spinnerDataList.add("PROFILE 2");
 
+        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(getActivity(), R.layout.layout_spinner_item, spinnerDataList);
+        ((Spinner) view.findViewById(R.id.spinner_home)).setAdapter(spinnerAdapter);
+
+        applyFonts(view);
         return view;
     }
 
-    private void setSpinnerAdapter() {
-        ArrayList<String> dataList = new ArrayList<>();
-        dataList.add("One");
-        dataList.add("Two");
-        dataList.add("Three");
+    ArrayList<String> spinnerDataList;
 
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, R.id.txt_spinner_item, dataList);
-        spinnerAdapter.setDropDownViewResource(R.layout.spinner_item);
-        ((Spinner) view.findViewById(R.id.spinner_home)).setAdapter(spinnerAdapter);
+
+    public class SpinnerAdapter extends ArrayAdapter<String>{
+
+        public SpinnerAdapter(Context context, int textViewResourceId, ArrayList<String> objects) {
+            super(context, textViewResourceId, objects);
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView,ViewGroup parent) {
+            return getCustomView(position, convertView, parent);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            return getCustomView(position, convertView, parent);
+        }
+
+        public View getCustomView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater=getActivity().getLayoutInflater();
+            View row=inflater.inflate(R.layout.layout_spinner_item, parent, false);
+            TextView label=(TextView)row.findViewById(R.id.txt_item);
+            Utils.setTypeface(getActivity(), label, Config.CENTURY_GOTHIC_REGULAR);
+            label.setText(spinnerDataList.get(position));
+            return row;
+        }
     }
+
+    private void applyFonts(View view) {
+        Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_search), Config.CENTURY_GOTHIC_REGULAR);
+    }
+
 }

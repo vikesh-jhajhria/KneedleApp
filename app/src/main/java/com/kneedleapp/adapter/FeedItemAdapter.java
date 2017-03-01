@@ -98,9 +98,7 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
         Picasso.with(context).load(feedItemVo.getmUserImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(holder.imgUser);
         Picasso.with(context).load(feedItemVo.getmContentImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(holder.imgContent);
 
-        Utils.setTypeface(context, holder.tvTitle, Config.CENTURY_GOTHIC);
-        Utils.setTypeface(context, holder.tvSubTitle, Config.CENTURY_GOTHIC);
-        Utils.setTypeface(context, holder.tvDescription, Config.CENTURY_GOTHIC);
+
     }
 
 
@@ -111,7 +109,7 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvTitle, tvSubTitle, tvDescription, tvLikes;
+        public TextView tvTitle, tvSubTitle, tvDescription, tvLikes,tvComment;
         public ImageView imgUser, imgHeart, imgMenu;
         public ViewGroup transitionsContainer;
         public ImageView imgContent;
@@ -123,11 +121,18 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
             tvSubTitle = (TextView) itemView.findViewById(R.id.textview_sub_title);
             tvDescription = (TextView) itemView.findViewById(R.id.textview_description);
             tvLikes = (TextView) itemView.findViewById(R.id.textview_likes);
+            tvComment = (TextView) itemView.findViewById(R.id.tv_comments);
             imgUser = (ImageView) itemView.findViewById(R.id.imageview_user);
             imgContent = (ImageView) itemView.findViewById(R.id.imageview_content);
             imgHeart = (ImageView) itemView.findViewById(R.id.imageview_like);
             imgMenu = (ImageView) itemView.findViewById(R.id.imageview_menu);
             transitionsContainer = (ViewGroup) itemView.findViewById(R.id.ll_container);
+
+            Utils.setTypeface(context, tvTitle, Config.CENTURY_GOTHIC_BOLD);
+            Utils.setTypeface(context, tvSubTitle, Config.CENTURY_GOTHIC_REGULAR);
+            Utils.setTypeface(context, tvDescription, Config.CENTURY_GOTHIC_REGULAR);
+            Utils.setTypeface(context, tvLikes, Config.CENTURY_GOTHIC_REGULAR);
+            Utils.setTypeface(context, tvComment, Config.CENTURY_GOTHIC_REGULAR);
         }
     }
 

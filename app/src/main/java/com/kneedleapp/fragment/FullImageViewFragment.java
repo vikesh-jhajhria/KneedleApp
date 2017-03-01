@@ -3,9 +3,7 @@ package com.kneedleapp.fragment;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
 import android.util.Log;
@@ -17,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kneedleapp.R;
+import com.kneedleapp.utils.Config;
+import com.kneedleapp.utils.Utils;
 import com.squareup.picasso.Picasso;
 
 
@@ -24,7 +24,6 @@ public class FullImageViewFragment extends Fragment {
 
     private String mUsername, mLikes;
     private String mImgBitmapContent, mImgBitmapUser;
-
 
 
     @Override
@@ -42,9 +41,10 @@ public class FullImageViewFragment extends Fragment {
         }
 
 
-
         ((TextView) view.findViewById(R.id.txt_user_name_pop)).setText(mUsername);
         ((TextView) view.findViewById(R.id.txt_likes_pop)).setText(mLikes);
+        Utils.setTypeface(getActivity(), ((TextView) view.findViewById(R.id.txt_user_name_pop)), Config.CENTURY_GOTHIC_BOLD);
+        Utils.setTypeface(getActivity(), ((TextView) view.findViewById(R.id.txt_likes_pop)), Config.CENTURY_GOTHIC_REGULAR);
         Picasso.with(getContext()).load(mImgBitmapContent).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into((ImageView) view.findViewById(R.id.img_full_image));
         Picasso.with(getContext()).load(mImgBitmapUser).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into((ImageView) view.findViewById(R.id.img_popup));
 

@@ -51,4 +51,10 @@
     <style name="AppTheme.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="spinnerarrow" parent="android:Widget.Spinner">
+
+        <item name="android:background">@drawable/custom_arrow_spinner</item>
+    </style>
+
 </resources>

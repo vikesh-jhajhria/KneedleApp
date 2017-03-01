@@ -1,6 +1,7 @@
 package com.kneedleapp.fragment;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -191,6 +192,7 @@ public class FeedFragment extends Fragment implements FeedItemAdapter.FeedItemLi
     }
 
 
+    @SuppressLint("NewApi")
     public class DetailsTransition extends android.transition.TransitionSet {
         public DetailsTransition() {
             init();

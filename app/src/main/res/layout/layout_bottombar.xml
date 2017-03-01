@@ -24,7 +24,6 @@
             android:onClick="onClick">
 
             <ImageView
-                android:id="@+id/home_unselected"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="@dimen/margin_10"
@@ -64,7 +63,6 @@
             android:onClick="onClick">
 
             <ImageView
-                android:id="@+id/feed_unselected"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="@dimen/margin_10"
@@ -104,7 +102,6 @@
             android:onClick="onClick">
 
             <ImageView
-                android:id="@+id/post_unselected"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="@dimen/margin_10"
@@ -144,7 +141,6 @@
             android:onClick="onClick">
 
             <ImageView
-                android:id="@+id/notification_unselected"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="@dimen/margin_10"
@@ -184,7 +180,6 @@
             android:onClick="onClick">
 
             <ImageView
-                android:id="@+id/profile_unselected"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="@dimen/margin_10"

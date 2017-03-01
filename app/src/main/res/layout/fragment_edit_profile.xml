@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="#ffffff"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:clickable="true"
+    android:orientation="vertical">
 
     <android.support.v7.widget.CardView
-        android:id="@+id/card"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         app:cardBackgroundColor="#E7E7E7"
@@ -15,234 +15,265 @@
         app:cardElevation="5dp">
 
         <RelativeLayout
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:layout_gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
+
             <ImageView
+                android:id="@+id/img_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/left_arrow"/>
+                android:layout_centerVertical="true"
+                android:padding="@dimen/margin_5"
+                android:src="@drawable/back" />
+
             <TextView
-                android:layout_centerInParent="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Edit Profile"
-                android:textColor="#000"
-                android:textAllCaps="true"
-                android:textSize="18sp"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
                 android:layout_gravity="center_vertical"
-                />
+                android:text="Edit Profile"
+                android:textAllCaps="true"
+                android:textColor="#000"
+                android:textSize="18sp" />
+
             <ImageView
+                android:id="@+id/img_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/placeholder"/>
+                android:layout_centerVertical="true"
+                android:padding="@dimen/margin_5"
+                android:src="@drawable/location" />
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>
+
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#ffffff"
             android:orientation="vertical"
-            android:padding="@dimen/activity_horizontal_margin"
-            >
+            android:padding="@dimen/activity_horizontal_margin">
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:orientation="horizontal"
                 android:layout_height="wrap_content"
-                >
+                android:orientation="horizontal">
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
                     <de.hdodenhof.circleimageview.CircleImageView
-                        android:layout_width="120dp"
-                        android:layout_height="120dp"
-                        android:src="@drawable/image"
-                        />
+                        android:layout_width="@dimen/margin_80"
+                        android:layout_height="@dimen/margin_80"
+                        android:src="@drawable/profile_img" />
+
                     <TextView
-                        android:layout_centerInParent="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Edit"
-                        android:textColor="#000"
-                        android:textAllCaps="true"
-                        android:textSize="18sp"
+                        android:layout_centerInParent="true"
                         android:layout_gravity="center"
-                        />
+                        android:layout_marginTop="@dimen/margin_10"
+                        android:text="Edit"
+                        android:textAllCaps="true"
+                        android:textColor="#000"
+                        android:textSize="18sp" />
                 </LinearLayout>
+
                 <LinearLayout
-                    android:layout_marginLeft="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
                     android:orientation="vertical">
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="John dixxx"
-                        android:textColor="#000"
-                        android:textColorHint="@android:color/darker_gray"
-                        android:textSize="16sp"
-                        android:drawablePadding="10dp"
-                        android:drawableLeft="@drawable/grid"
-                        android:theme="@style/TextLabel"/>
 
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/name"
+                        android:drawablePadding="10dp"
                         android:hint="John dixxx"
                         android:textColor="#000"
                         android:textColorHint="@android:color/darker_gray"
                         android:textSize="16sp"
+                        android:theme="@style/TextLabel" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/user"
                         android:drawablePadding="10dp"
-                        android:drawableLeft="@drawable/grid"
-                        android:theme="@style/TextLabel"/>
+                        android:hint="John dixxx"
+                        android:textColor="#000"
+                        android:textColorHint="@android:color/darker_gray"
+                        android:textSize="16sp"
+                        android:theme="@style/TextLabel" />
+
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
                         <EditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/password"
+                            android:drawablePadding="10dp"
                             android:hint="John dixxx"
-                            android:textColor="#000"
                             android:inputType="textWebPassword"
+                            android:maxLength="12"
+                            android:textColor="#000"
                             android:textColorHint="@android:color/darker_gray"
                             android:textSize="16sp"
-                            android:drawablePadding="10dp"
-                            android:drawableLeft="@drawable/grid"
-                            android:theme="@style/TextLabel"/>
+                            android:theme="@style/TextLabel" />
+
                         <TextView
-                            android:layout_alignParentRight="true"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Change pw"
-                            android:paddingLeft="10dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_gravity="center_vertical"
                             android:layout_marginTop="10dp"
+                            android:paddingLeft="10dp"
+                            android:text="Change pw"
+                            android:textAllCaps="true"
                             android:textColor="#CA0000"
                             android:textSize="14sp"
-                            android:textAllCaps="true"
-                            android:layout_gravity="center_vertical"></TextView>
+                            android:visibility="gone"></TextView>
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@drawable/bio"
+                android:drawablePadding="@dimen/margin_5"
                 android:enabled="false"
                 android:text="B I O"
-                android:drawableLeft="@android:drawable/ic_btn_speak_now"
                 android:textColor="#000"
-                android:textSize="16sp"
-                android:layout_marginTop="10dp"
+                android:textSize="16sp" />
 
-                />
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:textColor="#000"
-                android:textSize="16sp"
-                android:paddingLeft="5dp"
                 android:background="@drawable/border_gray"
-                />
+                android:gravity="start"
+                android:padding="@dimen/margin_5"
+                android:textColor="#000"
+                android:textSize="16sp" />
+
             <EditText
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@drawable/email"
+                android:drawablePadding="10dp"
                 android:hint="I A M @ GMAIL.COM"
-                android:textColor="#000"
                 android:inputType="textEmailAddress"
+                android:textColor="#000"
                 android:textColorHint="@android:color/darker_gray"
                 android:textSize="16sp"
-                android:drawablePadding="10dp"
-                android:drawableLeft="@drawable/grid"
-                android:theme="@style/TextLabel"/>
+                android:theme="@style/TextLabel" />
+
             <Spinner
-                android:layout_marginTop="10dp"
+                style="@style/spinnerarrow"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:dropDownWidth="fill_parent"
-                style="@style/SpinnerTheme">
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="@dimen/margin_20"
+                android:paddingTop="@dimen/margin_20"
 
+                ></Spinner>
 
-            </Spinner>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="#C3C3C3"></View>
+
             <LinearLayout
-                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Gender:"
                     android:textColor="#000"
-                    android:textSize="18sp"/>
+                    android:textSize="18sp" />
+
                 <RadioGroup
-                    android:id="@+id/rg_spyice"
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <RadioButton
-                        android:layout_marginLeft="20dp"
-                        android:id="@+id/rb_card"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         style="@style/MyRadioButtonStyleHomme"
-                        android:checked="true"
-                        />
-                    <RadioButton
-                        android:layout_marginLeft="30dp"
-                        android:id="@+id/rb_card_PAYTM"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:checked="true" />
+
+                    <RadioButton
                         style="@style/MyRadioButtonStyleFemme"
-                        android:checked="true"
-                        />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:checked="true" />
 
 
                 </RadioGroup>
 
             </LinearLayout>
+
             <LinearLayout
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_marginLeft="55dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="55dp"
                     android:text="HOMME"
                     android:textColor="#C3C3C3"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
+
                 <TextView
-                    android:layout_marginLeft="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
                     android:text="FEMME"
                     android:textColor="#C3C3C3"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
             </LinearLayout>
+
             <Button
-                android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#CA0000"
+                android:gravity="center"
                 android:text="SAVE CHANGES"
                 android:textColor="#fff"
-                android:textSize="18dp"
-                android:background="#CA0000"/>
+                android:textSize="18dp" />
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
 </LinearLayout>
+
+

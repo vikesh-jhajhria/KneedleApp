@@ -35,8 +35,12 @@ public class Utils {
     }
 
     public static void setTypeface(Context context, TextView textview, String fontName) {
-        if (fontName.equalsIgnoreCase(Config.CENTURY_GOTHIC)) {
-            Typeface face = Typeface.createFromAsset(context.getAssets(), "fonts/century_gothic.ttf");
+        if (fontName.equalsIgnoreCase(Config.CENTURY_GOTHIC_REGULAR)) {
+            Typeface face = Typeface.createFromAsset(context.getAssets(), "fonts/GOTHICR.TTF");
+            textview.setTypeface(face);
+        }
+        if (fontName.equalsIgnoreCase(Config.CENTURY_GOTHIC_BOLD)) {
+            Typeface face = Typeface.createFromAsset(context.getAssets(), "fonts/GOTHICB.TTF");
             textview.setTypeface(face);
         }
 

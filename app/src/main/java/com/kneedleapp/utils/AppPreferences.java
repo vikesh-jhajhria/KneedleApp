@@ -16,7 +16,7 @@ public class AppPreferences {
     public static final String USER_PHONE = "USERPHONE";
     public static final String USER_IMAGE = "USERIMAGE";
     public static final String USER_IMAGE_URL = "USERIMAGEURL";
-    private static final String SHARED_PREFERENCE_NAME = "OCTAGON";
+    private static final String SHARED_PREFERENCE_NAME = "KNEEDLEAPP";
     private SharedPreferences mPrefs;
 
     private AppPreferences(Context context) {

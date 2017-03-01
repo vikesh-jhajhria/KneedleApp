@@ -1,15 +1,17 @@
 package com.kneedleapp;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
-import android.icu.text.DisplayContext;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +24,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.kneedleapp.utils.Config;
+import com.kneedleapp.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,7 +44,7 @@ public class RegistrationActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-
+        applyFonts();
         findViews();
         setArrayAdapter();
         showCalender();
@@ -54,16 +57,29 @@ public class RegistrationActivity extends BaseActivity {
         super.onClick(view);
         switch (view.getId()) {
             case R.id.btn_let_me_in:
-                if (!((TextView) findViewById(R.id.txt_name)).getText().toString().isEmpty() && !((TextView) findViewById(R.id.txt_username)).getText().toString().isEmpty() && !((TextView) findViewById(R.id.txt_password)).getText().toString().isEmpty() && !((TextView) findViewById(R.id.txt_db)).getText().toString().isEmpty()) {
+                if (!((TextView) findViewById(R.id.txt_name)).getText().toString().isEmpty() && !((TextView) findViewById(R.id.txt_username)).getText().toString().isEmpty() && !((TextView) findViewById(R.id.txt_password)).getText().toString().isEmpty() && !((TextView) findViewById(R.id.txt_dob)).getText().toString().isEmpty()) {
                     RegisterData();
                 } else {
                     ((TextView) findViewById(R.id.textview_error_show)).setVisibility(View.VISIBLE);
+
+                    ((TextView) findViewById(R.id.txt_name)).setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_name_red), null, null, null);
+                    ((TextView) findViewById(R.id.txt_username)).setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_username_red), null, null, null);
+                    ((TextView) findViewById(R.id.txt_password)).setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_password_red), null, null, null);
+                    ((TextView) findViewById(R.id.txt_dob)).setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_calender_red), null, null, null);
                 }
                 break;
-            case R.id.txt_db:
+            case R.id.txt_dob:
                 new DatePickerDialog(RegistrationActivity.this, date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                break;
+            case R.id.ll_homme:
+                ((ImageView) findViewById(R.id.img_homme)).setImageResource(R.drawable.ic_homme_red);
+                ((ImageView) findViewById(R.id.img_femme)).setImageResource(R.drawable.ic_femme_white);
+                break;
+            case R.id.ll_femme:
+                ((ImageView) findViewById(R.id.img_femme)).setImageResource(R.drawable.ic_femme_red);
+                ((ImageView) findViewById(R.id.img_homme)).setImageResource(R.drawable.ic_homme_white);
                 break;
         }
     }
@@ -126,15 +142,15 @@ public class RegistrationActivity extends BaseActivity {
         RequestQueue registerqueue = Volley.newRequestQueue(RegistrationActivity.this);
         registerqueue.add(requestRegister);
     }
-
+    ArrayList<String> spinnerDataList;
     private void setArrayAdapter() {
 
-        ArrayList<String> spinnerDataList = new ArrayList<>();
-        spinnerDataList.add("One");
-        spinnerDataList.add("Two");
-        spinnerDataList.add("Three");
+        spinnerDataList = new ArrayList<>();
+        spinnerDataList.add("PROFILE TYPE");
+        spinnerDataList.add("PROFILE 1");
+        spinnerDataList.add("PROFILE 2");
 
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(RegistrationActivity.this,R.layout.spinner_item, R.id.txt_spinner_item, spinnerDataList);
+        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(RegistrationActivity.this, R.layout.layout_spinner_item, spinnerDataList);
         ((Spinner) findViewById(R.id.spinner_profile_type)).setAdapter(spinnerAdapter);
     }
 
@@ -159,16 +175,62 @@ public class RegistrationActivity extends BaseActivity {
     }
 
     private void updateLabel() {
-        String myFormat = "MM/dd/yy"; //In which you need put here
+        String myFormat = "MM / dd / yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-        ((TextView) findViewById(R.id.txt_db)).setText(sdf.format(myCalendar.getTime()));
+        ((TextView) findViewById(R.id.txt_dob)).setText(sdf.format(myCalendar.getTime()));
     }
 
     private void findViews() {
         findViewById(R.id.btn_let_me_in).setOnClickListener(this);
         ((Spinner) findViewById(R.id.spinner_profile_type)).getBackground().setColorFilter(getResources().getColor(R.color.textColorPrimary), PorterDuff.Mode.SRC_ATOP);
         ((Spinner) findViewById(R.id.spinner_profile_type)).setPrompt("PROFILE TYPE");
-        findViewById(R.id.txt_db).setOnClickListener(this);
+        findViewById(R.id.ll_homme).setOnClickListener(this);
+        findViewById(R.id.ll_femme).setOnClickListener(this);
+        findViewById(R.id.txt_dob).setOnClickListener(this);
+    }
+
+    private void applyFonts() {
+        Utils.setTypeface(this, (TextView) findViewById(R.id.textview_error_show), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(this, (TextView) findViewById(R.id.txt_name), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(this, (TextView) findViewById(R.id.txt_username), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(this, (TextView) findViewById(R.id.txt_password), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(this, (TextView) findViewById(R.id.txt_dob), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(this, (TextView) findViewById(R.id.txt_homme), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(this, (TextView) findViewById(R.id.txt_femme), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(this, (TextView) findViewById(R.id.btn_let_me_in), Config.CENTURY_GOTHIC_REGULAR);
+    }
+
+
+
+
+
+
+
+
+    public class SpinnerAdapter extends ArrayAdapter<String>{
+
+        public SpinnerAdapter(Context context, int textViewResourceId, ArrayList<String> objects) {
+            super(context, textViewResourceId, objects);
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView,ViewGroup parent) {
+            return getCustomView(position, convertView, parent);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            return getCustomView(position, convertView, parent);
+        }
+
+        public View getCustomView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater=getLayoutInflater();
+            View row=inflater.inflate(R.layout.layout_spinner_item, parent, false);
+            TextView label=(TextView)row.findViewById(R.id.txt_item);
+            Utils.setTypeface(RegistrationActivity.this, label, Config.CENTURY_GOTHIC_REGULAR);
+            label.setText(spinnerDataList.get(position));
+            return row;
+        }
     }
 
 }

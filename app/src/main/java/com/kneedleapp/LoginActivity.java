@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -33,20 +34,21 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        applyFonts();
 
         mPrefernce = AppPreferences.getAppPreferences(getApplicationContext());
-
 
         findViewById(R.id.txt_forgot_password).setOnClickListener(this);
         findViewById(R.id.btn_login).setOnClickListener(this);
         findViewById(R.id.txt_register_user).setOnClickListener(this);
+    }
 
-        if (!mPrefernce.getStringValue("USERNAME").isEmpty() && !mPrefernce.getStringValue("PASSWORD").isEmpty()) {
-
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-        }
-
-
+    private void applyFonts() {
+        Utils.setTypeface(this, (TextView) findViewById(R.id.txt_name), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(this, (TextView) findViewById(R.id.txt_password), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(this, (TextView) findViewById(R.id.txt_forgot_password), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(this, (TextView) findViewById(R.id.txt_register_user), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(this, (TextView) findViewById(R.id.btn_login), Config.CENTURY_GOTHIC_REGULAR);
     }
 
     @Override
@@ -58,13 +60,11 @@ public class LoginActivity extends BaseActivity {
                 break;
             case R.id.btn_login:
                 username = ((EditText) findViewById(R.id.txt_name)).getText().toString().trim();
-                mPrefernce.putStringValue("USERNAME", username);
                 if (username.isEmpty()) {
                     ((EditText) findViewById(R.id.txt_name)).setError(getString(R.string.error_username_empty));
                     break;
                 }
                 password = ((EditText) findViewById(R.id.txt_password)).getText().toString().trim();
-                mPrefernce.putStringValue("PASSWORD", password);
                 if (password.isEmpty()) {
                     ((EditText) findViewById(R.id.txt_password)).setError(getString(R.string.error_password_empty));
                     break;
@@ -91,6 +91,7 @@ public class LoginActivity extends BaseActivity {
                         try {
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
+                                mPrefernce.putStringValue(AppPreferences.USER_NAME,username);
                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                 finishAffinity();
                             } else {

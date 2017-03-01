@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -31,8 +32,15 @@ public class ForgotPasswordActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
-
+        applyFonts();
         findViewById(R.id.btn_send_email).setOnClickListener(this);
+    }
+
+    private void applyFonts() {
+        Utils.setTypeface(this, (TextView) findViewById(R.id.txt_forgot_password), Config.CENTURY_GOTHIC_BOLD);
+        Utils.setTypeface(this, (TextView) findViewById(R.id.txt_forgot_info), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(this, (TextView) findViewById(R.id.txt_email), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(this, (TextView) findViewById(R.id.btn_send_email), Config.CENTURY_GOTHIC_REGULAR);
     }
 
     @Override
@@ -50,7 +58,9 @@ public class ForgotPasswordActivity extends BaseActivity {
                     break;
                 }
                 if (Utils.isNetworkConnected(this, true)) {
-                    ForgotPasswordData();
+                    //ForgotPasswordData();
+                    startActivity(new Intent(ForgotPasswordActivity.this, MailSentActivity.class));
+                    finish();
                 }
                 break;
         }

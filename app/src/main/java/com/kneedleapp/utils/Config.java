@@ -6,7 +6,8 @@ package com.kneedleapp.utils;
 
 public class Config {
 
-    public final static String CENTURY_GOTHIC = "CENTURY_GOTHIC";
+    public final static String CENTURY_GOTHIC_REGULAR = "CENTURY_GOTHIC_REGULAR";
+    public final static String CENTURY_GOTHIC_BOLD = "CENTURY_GOTHIC_BOLD";
 
 
     public final static int SPLASH_TIME = 2000;

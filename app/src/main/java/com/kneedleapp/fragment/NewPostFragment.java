@@ -87,17 +87,17 @@ public class NewPostFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.txt_library:
+                userChoosenTask = "Choose From Library";
                 if (result)
                     gallaryIntent();
-                userChoosenTask = "Choose From Library";
                 ((TextView) view_main.findViewById(R.id.txt_library)).setTextColor(getResources().getColor(R.color.colorAccent));
                 ((TextView) view_main.findViewById(R.id.txt_photo)).setTextColor(getResources().getColor(R.color.colourBlack));
                 break;
 
             case R.id.txt_photo:
+                userChoosenTask = "Take Photo";
                 if (result)
                     cameraIntent();
-                userChoosenTask = "Take Photo";
                 ((TextView) view_main.findViewById(R.id.txt_photo)).setTextColor(getResources().getColor(R.color.colorAccent));
                 ((TextView) view_main.findViewById(R.id.txt_library)).setTextColor(getResources().getColor(R.color.colourBlack));
                 break;
@@ -125,6 +125,7 @@ public class NewPostFragment extends Fragment implements View.OnClickListener {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     if (userChoosenTask.equals("Take Photo")) {
+                        Log.e("TAG", "aman");
                         cameraIntent();
                     } else if (userChoosenTask.equals("Choose From Library")) {
                         gallaryIntent();

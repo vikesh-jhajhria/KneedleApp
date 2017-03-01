@@ -1,64 +1,71 @@
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_home"
-    android:layout_gravity="fill_vertical"
-    android:clickable="true"
-    tools:context="com.kneedleapp.fragment.HomeFragment">
+    android:layout_width="match_parent"
+    android:background="@drawable/bg_search">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:orientation="vertical">
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="fill_vertical"
+        android:clickable="true"
+        android:background="#90000000"
+        tools:context="com.kneedleapp.fragment.HomeFragment">
 
-        <EditText
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_10"
-            android:background="@color/textColorPrimary"
-            android:gravity="center_vertical"
-            android:hint="SEARCH NAMES + HASHTAGS"
-            android:inputType="textCapWords|textPersonName"
-            android:maxLines="1"
-            android:padding="@dimen/margin_10"
-            android:textColor="#000000"
-            android:textColorHint="@color/gray"
-            android:textSize="@dimen/font_18" />
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:orientation="vertical">
 
-        <!--  <EditText
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="@dimen/margin_15"
-              android:background="@null"
-              android:drawableRight="@drawable/ic_arrow_down"
-              android:drawablePadding="@dimen/margin_15"
-              android:hint="SEARCH BY CATEGORY"
-              android:inputType="textCapWords|textPersonName"
-              android:maxLines="1"
-              android:paddingBottom="@dimen/margin_10"
-              android:paddingTop="@dimen/margin_15"
-              android:textColor="@color/textColorPrimary"
-              android:textColorHint="@color/textColorPrimary"
-              android:textSize="@dimen/font_18" />-->
-
-        <Spinner
-            android:id="@+id/spinner_home"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_15"
-            android:paddingBottom="@dimen/margin_10"
-            android:paddingTop="@dimen/margin_15"
-            android:popupBackground="#a19b9b"></Spinner>
+            <EditText
+                android:id="@+id/txt_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10"
+                android:background="@color/textColorPrimary"
+                android:gravity="center_vertical"
+                android:hint="SEARCH NAMES + HASHTAGS"
+                android:inputType="textCapWords|textPersonName"
+                android:maxLines="1"
+                android:padding="@dimen/margin_10"
+                android:textColor="#000000"
+                android:textColorHint="@color/gray"
+                android:textSize="@dimen/font_16" />
 
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray" />
-    </LinearLayout>
 
-</android.support.v4.widget.NestedScrollView>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_5"
+                android:layout_marginTop="@dimen/margin_15">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="@dimen/margin_2"
+                    android:src="@drawable/drop_down_red" />
+
+                <Spinner
+                    android:id="@+id/spinner_home"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:popupBackground="@color/spinner_background" />
+            </RelativeLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/textColorPrimary" />
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+</RelativeLayout>
