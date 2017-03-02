@@ -5,9 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kneedleapp.R;
+import com.kneedleapp.utils.Config;
+import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.NotificationItemVo;
 
 import java.util.ArrayList;
@@ -58,13 +61,19 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             switch (obj.getmType()) {
                 case NotificationItemVo.DAY:
-
                     ((DayViewHolder) holder).mTvHeader.setText(obj.getmTvHeader());
-
+                    if(obj.getmTvHeader().equalsIgnoreCase("today")){
+                        ((DayViewHolder) holder).bell.setVisibility(View.VISIBLE);
+                    } else {
+                        ((DayViewHolder) holder).bell.setVisibility(View.GONE);
+                    }
+                    Utils.setTypeface(context, ((DayViewHolder) holder).mTvHeader , Config.CENTURY_GOTHIC_BOLD);
                     break;
 
                 case NotificationItemVo.NOTIFICATION:
                     ((NotificationDataViewHolder) holder).mTvNoti.setText(obj.getmTvNotiText());
+                    Utils.setTypeface(context, ((NotificationDataViewHolder) holder).mTvNoti , Config.CENTURY_GOTHIC_REGULAR);
+
                     break;
 
             }
@@ -97,10 +106,12 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     public static class DayViewHolder extends RecyclerView.ViewHolder {
         private TextView mTvHeader;
+        private ImageView bell;
 
         public DayViewHolder(View itemView) {
             super(itemView);
             mTvHeader = (TextView) itemView.findViewById(R.id.txt_header);
+            bell = (ImageView) itemView.findViewById(R.id.img_bell);
 
         }
     }
@@ -112,6 +123,7 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
             super(itemView);
 
             mTvNoti = (TextView) itemView.findViewById(R.id.txt_notification);
+
         }
     }
 
