@@ -2,39 +2,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    tools:context="com.kneedleapp.fragment.PostEditFragment">
+    android:background="#ffffff"
+    android:clickable="true">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#ffffff"
-        android:clickable="true"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:weightSum="100">
+        tools:context="com.kneedleapp.fragment.PostEditFragment">
 
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="?actionBarSize"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/margin_10"
-            android:layout_weight="10">
+            android:layout_marginRight="@dimen/activity_horizontal_margin">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:src="@drawable/cancel" />
+                android:src="@drawable/ic_cross_red" />
 
             <TextView
+                android:id="@+id/txt_new_post"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:text="@string/new_post"
-                android:textColor="@color/colourBlack" />
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/font_16"
+                android:textStyle="bold" />
 
 
             <TextView
@@ -50,46 +49,33 @@
                 android:paddingTop="@dimen/margin_10"
                 android:text="@string/post"
                 android:textColor="@color/textColorPrimary"
-                android:textSize="@dimen/font_12"
+                android:textSize="@dimen/font_14"
                 android:textStyle="bold" />
 
         </RelativeLayout>
 
-        <RelativeLayout
+
+        <ImageView
+            android:id="@+id/img_post"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="@dimen/margin_10"
-            android:layout_weight="60">
-
-            <ImageView
-                android:id="@+id/img_post"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#dcd4d4"
-                android:scaleType="fitCenter" />
-
-
-        </RelativeLayout>
+            android:layout_height="250dp"
+            android:background="#1d000000"
+            android:scaleType="fitCenter" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="10"></RelativeLayout>
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_margin="@dimen/activity_horizontal_margin"
-            android:layout_weight="20"
             android:background="@drawable/border_gray">
 
             <EditText
+                android:id="@+id/txt_caption"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@null"
                 android:gravity="start"
                 android:hint="@string/add_caption"
+                android:minLines="5"
                 android:padding="@dimen/margin_10"
                 android:textSize="@dimen/margin_15" />
 

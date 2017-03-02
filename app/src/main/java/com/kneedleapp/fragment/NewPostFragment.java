@@ -13,7 +13,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -26,14 +25,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.kneedleapp.BaseActivity;
 import com.kneedleapp.R;
+import com.kneedleapp.utils.Config;
+import com.kneedleapp.utils.Utils;
 
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 
@@ -68,6 +63,9 @@ public class NewPostFragment extends Fragment implements View.OnClickListener {
         ((ImageView) view_main.findViewById(R.id.img_next)).setOnClickListener(this);
         ((TextView) view_main.findViewById(R.id.txt_library)).setOnClickListener(this);
         ((TextView) view_main.findViewById(R.id.txt_photo)).setOnClickListener(this);
+        Utils.setTypeface(getActivity(), (TextView) view_main.findViewById(R.id.txt_new_post), Config.CENTURY_GOTHIC_BOLD);
+        Utils.setTypeface(getActivity(), (TextView) view_main.findViewById(R.id.txt_library), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getActivity(), (TextView) view_main.findViewById(R.id.txt_photo), Config.CENTURY_GOTHIC_REGULAR);
         checkPermission(getContext());
         return view_main;
     }
@@ -90,6 +88,8 @@ public class NewPostFragment extends Fragment implements View.OnClickListener {
                 userChoosenTask = "Choose From Library";
                 if (result)
                     gallaryIntent();
+                Utils.setTypeface(getActivity(), (TextView) view_main.findViewById(R.id.txt_library), Config.CENTURY_GOTHIC_BOLD);
+                Utils.setTypeface(getActivity(), (TextView) view_main.findViewById(R.id.txt_photo), Config.CENTURY_GOTHIC_REGULAR);
                 ((TextView) view_main.findViewById(R.id.txt_library)).setTextColor(getResources().getColor(R.color.colorAccent));
                 ((TextView) view_main.findViewById(R.id.txt_photo)).setTextColor(getResources().getColor(R.color.colourBlack));
                 break;
@@ -98,6 +98,8 @@ public class NewPostFragment extends Fragment implements View.OnClickListener {
                 userChoosenTask = "Take Photo";
                 if (result)
                     cameraIntent();
+                Utils.setTypeface(getActivity(), (TextView) view_main.findViewById(R.id.txt_library), Config.CENTURY_GOTHIC_REGULAR);
+                Utils.setTypeface(getActivity(), (TextView) view_main.findViewById(R.id.txt_photo), Config.CENTURY_GOTHIC_BOLD);
                 ((TextView) view_main.findViewById(R.id.txt_photo)).setTextColor(getResources().getColor(R.color.colorAccent));
                 ((TextView) view_main.findViewById(R.id.txt_library)).setTextColor(getResources().getColor(R.color.colourBlack));
                 break;
@@ -134,31 +136,6 @@ public class NewPostFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void selectImage() {
-        final CharSequence item[] = {"Take Photo", "Choose From Library", "Cancel"};
-
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Add Photo!");
-        builder.setItems(item, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-
-                if (item[i].equals("Take Photo")) {
-                    userChoosenTask = "Take Photo";
-                    if (result)
-                        cameraIntent();
-                } else if (item[i].equals("Choose From Library")) {
-                    userChoosenTask = "Choose From Library";
-                    if (result)
-                        gallaryIntent();
-                } else if (item[i].equals("Cancel")) {
-                    dialogInterface.dismiss();
-                }
-            }
-        });
-        builder.show();
-    }
 
     public static boolean checkPermission(final Context context) {
         int currentAPIVersion = Build.VERSION.SDK_INT;
@@ -206,27 +183,6 @@ public class NewPostFragment extends Fragment implements View.OnClickListener {
     }
 
     private void onCaptureImageResult(Intent data) {
-      /*  Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-       // thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-
-        File destination = new File(Environment.getExternalStorageDirectory(),
-                System.currentTimeMillis() + ".jpg");
-
-        FileOutputStream fo;
-        try {
-            destination.createNewFile();
-            fo = new FileOutputStream(destination);
-            fo.write(bytes.toByteArray());
-            fo.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        mImgContent.setImageBitmap(thumbnail);*/
-
         Bitmap bitmap = (Bitmap) data.getExtras().get("data");
         mImgContent.setImageBitmap(bitmap);
 

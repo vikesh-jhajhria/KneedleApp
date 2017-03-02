@@ -1,29 +1,20 @@
 package com.kneedleapp.fragment;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.kneedleapp.EditProfileActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.vo.ListVo;
 
@@ -111,12 +102,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         switch (view.getId()) {
 
             case R.id.txt_edit_profile:
-               // Fragment fragment = new EditProfileFragment();
-              //  getFragmentManager().beginTransaction().add(R.id.main_frame, fragment).addToBackStack(null).commit();
+                Fragment fragment = new EditProfileFragment();
+                getFragmentManager().beginTransaction().add(R.id.main_frame, fragment).addToBackStack(null).commit();
 
-                Fragment fragment = new UserFollowRequest();
+                /*Fragment fragment = new UserFollowRequest();
                 getFragmentManager().beginTransaction().add(R.id.main_frame,fragment).addToBackStack(null).commit();
-
+*/
 
                 break;
             case R.id.img_back:
@@ -154,6 +145,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         }
     }
+
 }
 
 
