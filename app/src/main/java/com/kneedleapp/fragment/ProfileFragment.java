@@ -16,6 +16,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kneedleapp.R;
+import com.kneedleapp.adapter.ProfileListAdapter;
+import com.kneedleapp.utils.Config;
+import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.ListVo;
 
 import java.util.ArrayList;
@@ -25,7 +28,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private com.kneedleapp.adapter.ListAdapter listAdapter;
+    private ProfileListAdapter profileListAdapter;
     private ArrayList<ListVo> List = new ArrayList<ListVo>();
     public static RecyclerView recyclerView;
     public boolean checkFlag = true;
@@ -48,7 +51,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-
+        applyFonts(view);
 
         ((RelativeLayout) getActivity().findViewById(R.id.rl_toolbar)).setVisibility(View.GONE);
 
@@ -61,19 +64,19 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             List.add(check);
         }
         list = (ImageView) view.findViewById(R.id.list);
-        grid = (ImageView) view.findViewById(R.id.grid);
-        listAdapter = new com.kneedleapp.adapter.ListAdapter(List, getContext(), "grid");
+        grid = (ImageView) view.findViewById(R.id.img_grid);
+        profileListAdapter = new ProfileListAdapter(List, getContext(), "grid");
         StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(gridLayoutManager);
-        recyclerView.setAdapter(listAdapter);
+        recyclerView.setAdapter(profileListAdapter);
 
         list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 layoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(layoutManager);
-                listAdapter = new com.kneedleapp.adapter.ListAdapter(List, getContext(), "list");
-                recyclerView.setAdapter(listAdapter);
+                profileListAdapter = new ProfileListAdapter(List, getContext(), "LIST");
+                recyclerView.setAdapter(profileListAdapter);
             }
         });
         grid.setOnClickListener(new View.OnClickListener() {
@@ -82,13 +85,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 checkFlag = false;
                 StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
                 recyclerView.setLayoutManager(gridLayoutManager);
-                listAdapter = new com.kneedleapp.adapter.ListAdapter(List, getContext(), "grid");
-                recyclerView.setAdapter(listAdapter);
+                profileListAdapter = new ProfileListAdapter(List, getContext(), "GRID");
+                recyclerView.setAdapter(profileListAdapter);
             }
         });
 
 
-        view.findViewById(R.id.txt_edit_profile).setOnClickListener(this);
+        view.findViewById(R.id.txt_btn_edit).setOnClickListener(this);
         view.findViewById(R.id.img_back).setOnClickListener(this);
         view.findViewById(R.id.img_chat).setOnClickListener(this);
 
@@ -96,12 +99,28 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
+    private void applyFonts(View view){
+        Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_username), Config.CENTURY_GOTHIC_BOLD);
+        Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_post), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_post_count), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_follower), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_follower_count), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_following), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_following_count), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_btn_edit), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_btn_follow), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_btn_following), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_designation), Config.CENTURY_GOTHIC_BOLD);
+        Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_address), Config.CENTURY_GOTHIC_REGULAR);
+
+    }
+
     @Override
     public void onClick(View view) {
 
         switch (view.getId()) {
 
-            case R.id.txt_edit_profile:
+            case R.id.txt_btn_edit:
                 Fragment fragment = new EditProfileFragment();
                 getFragmentManager().beginTransaction().add(R.id.main_frame, fragment).addToBackStack(null).commit();
 

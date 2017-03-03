@@ -13,29 +13,27 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/underline"
-            android:paddingBottom="@dimen/margin_10"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/margin_10">
+            android:layout_height="?actionBarSize"
+            android:background="@drawable/underline">
 
             <ImageView
                 android:id="@+id/img_back"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_centerVertical="true"
-                android:padding="@dimen/margin_5"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
                 android:src="@drawable/back" />
 
             <TextView
+                android:id="@+id/txt_edit_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:text="@string/editprofile"
-                android:textColor="@color/colourBlack"
-                android:textSize="@dimen/margin_15" />
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/font_18" />
 
         </RelativeLayout>
 
@@ -44,33 +42,54 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
-            android:paddingBottom="@dimen/margin_20"
-            android:paddingTop="@dimen/margin_20">
+            android:paddingBottom="@dimen/margin_15"
+            android:paddingTop="@dimen/margin_15">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/location" />
+                android:src="@drawable/location_large" />
 
             <TextView
+                android:id="@+id/txt_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_8"
+                android:layout_marginLeft="@dimen/margin_10"
                 android:text="@string/location"
-                android:textColor="@color/colourBlack"
-                android:textSize="@dimen/font_15" />
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/font_16" />
 
         </LinearLayout>
 
-        <Spinner
-            style="@style/spinnerarrow"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="@dimen/margin_2"
+                android:src="@drawable/drop_down_red" />
+
+            <Spinner
+                android:id="@+id/spinner_profile_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:popupBackground="@color/spinner_background" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/margin_10"
-            android:paddingBottom="@dimen/margin_20"
-            android:paddingTop="@dimen/margin_20"></Spinner>
+            android:background="@color/gray"></View>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -81,16 +100,17 @@
             android:paddingTop="@dimen/margin_20">
 
             <EditText
+                android:id="@+id/txt_state"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:hint="@string/state"
                 android:maxLines="1"
-                android:singleLine="true"
                 android:textColorHint="@color/colourBlack"
-                android:textSize="@dimen/font_12" />
+                android:textSize="@dimen/font_14" />
 
             <EditText
+                android:id="@+id/txt_city"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_5"
@@ -99,7 +119,7 @@
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColorHint="@color/colourBlack"
-                android:textSize="@dimen/font_12" />
+                android:textSize="@dimen/font_14" />
 
         </LinearLayout>
 
@@ -113,14 +133,14 @@
             android:weightSum="1">
 
             <EditText
+                android:id="@+id/txt_zip"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:hint="@string/zip"
                 android:maxLines="1"
-                android:singleLine="true"
                 android:textColorHint="@color/colourBlack"
-                android:textSize="@dimen/font_12" />
+                android:textSize="@dimen/font_14" />
         </LinearLayout>
 
         <LinearLayout
@@ -135,6 +155,7 @@
             android:paddingTop="@dimen/margin_15">
 
             <TextView
+                android:id="@+id/txt_info1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -142,20 +163,22 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:text="@string/location_info"
                 android:textColor="@color/colourBlack"
-                android:textSize="@dimen/font_15" />
+                android:textSize="@dimen/font_14" />
 
             <TextView
+                android:id="@+id/txt_info2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_10"
                 android:gravity="center"
                 android:text="@string/location_info_sub"
                 android:textColor="@color/colourBlack"
-                android:textSize="@dimen/font_12" />
+                android:textSize="@dimen/font_13" />
 
         </LinearLayout>
 
         <EditText
+            android:id="@+id/txt_search_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -163,22 +186,23 @@
             android:layout_marginTop="@dimen/margin_30"
             android:drawableRight="@drawable/search"
             android:hint="@string/search_profile"
-            android:paddingTop="@dimen/margin_10"
-            android:textSize="@dimen/font_15"></EditText>
+            android:textSize="@dimen/font_16"></EditText>
 
         <TextView
+            android:id="@+id/txt_btn_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/margin_20"
             android:layout_marginTop="@dimen/margin_30"
-            android:background="@color/colourRed"
+            android:background="@color/colorAccent"
             android:paddingBottom="@dimen/margin_10"
             android:paddingLeft="@dimen/margin_40"
             android:paddingRight="@dimen/margin_40"
             android:paddingTop="@dimen/margin_10"
-            android:layout_marginBottom="@dimen/margin_20"
             android:text="@string/save"
-            android:textColor="@color/textColorPrimary" />
+            android:textColor="@color/textColorPrimary"
+            android:textSize="@dimen/font_18" />
 
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

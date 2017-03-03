@@ -2,41 +2,39 @@ package com.kneedleapp.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
+import com.kneedleapp.BaseActivity;
 import com.kneedleapp.R;
+import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.ListVo;
 
 import java.util.ArrayList;
 
 
-public class ListAdapter extends RecyclerView.Adapter<ListAdapter.CheckViewHolder> {
+public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.CheckViewHolder> {
 
     Context context;
     ArrayList<ListVo> list;
-    String check;
+    String viewType;
 
 
-    public ListAdapter(ArrayList<ListVo> list, Context context, String check) {
+    public ProfileListAdapter(ArrayList<ListVo> list, Context context, String viewType) {
         this.context = context;
         this.list = list;
-        this.check=check;
+        this.viewType = viewType;
     }
 
     @Override
     public CheckViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         CheckViewHolder viewHolder;
-        if(check.trim().equalsIgnoreCase("list"))
-        { Log.e("hello","list");
-            viewHolder=new CheckViewHolder(LayoutInflater.from(context).inflate(R.layout.item_recyleview, parent, false));
+        if(this.viewType.trim().equalsIgnoreCase("LIST")){
+            viewHolder=new CheckViewHolder(LayoutInflater.from(context).inflate(R.layout.list_feed_item, parent, false));
         }
         else{
-            Log.e("hello","hello");
             viewHolder=new CheckViewHolder(LayoutInflater.from(context).inflate(R.layout.item_stagger, parent, false));
         }
         return viewHolder;
@@ -45,8 +43,12 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.CheckViewHolde
     @Override
     public void onBindViewHolder(final CheckViewHolder holder, final int position) {
        final ListVo checkVo = list.get(position);
-        holder.txt_name.setText(checkVo.ProjectName);
-
+        if(viewType.equalsIgnoreCase("GRID")) {
+            holder.img.setImageResource(R.drawable.image);
+            ViewGroup.LayoutParams lp = holder.img.getLayoutParams();
+            lp.height = (int) Utils.getDeviceSize((BaseActivity) context).get("Width") / 3;
+            holder.img.setLayoutParams(lp);
+        }
 
     }
 
@@ -57,15 +59,13 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.CheckViewHolde
 
     public class CheckViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView txt_name;
         ImageView img;
 
 
 
         public CheckViewHolder(final View itemView) {
             super(itemView);
-            txt_name = (TextView) itemView.findViewById(R.id.txtview);
-            img = (ImageView) itemView.findViewById(R.id.img);
+            img = (ImageView) itemView.findViewById(R.id.img_view);
 
 
 

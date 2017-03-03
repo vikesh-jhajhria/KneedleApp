@@ -11,45 +11,40 @@
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         app:cardBackgroundColor="#E7E7E7"
-        app:cardCornerRadius="3dp"
         app:cardElevation="5dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp">
+            android:layout_gravity="center">
 
             <ImageView
                 android:id="@+id/img_back"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:padding="@dimen/margin_5"
-                android:src="@drawable/back" />
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:src="@drawable/ic_back" />
 
             <TextView
+                android:id="@+id/txt_edit_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center_vertical"
-                android:text="Edit Profile"
+                android:text="@string/editprofile"
                 android:textAllCaps="true"
-                android:textColor="#000"
-                android:textSize="18sp" />
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/font_18" />
 
             <ImageView
                 android:id="@+id/img_location"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:padding="@dimen/margin_5"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
                 android:src="@drawable/location" />
         </RelativeLayout>
 
@@ -77,48 +72,52 @@
                     android:orientation="vertical">
 
                     <de.hdodenhof.circleimageview.CircleImageView
-                        android:layout_width="@dimen/margin_80"
-                        android:layout_height="@dimen/margin_80"
+                        android:id="@+id/img_profile"
+                        android:layout_width="@dimen/profile_image_height"
+                        android:layout_height="@dimen/profile_image_height"
                         android:src="@drawable/profile_img" />
 
                     <TextView
+                        android:id="@+id/txt_edit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:layout_gravity="center"
                         android:layout_marginTop="@dimen/margin_10"
-                        android:text="Edit"
+                        android:text="@string/edit"
                         android:textAllCaps="true"
-                        android:textColor="#000"
-                        android:textSize="18sp" />
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/font_16" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginLeft="@dimen/margin_10"
                     android:orientation="vertical">
 
                     <EditText
+                        android:id="@+id/txt_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawableLeft="@drawable/name"
                         android:drawablePadding="10dp"
                         android:hint="John dixxx"
-                        android:textColor="#000"
+                        android:textColor="@color/colorPrimary"
                         android:textColorHint="@android:color/darker_gray"
-                        android:textSize="16sp"
+                        android:textSize="@dimen/font_16"
                         android:theme="@style/TextLabel" />
 
                     <EditText
+                        android:id="@+id/txt_username"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawableLeft="@drawable/user"
                         android:drawablePadding="10dp"
                         android:hint="John dixxx"
-                        android:textColor="#000"
+                        android:textColor="@color/colorPrimary"
                         android:textColorHint="@android:color/darker_gray"
-                        android:textSize="16sp"
+                        android:textSize="@dimen/font_16"
                         android:theme="@style/TextLabel" />
 
                     <RelativeLayout
@@ -126,19 +125,20 @@
                         android:layout_height="wrap_content">
 
                         <EditText
+                            android:id="@+id/txt_password"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:drawableLeft="@drawable/password"
                             android:drawablePadding="10dp"
                             android:hint="John dixxx"
                             android:inputType="textWebPassword"
-                            android:maxLength="12"
-                            android:textColor="#000"
+                            android:textColor="@color/colorPrimary"
                             android:textColorHint="@android:color/darker_gray"
-                            android:textSize="16sp"
+                            android:textSize="@dimen/font_16"
                             android:theme="@style/TextLabel" />
 
                         <TextView
+                            android:id="@+id/txt_change_password"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
@@ -148,129 +148,162 @@
                             android:text="Change pw"
                             android:textAllCaps="true"
                             android:textColor="#CA0000"
-                            android:textSize="14sp"
+                            android:textSize="@dimen/font_16"
                             android:visibility="gone"></TextView>
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
 
-            <EditText
+            <TextView
+                android:id="@+id/txt_bio_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:drawableLeft="@drawable/bio"
                 android:drawablePadding="@dimen/margin_5"
-                android:enabled="false"
-                android:text="B I O"
+                android:text="BIO"
                 android:textColor="#000"
-                android:textSize="16sp" />
+                android:textSize="@dimen/font_16" />
 
             <EditText
+                android:id="@+id/txt_bio"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="wrap_content"
                 android:background="@drawable/border_gray"
                 android:gravity="start"
+                android:minLines="5"
                 android:padding="@dimen/margin_5"
                 android:textColor="#000"
-                android:textSize="16sp" />
+                android:textSize="@dimen/font_16" />
 
             <EditText
+                android:id="@+id/txt_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:drawableLeft="@drawable/email"
                 android:drawablePadding="10dp"
-                android:hint="I A M @ GMAIL.COM"
+                android:hint="IAM@GMAIL.COM"
                 android:inputType="textEmailAddress"
                 android:textColor="#000"
                 android:textColorHint="@android:color/darker_gray"
-                android:textSize="16sp"
+                android:textSize="@dimen/font_16"
                 android:theme="@style/TextLabel" />
 
-            <Spinner
-                style="@style/spinnerarrow"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:paddingBottom="@dimen/margin_20"
-                android:paddingTop="@dimen/margin_20"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_5"
+                android:layout_marginTop="@dimen/margin_20">
 
-                ></Spinner>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="@dimen/margin_2"
+                    android:src="@drawable/drop_down_red" />
+
+                <Spinner
+                    android:id="@+id/spinner_profile_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:popupBackground="@color/spinner_background" />
+            </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
+                android:layout_height="1dp"
                 android:background="#C3C3C3"></View>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/txt_gender"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Gender:"
-                    android:textColor="#000"
-                    android:textSize="18sp" />
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/font_16" />
 
-                <RadioGroup
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_marginLeft="@dimen/margin_20"
+                    android:gravity="center_vertical">
 
-                    <RadioButton
-                        style="@style/MyRadioButtonStyleHomme"
+                    <LinearLayout
+                        android:id="@+id/ll_homme"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:checked="true" />
+                        android:gravity="center"
+                        android:orientation="vertical">
 
-                    <RadioButton
-                        style="@style/MyRadioButtonStyleFemme"
+                        <ImageView
+                            android:id="@+id/img_homme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/margin_5"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/male_red" />
+
+                        <TextView
+                            android:id="@+id/txt_homme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/homme"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/font_14" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_femme"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="30dp"
-                        android:checked="true" />
+                        android:layout_marginLeft="@dimen/margin_20"
+                        android:gravity="center"
+                        android:orientation="vertical">
 
+                        <ImageView
+                            android:id="@+id/img_femme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/margin_5"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/female" />
 
-                </RadioGroup>
+                        <TextView
+                            android:id="@+id/txt_femme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/femme"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/font_14" />
+                    </LinearLayout>
+                </LinearLayout>
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="20dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="55dp"
-                    android:text="HOMME"
-                    android:textColor="#C3C3C3"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="FEMME"
-                    android:textColor="#C3C3C3"
-                    android:textSize="16sp" />
-            </LinearLayout>
 
             <Button
+                android:id="@+id/btn_save_changes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#CA0000"
+                android:layout_marginTop="@dimen/margin_20"
+                android:background="@color/colorAccent"
                 android:gravity="center"
                 android:text="SAVE CHANGES"
-                android:textColor="#fff"
-                android:textSize="18dp" />
+                android:textColor="@color/textColorPrimary"
+                android:textSize="@dimen/font_18" />
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
