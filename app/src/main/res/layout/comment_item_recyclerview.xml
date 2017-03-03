@@ -5,11 +5,11 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/img_circle_comment"
-        android:layout_width="@dimen/margin_60"
-        android:layout_height="@dimen/margin_60"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginLeft="@dimen/margin_16"
-        android:layout_marginTop="@dimen/margin_16"
-        android:src="@drawable/shahrukhkhan" />
+        android:layout_marginTop="@dimen/margin_10"
+        android:src="@drawable/profile_img" />
 
 
     <LinearLayout
@@ -17,7 +17,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_16"
         android:layout_marginRight="@dimen/margin_16"
-        android:layout_marginTop="@dimen/margin_16"
+        android:gravity="center"
+        android:layout_centerInParent="true"
         android:layout_toRightOf="@+id/img_circle_comment"
         android:orientation="vertical">
 
@@ -26,6 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAllCaps="true"
+            android:textSize="@dimen/font_16"
             android:textColor="#000000" />
 
 
@@ -33,7 +35,8 @@
             android:id="@+id/txt_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_3" />
+            android:textSize="@dimen/font_14"
+            android:textColor="@color/gray"/>
 
 
     </LinearLayout>

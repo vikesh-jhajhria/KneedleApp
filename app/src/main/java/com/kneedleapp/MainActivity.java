@@ -1,16 +1,14 @@
 package com.kneedleapp;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.kneedleapp.fragment.AddCommentFragment;
 import com.kneedleapp.fragment.FeedFragment;
 import com.kneedleapp.fragment.HomeFragment;
 import com.kneedleapp.fragment.NewPostFragment;
 import com.kneedleapp.fragment.NotificationFragment;
-import com.kneedleapp.fragment.PostFragment;
 import com.kneedleapp.fragment.ProfileFragment;
+import com.kneedleapp.utils.Config;
 
 public class MainActivity extends BaseActivity {
 
@@ -20,6 +18,9 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if(Config.fragmentManager == null){
+            Config.fragmentManager = getSupportFragmentManager();
+        }
         selectTab(BottomBarTab.HOME);
     }
 

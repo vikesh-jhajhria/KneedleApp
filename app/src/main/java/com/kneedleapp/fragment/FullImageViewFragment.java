@@ -19,6 +19,8 @@ import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.squareup.picasso.Picasso;
 
+import static com.kneedleapp.utils.Config.fragmentManager;
+
 
 public class FullImageViewFragment extends Fragment {
 
@@ -73,7 +75,7 @@ public class FullImageViewFragment extends Fragment {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     Log.e("TAG", "on back pressed");
-                    getFragmentManager().popBackStack();
+                    fragmentManager.popBackStack();
                     return true;
                 }
                 return false;

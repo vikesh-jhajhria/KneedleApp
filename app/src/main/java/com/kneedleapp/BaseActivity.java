@@ -16,12 +16,15 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import static com.kneedleapp.utils.Config.fragmentManager;
+
 public class BaseActivity extends AppCompatActivity implements View.OnClickListener {
 
     private boolean isExit;
     private ProgressDialog dialog;
     public String TAG = "KNEEDLE";
     private Context mContext;
+
 
     public enum BottomBarTab {
         HOME, FEEd, POST, NOTIFICATION, PROFILE;
@@ -89,7 +92,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     protected void addFragment(@IdRes int containerViewId,
                                @NonNull Fragment fragment,
                                @NonNull String fragmentTag) {
-        getSupportFragmentManager()
+        fragmentManager
                 .beginTransaction()
                 .add(containerViewId, fragment, fragmentTag)
                 .disallowAddToBackStack()
@@ -100,7 +103,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
                                    @NonNull Fragment fragment,
                                    @NonNull String fragmentTag,
                                    @Nullable String backStackStateName) {
-        getSupportFragmentManager()
+        fragmentManager
                 .beginTransaction()
                 .replace(containerViewId, fragment, fragmentTag)
                 .addToBackStack(backStackStateName)
@@ -110,16 +113,23 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     protected void showFragment(@IdRes int containerViewId,
                                 @NonNull Fragment fragment,
                                 @NonNull String fragmentTag) {
-        if (!showFragment(fragmentTag)) {
+        /*if (!showFragment(fragmentTag)) {
+            addFragment(containerViewId, fragment, fragmentTag);
+        }*/
+
+        Fragment f = fragmentManager.findFragmentByTag(fragmentTag);
+        if (f != null) {
+            replaceFragment(containerViewId, fragment, fragmentTag, null);
+        } else{
             addFragment(containerViewId, fragment, fragmentTag);
         }
     }
 
     protected boolean showFragment(@NonNull String tag) {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+        Fragment fragment = fragmentManager.findFragmentByTag(tag);
         if (fragment != null) {
             hideAllFragment();
-            getSupportFragmentManager()
+            fragmentManager
                     .beginTransaction()
                     .show(fragment)
                     .commit();
@@ -129,22 +139,26 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     protected void hideFragment(@NonNull Fragment fragment) {
-        getSupportFragmentManager()
+        fragmentManager
                 .beginTransaction()
                 .hide(fragment)
                 .commit();
     }
 
     protected void removeFragment(@NonNull Fragment fragment) {
-        getSupportFragmentManager()
+        fragmentManager
                 .beginTransaction()
                 .remove(fragment)
                 .commit();
     }
 
     protected void hideAllFragment() {
-        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-            hideFragment(fragment);
+        try {
+            for (Fragment fragment : fragmentManager.getFragments()) {
+                hideFragment(fragment);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -19,7 +19,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +30,8 @@ import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 
 import java.io.IOException;
+
+import static com.kneedleapp.utils.Config.fragmentManager;
 
 
 public class NewPostFragment extends Fragment implements View.OnClickListener {
@@ -81,7 +82,7 @@ public class NewPostFragment extends Fragment implements View.OnClickListener {
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("POSTIMAGE", ((BitmapDrawable) mImgContent.getDrawable()).getBitmap());
                 fragment.setArguments(bundle);
-                getFragmentManager().beginTransaction().add(R.id.main_frame, fragment).addToBackStack(null).commit();
+                fragmentManager.beginTransaction().add(R.id.main_frame, fragment).addToBackStack(null).commit();
 
                 break;
 
@@ -204,22 +205,5 @@ public class NewPostFragment extends Fragment implements View.OnClickListener {
         mImgContent.setImageBitmap(bm);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        getView().setFocusableInTouchMode(true);
-        getView().requestFocus();
-        getView().setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if (i == KeyEvent.KEYCODE_BACK) {
 
-                    getFragmentManager().popBackStack();
-                    return true;
-                }
-                return false;
-            }
-        });
-
-    }
 }

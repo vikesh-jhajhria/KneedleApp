@@ -13,12 +13,15 @@ import android.widget.TextView;
 
 import com.kneedleapp.MainActivity;
 import com.kneedleapp.R;
+import com.kneedleapp.fragment.AddCommentFragment;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.FeedItemVo;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import static com.kneedleapp.utils.Config.fragmentManager;
 
 /**
  * Created by aman.sharma on 2/21/2017.
@@ -32,15 +35,15 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
     private MainActivity mActivityContext;
     private FeedItemListener mListener;
 
-    public interface FeedItemListener{
+    public interface FeedItemListener {
         public void getItem(int position, ViewHolder holder);
     }
 
-    public FeedItemAdapter(Context context, ArrayList<FeedItemVo> mList, MainActivity mActivityContext,FeedItemListener mListener) {
+    public FeedItemAdapter(Context context, ArrayList<FeedItemVo> mList, MainActivity mActivityContext, FeedItemListener mListener) {
         this.context = context;
         this.mList = mList;
         this.mActivityContext = mActivityContext;
-        this.mListener  = mListener;
+        this.mListener = mListener;
     }
 
     @Override
@@ -89,9 +92,17 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
         holder.imgContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                mListener.getItem(position,holder);
-
+                mListener.getItem(position, holder);
+            }
+        });
+        holder.comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddCommentFragment fragment = new AddCommentFragment();
+                fragmentManager.beginTransaction()
+                        .add(R.id.main_frame, fragment, "ADDCOMMENT_FRAGMENT")
+                        .addToBackStack(null)
+                        .commit();
             }
         });
 
@@ -102,15 +113,14 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
     }
 
 
-
     @Override
     public int getItemCount() {
         return mList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvTitle, tvSubTitle, tvDescription, tvLikes,tvComment;
-        public ImageView imgUser, imgHeart, imgMenu;
+        public TextView tvTitle, tvSubTitle, tvDescription, tvLikes, tvComment;
+        public ImageView imgUser, imgHeart, imgMenu, comment, share;
         public ViewGroup transitionsContainer;
         public ImageView imgContent;
 
@@ -125,6 +135,8 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
             imgUser = (ImageView) itemView.findViewById(R.id.imageview_user);
             imgContent = (ImageView) itemView.findViewById(R.id.imageview_content);
             imgHeart = (ImageView) itemView.findViewById(R.id.imageview_like);
+            comment = (ImageView) itemView.findViewById(R.id.img_comment);
+            share = (ImageView) itemView.findViewById(R.id.img_share);
             imgMenu = (ImageView) itemView.findViewById(R.id.imageview_menu);
             transitionsContainer = (ViewGroup) itemView.findViewById(R.id.ll_container);
 
@@ -135,8 +147,6 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
             Utils.setTypeface(context, tvComment, Config.CENTURY_GOTHIC_REGULAR);
         }
     }
-
-
 
 
 }

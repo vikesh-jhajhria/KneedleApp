@@ -9,8 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kneedleapp.R;
+import com.kneedleapp.utils.Config;
+import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.CommentVo;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -63,6 +64,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             userName = (TextView) itemView.findViewById(R.id.txt_user_name);
             userComment = (TextView) itemView.findViewById(R.id.txt_comment);
             imgUser = (ImageView) itemView.findViewById(R.id.img_circle_comment);
+
+            Utils.setTypeface(mContext, userName, Config.CENTURY_GOTHIC_BOLD);
+            Utils.setTypeface(mContext, userComment, Config.CENTURY_GOTHIC_REGULAR);
 
 
         }

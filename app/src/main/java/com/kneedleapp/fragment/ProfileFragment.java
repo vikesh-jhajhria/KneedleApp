@@ -23,6 +23,8 @@ import com.kneedleapp.vo.ListVo;
 
 import java.util.ArrayList;
 
+import static com.kneedleapp.utils.Config.fragmentManager;
+
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
 
@@ -122,7 +124,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
             case R.id.txt_btn_edit:
                 Fragment fragment = new EditProfileFragment();
-                getFragmentManager().beginTransaction().add(R.id.main_frame, fragment).addToBackStack(null).commit();
+                fragmentManager.beginTransaction().add(R.id.main_frame, fragment).addToBackStack(null).commit();
 
                 /*Fragment fragment = new UserFollowRequest();
                 getFragmentManager().beginTransaction().add(R.id.main_frame,fragment).addToBackStack(null).commit();
@@ -135,6 +137,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             case R.id.img_chat:
                 final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 View view1 = LayoutInflater.from(getContext()).inflate(R.layout.unfollow_popup, null);
+                builder.setCancelable(false);
                 builder.setView(view1);
 
                 String text = "UNFOLLOW  ABIELKUNST?";
@@ -142,6 +145,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colourRed)), 0, 8, 0);
                 spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.textColorPrimary)), 9, text.length(), 0);
                 ((TextView) view1.findViewById(R.id.txt_unfollow)).setText(spannableString);
+                Utils.setTypeface(getActivity(), ((TextView) view1.findViewById(R.id.txt_unfollow)), Config.CENTURY_GOTHIC_BOLD);
+                Utils.setTypeface(getActivity(), ((TextView) view1.findViewById(R.id.txt_cancel)), Config.CENTURY_GOTHIC_BOLD);
+                Utils.setTypeface(getActivity(), ((TextView) view1.findViewById(R.id.txt_confirm)), Config.CENTURY_GOTHIC_BOLD);
                 final AlertDialog alertDialog = builder.create();
 
                 ((TextView) view1.findViewById(R.id.txt_cancel)).setOnClickListener(new View.OnClickListener() {

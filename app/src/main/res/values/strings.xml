@@ -25,7 +25,7 @@
     <string name="error_email_valid">Please enter valid email</string>
     <string name="comments">COMMENTS</string>
     <string name="post">POST</string>
-    <string name="add_comment">Add Comment</string>
+    <string name="add_comment">Add Comment...</string>
 
     <string name="new_post">NEW POST</string>
     <string name="library">LIBRARY</string>

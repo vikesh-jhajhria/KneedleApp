@@ -16,6 +16,8 @@ import com.kneedleapp.vo.UserRequestVo;
 
 import java.util.ArrayList;
 
+import static com.kneedleapp.utils.Config.fragmentManager;
+
 
 public class UserFollowRequest extends Fragment implements View.OnClickListener {
     private RecyclerView mRecyclerView;
@@ -56,7 +58,7 @@ public class UserFollowRequest extends Fragment implements View.OnClickListener 
 
         switch (view.getId()) {
             case R.id.img_back:
-                getFragmentManager().popBackStackImmediate();
+                fragmentManager.popBackStackImmediate();
                 break;
         }
 
@@ -74,7 +76,7 @@ public class UserFollowRequest extends Fragment implements View.OnClickListener 
 
                 if (i == KeyEvent.KEYCODE_BACK) {
 
-                    getFragmentManager().popBackStackImmediate();
+                    fragmentManager.popBackStackImmediate();
                     return true;
                 }
                 return false;

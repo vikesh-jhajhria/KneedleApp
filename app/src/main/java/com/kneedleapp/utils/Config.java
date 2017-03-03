@@ -1,5 +1,7 @@
 package com.kneedleapp.utils;
 
+import android.support.v4.app.FragmentManager;
+
 /**
  * Created by Vikesh on 02/14/2017.
  */
@@ -8,6 +10,8 @@ public class Config {
 
     public final static String CENTURY_GOTHIC_REGULAR = "CENTURY_GOTHIC_REGULAR";
     public final static String CENTURY_GOTHIC_BOLD = "CENTURY_GOTHIC_BOLD";
+
+    public static FragmentManager fragmentManager;
 
 
     public final static int SPLASH_TIME = 2000;

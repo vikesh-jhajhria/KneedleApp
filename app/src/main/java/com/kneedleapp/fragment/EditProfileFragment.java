@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -19,6 +18,8 @@ import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 
 import java.util.ArrayList;
+
+import static com.kneedleapp.utils.Config.fragmentManager;
 
 
 public class EditProfileFragment extends Fragment implements View.OnClickListener {
@@ -72,11 +73,11 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         switch (view.getId()) {
 
             case R.id.img_back:
-                getFragmentManager().popBackStack();
+                fragmentManager.popBackStack();
                 break;
             case R.id.img_location:
                 Fragment fragment = new LocationFragment();
-                getFragmentManager().beginTransaction().add(R.id.main_frame, fragment).addToBackStack(null).commit();
+                fragmentManager.beginTransaction().add(R.id.main_frame, fragment).addToBackStack(null).commit();
                 break;
 
 
@@ -109,7 +110,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
 
                 if (i == KeyEvent.KEYCODE_BACK) {
-                    getFragmentManager().popBackStackImmediate();
+                    fragmentManager.popBackStackImmediate();
 
                     return true;
                 }

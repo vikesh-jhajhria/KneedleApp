@@ -6,7 +6,6 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.ChangeImageTransform;
@@ -40,6 +39,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.kneedleapp.utils.Config.fragmentManager;
 
 
 public class FeedFragment extends Fragment implements FeedItemAdapter.FeedItemListener{
@@ -154,7 +155,6 @@ public class FeedFragment extends Fragment implements FeedItemAdapter.FeedItemLi
     @Override
     public void getItem(int position, FeedItemAdapter.ViewHolder holder) {
         FullImageViewFragment fragment = new FullImageViewFragment();
-        FeedFragment feedFragment = new FeedFragment();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
@@ -176,14 +176,13 @@ public class FeedFragment extends Fragment implements FeedItemAdapter.FeedItemLi
             fragment.setArguments(bundle);
 
 
-            FragmentManager fragmentManager = ((MainActivity) context).getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .addSharedElement(holder.imgContent, "image")
                     .addSharedElement(holder.tvTitle, "title")
                     .addSharedElement(holder.imgUser,"userimage")
                     .addSharedElement(holder.imgHeart,"heart")
                     .addSharedElement(holder.tvLikes,"likes")
-                    .add(R.id.main_frame, fragment)
+                    .add(R.id.main_frame, fragment,"FULLIMAGEVIEW_FRAGMENT")
                     .addToBackStack(null)
                     .commit();
 

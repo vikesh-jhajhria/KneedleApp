@@ -2,7 +2,6 @@ package com.kneedleapp.fragment;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,10 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kneedleapp.R;
 import com.kneedleapp.adapter.CommentAdapter;
+import com.kneedleapp.utils.Config;
+import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.CommentVo;
 
 import java.util.ArrayList;
@@ -47,10 +49,15 @@ public class AddCommentFragment extends BaseFragment implements View.OnClickList
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_add_comment, container, false);
         findViews();
-
+applyFonts(view);
         return view;
     }
 
+    private void applyFonts(View view){
+        Utils.setTypeface(getContext(),(TextView)view.findViewById(R.id.txt_comment), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(),(TextView)view.findViewById(R.id.edt_comment), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(),(TextView)view.findViewById(R.id.txt_post), Config.CENTURY_GOTHIC_BOLD);
+    }
     private void findViews() {
         mList = new ArrayList<>();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_comments);
@@ -67,10 +74,11 @@ public class AddCommentFragment extends BaseFragment implements View.OnClickList
 
     private void addDataIntoList() {
         obj = new CommentVo();
-        obj.setmUserName("aman");
+        obj.setmUserName("Abiel89");
         obj.setmDescription(mComment);
         obj.setmImageUrl("");
         mList.add(obj);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override

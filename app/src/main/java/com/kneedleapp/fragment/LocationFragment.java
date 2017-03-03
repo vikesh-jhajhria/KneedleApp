@@ -13,6 +13,8 @@ import com.kneedleapp.R;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 
+import static com.kneedleapp.utils.Config.fragmentManager;
+
 
 public class LocationFragment extends Fragment implements View.OnClickListener {
 
@@ -49,7 +51,7 @@ public class LocationFragment extends Fragment implements View.OnClickListener {
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
 
                 if (i == KeyEvent.KEYCODE_BACK) {
-                    getFragmentManager().popBackStackImmediate();
+                    fragmentManager.popBackStackImmediate();
                     return true;
                 }
                 return false;
@@ -61,7 +63,7 @@ public class LocationFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.img_back:
-                getFragmentManager().popBackStack();
+                fragmentManager.popBackStack();
                 break;
         }
     }
