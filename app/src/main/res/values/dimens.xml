@@ -5,6 +5,7 @@
     <dimen name="list_image_height">220dp</dimen>
     <dimen name="grid_image_height">150dp</dimen>
     <dimen name="profile_image_height">70dp</dimen>
+    <dimen name="list_profile_image_height">50dp</dimen>
 
     <dimen name="margin_1">1dp</dimen>
     <dimen name="margin_2">2dp</dimen>

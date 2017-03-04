@@ -11,7 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.kneedleapp.R;
 
 
-public class BaseFragment extends Fragment {
+public class BaseFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -25,5 +25,10 @@ public class BaseFragment extends Fragment {
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
+    }
+
+    @Override
+    public void onClick(View view) {
+
     }
 }

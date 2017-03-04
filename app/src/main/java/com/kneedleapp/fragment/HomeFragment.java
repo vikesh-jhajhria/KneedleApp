@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -23,7 +24,7 @@ import java.util.ArrayList;
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends BaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -34,6 +35,7 @@ public class HomeFragment extends Fragment {
     private String mParam2;
     private View view;
 
+    private String searchText = "";
 
     // TODO: Rename and change types and number of parameters
     public static HomeFragment newInstance(String param1, String param2) {
@@ -66,6 +68,7 @@ public class HomeFragment extends Fragment {
         spinnerDataList.add("PROFILE TYPE");
         spinnerDataList.add("PROFILE 1");
         spinnerDataList.add("PROFILE 2");
+        view.findViewById(R.id.img_search).setOnClickListener(this);
 
         SpinnerAdapter spinnerAdapter = new SpinnerAdapter(getActivity(), R.layout.layout_spinner_item, spinnerDataList);
         ((Spinner) view.findViewById(R.id.spinner_home)).setAdapter(spinnerAdapter);
@@ -77,14 +80,14 @@ public class HomeFragment extends Fragment {
     ArrayList<String> spinnerDataList;
 
 
-    public class SpinnerAdapter extends ArrayAdapter<String>{
+    public class SpinnerAdapter extends ArrayAdapter<String> {
 
         public SpinnerAdapter(Context context, int textViewResourceId, ArrayList<String> objects) {
             super(context, textViewResourceId, objects);
         }
 
         @Override
-        public View getDropDownView(int position, View convertView,ViewGroup parent) {
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
             return getCustomView(position, convertView, parent);
         }
 
@@ -94,12 +97,30 @@ public class HomeFragment extends Fragment {
         }
 
         public View getCustomView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater=getActivity().getLayoutInflater();
-            View row=inflater.inflate(R.layout.layout_spinner_item, parent, false);
-            TextView label=(TextView)row.findViewById(R.id.txt_item);
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            View row = inflater.inflate(R.layout.layout_spinner_item, parent, false);
+            TextView label = (TextView) row.findViewById(R.id.txt_item);
             Utils.setTypeface(getActivity(), label, Config.CENTURY_GOTHIC_REGULAR);
             label.setText(spinnerDataList.get(position));
             return row;
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.img_search:
+                searchText = ((EditText)getView().findViewById(R.id.txt_search)).getText().toString().trim();
+                if(searchText.isEmpty()){
+                    ((EditText)getView().findViewById(R.id.txt_search)).setError("Please enter key to search.");
+                    break;
+                }
+                SearchResultFragment fragment = SearchResultFragment.newInstance();
+                Config.fragmentManager.beginTransaction()
+                        .add(R.id.main_frame, fragment, "SEARCH_RESULT")
+                        .disallowAddToBackStack()
+                        .commit();
+                break;
         }
     }
 
