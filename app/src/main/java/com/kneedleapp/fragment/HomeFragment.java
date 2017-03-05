@@ -1,43 +1,61 @@
 package com.kneedleapp.fragment;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.transition.ChangeImageTransform;
+import android.transition.ChangeTransform;
+import android.transition.Fade;
+import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.kneedleapp.BaseActivity;
+import com.kneedleapp.MainActivity;
 import com.kneedleapp.R;
+import com.kneedleapp.adapter.FeedItemAdapter;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
+import com.kneedleapp.vo.FeedItemVo;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class HomeFragment extends BaseFragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+import static com.kneedleapp.utils.Config.fragmentManager;
+
+
+public class HomeFragment extends Fragment implements FeedItemAdapter.FeedItemListener{
+
+    private RecyclerView mRecyclerView;
+    private FeedItemAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private ArrayList<FeedItemVo> mList;
+    private String names[] = {"aman", "ravi", "manoj", "krishan"};
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private BaseActivity context;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-    private View view;
 
-    private String searchText = "";
-
-    // TODO: Rename and change types and number of parameters
     public static HomeFragment newInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
@@ -47,85 +65,153 @@ public class HomeFragment extends BaseFragment {
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
 
-        view = inflater.inflate(R.layout.fragment_home, container, false);
-        ((Spinner) view.findViewById(R.id.spinner_home)).getBackground().setColorFilter(getResources().getColor(R.color.textColorPrimary), PorterDuff.Mode.SRC_ATOP);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        spinnerDataList = new ArrayList<>();
-        spinnerDataList.add("PROFILE TYPE");
-        spinnerDataList.add("PROFILE 1");
-        spinnerDataList.add("PROFILE 2");
-        view.findViewById(R.id.img_search).setOnClickListener(this);
+        context = (BaseActivity) getActivity();
 
-        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(getActivity(), R.layout.layout_spinner_item, spinnerDataList);
-        ((Spinner) view.findViewById(R.id.spinner_home)).setAdapter(spinnerAdapter);
 
-        applyFonts(view);
+        mList = new ArrayList<>();
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mAdapter = new FeedItemAdapter(getContext(), mList, ((MainActivity) getActivity()),this);
+        mRecyclerView.setAdapter(mAdapter);
+        if(Utils.isNetworkConnected(getContext(),true)) {
+            FeedData();
+        }
+
         return view;
     }
 
-    ArrayList<String> spinnerDataList;
+    public void FeedData() {
 
+        context.showProgessDialog("Please wait...");
+        StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.FEED_DATA,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        context.dismissProgressDialog();
+                        try {
+                            final JSONObject jObject = new JSONObject(response);
+                            if (jObject.getString("status_id").equals("1")) {
+                                Log.e("responce....::>>>", response);
 
-    public class SpinnerAdapter extends ArrayAdapter<String> {
+                                JSONArray jsonArray = jObject.getJSONArray("feed_data");
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                    FeedItemVo feedItemVo = new FeedItemVo();
+                                    feedItemVo.setmUserTitle(jsonObject.getString("fullname"));
+                                    feedItemVo.setmUserSubTitle(jsonObject.getString("username"));
+                                    feedItemVo.setmUserImage("http://kneedleapp.com/restAPIs/uploads/user_images/" + jsonObject.getString("mypic"));
+                                    feedItemVo.setmContentImage("http://kneedleapp.com/restAPIs/uploads/post_images/" + jsonObject.getString("image"));
+                                    feedItemVo.setmDesciption(jsonObject.getString("caption"));
+                                    feedItemVo.setmLikes(jsonObject.getString("likes_count"));
 
-        public SpinnerAdapter(Context context, int textViewResourceId, ArrayList<String> objects) {
-            super(context, textViewResourceId, objects);
-        }
+                                    mList.add(feedItemVo);
+                                }
+                                mAdapter.notifyDataSetChanged();
 
-        @Override
-        public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            return getCustomView(position, convertView, parent);
-        }
+                            } else {
+                                Toast.makeText(getContext(), "no data available", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(getContext(), volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d("error", volleyError.getMessage());
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("user_id", "4");
+                params.put("lmt", "10");
+                params.put("offset", "1");
+                return params;
+            }
+        };
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            return getCustomView(position, convertView, parent);
-        }
+        requestFeed.setRetryPolicy(new DefaultRetryPolicy(
+                30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-        public View getCustomView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-            View row = inflater.inflate(R.layout.layout_spinner_item, parent, false);
-            TextView label = (TextView) row.findViewById(R.id.txt_item);
-            Utils.setTypeface(getActivity(), label, Config.CENTURY_GOTHIC_REGULAR);
-            label.setText(spinnerDataList.get(position));
-            return row;
-        }
+        RequestQueue feedqueue = Volley.newRequestQueue(getContext());
+        feedqueue.add(requestFeed);
     }
 
     @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.img_search:
-                searchText = ((EditText)getView().findViewById(R.id.txt_search)).getText().toString().trim();
-                if(searchText.isEmpty()){
-                    ((EditText)getView().findViewById(R.id.txt_search)).setError("Please enter key to search.");
-                    break;
-                }
-                SearchResultFragment fragment = SearchResultFragment.newInstance();
-                Config.fragmentManager.beginTransaction()
-                        .add(R.id.main_frame, fragment, "SEARCH_RESULT")
-                        .disallowAddToBackStack()
-                        .commit();
-                break;
+    public void getItem(int position, FeedItemAdapter.ViewHolder holder) {
+        FullImageViewFragment fragment = new FullImageViewFragment();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+
+
+            fragment.setSharedElementEnterTransition(new DetailsTransition());
+            fragment.setEnterTransition(new Fade());
+            setExitTransition(new Fade());
+            setSharedElementReturnTransition(new DetailsTransition());
+
+
+
+            Bundle bundle = new Bundle();
+            bundle.putString("USERNAME", mList.get(position).getmUserTitle());
+            bundle.putString("IMAGE", mList.get(position).getmContentImage());
+            bundle.putString("USERIMAGE", mList.get(position).getmUserImage());
+            bundle.putString("LIKES", mList.get(position).getmLikes());
+
+            fragment.setArguments(bundle);
+
+
+            fragmentManager.beginTransaction()
+                    .addSharedElement(holder.imgContent, "image")
+                    .addSharedElement(holder.tvTitle, "title")
+                    .addSharedElement(holder.imgUser,"userimage")
+                    .addSharedElement(holder.imgHeart,"heart")
+                    .addSharedElement(holder.tvLikes,"likes")
+                    .add(R.id.main_frame, fragment,"FULLIMAGEVIEW_FRAGMENT")
+                    .addToBackStack(null)
+                    .commit();
+
+
         }
     }
 
-    private void applyFonts(View view) {
-        Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_search), Config.CENTURY_GOTHIC_REGULAR);
+
+    @SuppressLint("NewApi")
+    public class DetailsTransition extends android.transition.TransitionSet {
+        public DetailsTransition() {
+            init();
+        }
+
+        /**
+         * This constructor allows us to use this transition in XML
+         */
+        public DetailsTransition(Context context, AttributeSet attrs) {
+            super(context, attrs);
+            init();
+        }
+
+        private void init() {
+            setOrdering(ORDERING_TOGETHER);
+            addTransition(new android.transition.ChangeBounds()).
+                    addTransition(new ChangeTransform()).
+                    addTransition(new ChangeImageTransform());
+        }
     }
 
 }
+

@@ -27,7 +27,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public enum BottomBarTab {
-        HOME, FEEd, POST, NOTIFICATION, PROFILE;
+        HOME, SEARCH, POST, NOTIFICATION, PROFILE;
     }
 
     @Override

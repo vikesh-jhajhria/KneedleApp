@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:background="#ffffff"
     android:orientation="vertical"
+    android:clickable="true"
     tools:context="com.kneedleapp.fragment.AddCommentFragment">
 
     <RelativeLayout

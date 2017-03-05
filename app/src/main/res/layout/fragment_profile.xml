@@ -35,7 +35,7 @@
                     android:layout_centerVertical="true"
                     android:paddingRight="@dimen/margin_10"
                     android:src="@drawable/back"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/txt_username"
@@ -112,6 +112,7 @@
 
 
                 <LinearLayout
+                    android:id="@+id/ll_followers"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_10"
@@ -140,6 +141,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_following"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_10"
@@ -269,29 +271,33 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
+                        android:paddingRight="@dimen/activity_horizontal_margin"
                         android:src="@drawable/ic_grid_red" />
 
-                    <View
+                    <!--<View
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
                         android:layout_margin="10dp"
-                        android:background="#707070"></View>
+                        android:background="#707070"></View>-->
 
                     <ImageView
-                        android:id="@+id/list"
+                        android:id="@+id/img_list"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/ic_list_gray" />
+                        android:paddingLeft="@dimen/activity_horizontal_margin"
+                        android:paddingRight="@dimen/activity_horizontal_margin"
+                        android:src="@drawable/ic_list_red"
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:nestedScrollingEnabled="false"
                     android:paddingLeft="@dimen/margin_5"
                     android:paddingRight="@dimen/margin_5"
-                    android:nestedScrollingEnabled="false"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior" />
             </LinearLayout>
         </LinearLayout>

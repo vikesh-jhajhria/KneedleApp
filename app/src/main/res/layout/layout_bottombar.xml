@@ -55,7 +55,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/rl_feed"
+            android:id="@+id/rl_search"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -70,7 +70,7 @@
                 android:src="@drawable/newsfeed_gray" />
 
             <RelativeLayout
-                android:id="@+id/rl_feed_selected"
+                android:id="@+id/rl_search_selected"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="invisible">

@@ -40,14 +40,12 @@ public class LoginActivity extends BaseActivity {
 
         findViewById(R.id.txt_forgot_password).setOnClickListener(this);
         findViewById(R.id.btn_login).setOnClickListener(this);
-        findViewById(R.id.txt_register_user).setOnClickListener(this);
     }
 
     private void applyFonts() {
         Utils.setTypeface(this, (TextView) findViewById(R.id.txt_name), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(this, (TextView) findViewById(R.id.txt_password), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(this, (TextView) findViewById(R.id.txt_forgot_password), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(this, (TextView) findViewById(R.id.txt_register_user), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(this, (TextView) findViewById(R.id.btn_login), Config.CENTURY_GOTHIC_REGULAR);
     }
 
@@ -72,9 +70,6 @@ public class LoginActivity extends BaseActivity {
                 if (Utils.isNetworkConnected(this, true)) {
                     LoginData();
                 }
-                break;
-            case R.id.txt_register_user:
-                startActivity(new Intent(this, RegistrationActivity.class));
                 break;
         }
     }

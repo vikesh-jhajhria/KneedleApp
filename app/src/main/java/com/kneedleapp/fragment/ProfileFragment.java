@@ -33,9 +33,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private ProfileListAdapter profileListAdapter;
     private ArrayList<ListVo> List = new ArrayList<ListVo>();
     public static RecyclerView recyclerView;
-    public boolean checkFlag = true;
     LinearLayoutManager layoutManager;
-    private ImageView avatar, list, grid;
+    private ImageView listBtn, gridBtn;
 
     public static ProfileFragment newInstance(String param1, String param2) {
         ProfileFragment fragment = new ProfileFragment();
@@ -50,11 +49,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         applyFonts(view);
 
+        view.findViewById(R.id.ll_followers).setOnClickListener(this);
+        view.findViewById(R.id.ll_following).setOnClickListener(this);
         ((RelativeLayout) getActivity().findViewById(R.id.rl_toolbar)).setVisibility(View.GONE);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
@@ -65,26 +65,29 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             check.image = getResources().getDrawable(R.drawable.image);
             List.add(check);
         }
-        list = (ImageView) view.findViewById(R.id.list);
-        grid = (ImageView) view.findViewById(R.id.img_grid);
+        listBtn = (ImageView) view.findViewById(R.id.img_list);
+        gridBtn = (ImageView) view.findViewById(R.id.img_grid);
         profileListAdapter = new ProfileListAdapter(List, getContext(), "grid");
         StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(profileListAdapter);
 
-        list.setOnClickListener(new View.OnClickListener() {
+        gridBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                gridBtn.setVisibility(View.GONE);
+                listBtn.setVisibility(View.VISIBLE);
                 layoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(layoutManager);
                 profileListAdapter = new ProfileListAdapter(List, getContext(), "LIST");
                 recyclerView.setAdapter(profileListAdapter);
             }
         });
-        grid.setOnClickListener(new View.OnClickListener() {
+        listBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                checkFlag = false;
+                listBtn.setVisibility(View.GONE);
+                gridBtn.setVisibility(View.VISIBLE);
                 StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
                 recyclerView.setLayoutManager(gridLayoutManager);
                 profileListAdapter = new ProfileListAdapter(List, getContext(), "GRID");
@@ -101,7 +104,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    private void applyFonts(View view){
+    private void applyFonts(View view) {
         Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_username), Config.CENTURY_GOTHIC_BOLD);
         Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_post), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_post_count), Config.CENTURY_GOTHIC_REGULAR);
@@ -165,6 +168,17 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 });
                 alertDialog.show();
 
+                break;
+            case R.id.ll_followers:
+                FollowerFragment followerFragment = new FollowerFragment();
+                fragmentManager.beginTransaction().add(R.id.main_frame, followerFragment)
+                        .addToBackStack(null).commit();
+
+                break;
+            case R.id.ll_following:
+                FollowerFragment followingFragment = new FollowerFragment();
+                fragmentManager.beginTransaction().add(R.id.main_frame, followingFragment)
+                        .addToBackStack(null).commit();
                 break;
 
 
