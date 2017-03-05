@@ -52,9 +52,13 @@
 
     <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="spinnerarrow" parent="android:Widget.Spinner">
+    <style name="spinnerarrow" parent="Widget.AppCompat.Light.DropDownItem.Spinner">
 
         <item name="android:background">@drawable/custom_arrow_spinner</item>
+        <item name="android:popupBackground">@color/spinner_background</item>
+        <item name="android:gravity">left</item>
     </style>
+
+
 
 </resources>

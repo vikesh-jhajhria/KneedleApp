@@ -1,9 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:clickable="true"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_search">
+    android:background="@drawable/bg_search"
+    android:clickable="true">
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -14,7 +14,7 @@
         tools:context="com.kneedleapp.fragment.SearchFragment">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -83,6 +83,72 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/textColorPrimary" />
+
+            <CheckBox
+                android:id="@+id/check_near_me"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_30"
+                android:button="@null"
+                android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
+                android:drawableTint="@color/colorAccent"
+                android:text="Near me"
+                android:textAllCaps="true"
+                android:textColor="@color/textColorPrimary"
+                android:textSize="@dimen/font_16" />
+
+            <RelativeLayout
+                android:id="@+id/rl_zip"
+                android:visibility="invisible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/txt_zip"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:hint="ZIP CODE"
+                        android:inputType="number"
+                        android:paddingBottom="@dimen/margin_5"
+                        android:paddingTop="@dimen/margin_5"
+                        android:textAllCaps="true"
+                        android:textColor="@color/textColorPrimary"
+                        android:textColorHint="@color/textColorPrimary"
+                        android:textSize="@dimen/font_16" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/textColorPrimary" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:orientation="vertical">
+
+                    <Spinner
+                        android:id="@+id/spinner_within"
+                        style="@style/spinnerarrow"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/textColorPrimary" />
+                </LinearLayout>
+            </RelativeLayout>
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
