@@ -72,7 +72,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(profileListAdapter);
 
-        gridBtn.setOnClickListener(new View.OnClickListener() {
+        listBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 gridBtn.setVisibility(View.GONE);
@@ -83,7 +83,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 recyclerView.setAdapter(profileListAdapter);
             }
         });
-        listBtn.setOnClickListener(new View.OnClickListener() {
+        gridBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 listBtn.setVisibility(View.GONE);

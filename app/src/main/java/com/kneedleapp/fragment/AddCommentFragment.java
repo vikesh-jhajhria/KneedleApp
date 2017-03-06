@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,8 @@ import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.CommentVo;
 
 import java.util.ArrayList;
+
+import static com.kneedleapp.utils.Config.fragmentManager;
 
 
 public class AddCommentFragment extends BaseFragment implements View.OnClickListener {
@@ -49,15 +52,16 @@ public class AddCommentFragment extends BaseFragment implements View.OnClickList
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_add_comment, container, false);
         findViews();
-applyFonts(view);
+        applyFonts(view);
         return view;
     }
 
-    private void applyFonts(View view){
-        Utils.setTypeface(getContext(),(TextView)view.findViewById(R.id.txt_comment), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getContext(),(TextView)view.findViewById(R.id.edt_comment), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getContext(),(TextView)view.findViewById(R.id.txt_post), Config.CENTURY_GOTHIC_BOLD);
+    private void applyFonts(View view) {
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_comment), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.edt_comment), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_post), Config.CENTURY_GOTHIC_BOLD);
     }
+
     private void findViews() {
         mList = new ArrayList<>();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_comments);
@@ -69,6 +73,7 @@ applyFonts(view);
         mAdapter.notifyDataSetChanged();
         mEdtComment = ((EditText) view.findViewById(R.id.edt_comment));
         view.findViewById(R.id.txt_post).setOnClickListener(this);
+        view.findViewById(R.id.img_back).setOnClickListener(this);
 
     }
 
@@ -88,19 +93,39 @@ applyFonts(view);
             case R.id.txt_post:
 
                 if (mEdtComment.getText().toString().isEmpty()) {
-
                     Toast.makeText(getContext(), "Please write the comment", Toast.LENGTH_LONG).show();
                 } else {
-
                     mComment = mEdtComment.getText().toString();
                     addDataIntoList();
                     Log.e("comment", mComment);
                     mEdtComment.setText("");
                     hideKeyboard();
                 }
-
-
+                break;
+            case R.id.img_back:
+                fragmentManager.popBackStack();
                 break;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+
+                if (i == KeyEvent.KEYCODE_BACK) {
+                    fragmentManager.popBackStackImmediate();
+
+                    return true;
+                }
+                return false;
+            }
+        });
+
     }
 }

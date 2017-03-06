@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
@@ -113,14 +114,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     protected void showFragment(@IdRes int containerViewId,
                                 @NonNull Fragment fragment,
                                 @NonNull String fragmentTag) {
-        /*if (!showFragment(fragmentTag)) {
-            addFragment(containerViewId, fragment, fragmentTag);
-        }*/
-
-        Fragment f = fragmentManager.findFragmentByTag(fragmentTag);
-        if (f != null) {
-            replaceFragment(containerViewId, fragment, fragmentTag, null);
-        } else{
+        if (!showFragment(fragmentTag)) {
             addFragment(containerViewId, fragment, fragmentTag);
         }
     }
@@ -155,7 +149,9 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     protected void hideAllFragment() {
         try {
             for (Fragment fragment : fragmentManager.getFragments()) {
-                hideFragment(fragment);
+                if(fragment != null) {
+                    hideFragment(fragment);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

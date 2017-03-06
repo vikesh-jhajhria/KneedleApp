@@ -272,7 +272,8 @@
                         android:layout_height="match_parent"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
                         android:paddingRight="@dimen/activity_horizontal_margin"
-                        android:src="@drawable/ic_grid_red" />
+                        android:src="@drawable/ic_grid_red"
+                        android:visibility="gone" />
 
                     <!--<View
                         android:layout_width="1dp"
@@ -287,8 +288,7 @@
                         android:layout_centerVertical="true"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
                         android:paddingRight="@dimen/activity_horizontal_margin"
-                        android:src="@drawable/ic_list_red"
-                        android:visibility="gone" />
+                        android:src="@drawable/ic_list_red" />
                 </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView

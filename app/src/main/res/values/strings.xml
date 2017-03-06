@@ -51,4 +51,12 @@
     <string name="hide">HIDE</string>
 
 
+    <string name="header_image">HEADER_IMAGE</string>
+    <string name="main_image">MAIN_IMAGE</string>
+    <string name="user_image">USER_IMAGE</string>
+    <string name="heart_image">HEART_IMAGE</string>
+    <string name="user_name">USERNAME</string>
+    <string name="likes">LIKES</string>
+
+
 </resources>

@@ -2,7 +2,11 @@ package com.kneedleapp.fragment;
 
 
 import android.annotation.SuppressLint;
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,12 +14,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.ChangeImageTransform;
 import android.transition.ChangeTransform;
-import android.transition.Fade;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -26,6 +31,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.kneedleapp.BaseActivity;
+import com.kneedleapp.FullImageViewActivity;
 import com.kneedleapp.MainActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.adapter.FeedItemAdapter;
@@ -37,14 +43,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.kneedleapp.utils.Config.fragmentManager;
 
-
-public class HomeFragment extends Fragment implements FeedItemAdapter.FeedItemListener{
+public class HomeFragment extends Fragment implements FeedItemAdapter.FeedItemListener {
 
     private RecyclerView mRecyclerView;
     private FeedItemAdapter mAdapter;
@@ -75,15 +80,14 @@ public class HomeFragment extends Fragment implements FeedItemAdapter.FeedItemLi
 
         context = (BaseActivity) getActivity();
 
-
         mList = new ArrayList<>();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new FeedItemAdapter(getContext(), mList, ((MainActivity) getActivity()),this);
+        mAdapter = new FeedItemAdapter(getContext(), mList, ((MainActivity) getActivity()), this);
         mRecyclerView.setAdapter(mAdapter);
-        if(Utils.isNetworkConnected(getContext(),true)) {
+        if (Utils.isNetworkConnected(getContext(), true)) {
             FeedData();
         }
 
@@ -154,40 +158,62 @@ public class HomeFragment extends Fragment implements FeedItemAdapter.FeedItemLi
 
     @Override
     public void getItem(int position, FeedItemAdapter.ViewHolder holder) {
-        FullImageViewFragment fragment = new FullImageViewFragment();
+        Intent intent = new Intent(getActivity(), FullImageViewActivity.class);
+        intent.putExtra("USERNAME", mList.get(position).getmUserTitle());
+        intent.putExtra("IMAGE", mList.get(position).getmContentImage());
+        intent.putExtra("USERIMAGE", mList.get(position).getmUserImage());
+        intent.putExtra("LIKES", mList.get(position).getmLikes());
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            try {
+
+               *//* Bitmap header = ((BitmapDrawable) ((ImageView) getActivity().findViewById(R.id.img_kneedle)).getDrawable()).getBitmap();
+                ByteArrayOutputStream headerstream = new ByteArrayOutputStream();
+                header.compress(Bitmap.CompressFormat.PNG, 100, headerstream);
+                byte[] headerByteArray = headerstream.toByteArray();
+*//*
+                Bitmap bmp = ((BitmapDrawable) holder.imgContent.getDrawable()).getBitmap();
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] mainImageByteArray = stream.toByteArray();
+
+               *//* byte[] userImageByteArray = new byte[0];
+                Bitmap imgUser = ((BitmapDrawable) holder.imgUser.getDrawable()).getBitmap();
+                ByteArrayOutputStream imgStream = new ByteArrayOutputStream();
+                imgUser.compress(Bitmap.CompressFormat.PNG, 100, imgStream);
+                userImageByteArray = imgStream.toByteArray();
+
+                byte[] likeByteArray = new byte[0];
+                Bitmap imglike = ((BitmapDrawable) holder.imgHeart.getDrawable()).getBitmap();
+                ByteArrayOutputStream likeStream = new ByteArrayOutputStream();
+                imglike.compress(Bitmap.CompressFormat.PNG, 100, likeStream);
+                likeByteArray = likeStream.toByteArray();*//*
 
 
+                intent.putExtra("transition", false);
+                //intent.putExtra("HEADER_IMAGE", headerByteArray);
+                intent.putExtra("MAIN_IMAGE", mainImageByteArray);
+                //intent.putExtra("USER_IMAGE", userImageByteArray);
+                //intent.putExtra("HEART_IMAGE", likeByteArray);
+                ActivityOptions options;
 
-            fragment.setSharedElementEnterTransition(new DetailsTransition());
-            fragment.setEnterTransition(new Fade());
-            setExitTransition(new Fade());
-            setSharedElementReturnTransition(new DetailsTransition());
-
-
-
-            Bundle bundle = new Bundle();
-            bundle.putString("USERNAME", mList.get(position).getmUserTitle());
-            bundle.putString("IMAGE", mList.get(position).getmContentImage());
-            bundle.putString("USERIMAGE", mList.get(position).getmUserImage());
-            bundle.putString("LIKES", mList.get(position).getmLikes());
-
-            fragment.setArguments(bundle);
-
-
-            fragmentManager.beginTransaction()
-                    .addSharedElement(holder.imgContent, "image")
-                    .addSharedElement(holder.tvTitle, "title")
-                    .addSharedElement(holder.imgUser,"userimage")
-                    .addSharedElement(holder.imgHeart,"heart")
-                    .addSharedElement(holder.tvLikes,"likes")
-                    .add(R.id.main_frame, fragment,"FULLIMAGEVIEW_FRAGMENT")
-                    .addToBackStack(null)
-                    .commit();
+                options = ActivityOptions.makeSceneTransitionAnimation(getActivity(),
+                        new Pair<View, String>(holder.imgContent, context.getResources().getString(R.string.main_image)),
+                        //new Pair<View, String>(holder.imgUser, context.getResources().getString(R.string.user_image)),
+                        //new Pair<View, String>(holder.imgHeart, context.getResources().getString(R.string.heart_image)),
+                        //new Pair<View, String>(((ImageView) getActivity().findViewById(R.id.img_kneedle)), context.getResources().getString(R.string.header_image)),
+                        new Pair<View, String>(holder.tvLikes, context.getResources().getString(R.string.likes)),
+                        new Pair<View, String>(holder.tvTitle, context.getResources().getString(R.string.user_name)));
 
 
-        }
+                context.startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } else {*/
+            startActivity(intent);
+        //}
     }
 
 
