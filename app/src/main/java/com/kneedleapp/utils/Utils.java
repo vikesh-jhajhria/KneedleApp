@@ -19,15 +19,13 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.kneedleapp.BaseActivity;
-import com.kneedleapp.R;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
-import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.kneedleapp.utils.Config.CENTURY_GOTHIC_REGULAR;
 
 
 public class Utils {
@@ -42,7 +40,7 @@ public class Utils {
     }
 
     public static void setTypeface(Context context, TextView textview, String fontName) {
-        if (fontName.equalsIgnoreCase(Config.CENTURY_GOTHIC_REGULAR)) {
+        if (fontName.equalsIgnoreCase(CENTURY_GOTHIC_REGULAR)) {
             Typeface face = Typeface.createFromAsset(context.getAssets(), "fonts/GOTHICR.TTF");
             textview.setTypeface(face);
         }
@@ -164,6 +162,7 @@ public class Utils {
         View snackbarView = snackbar.getView();
         snackbarView.setBackgroundColor(Color.BLACK);
         TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+        Utils.setTypeface(view.getContext(),textView,CENTURY_GOTHIC_REGULAR);
         textView.setTextColor(Color.WHITE);
         snackbar.show();
 

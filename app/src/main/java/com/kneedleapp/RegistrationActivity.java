@@ -23,7 +23,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.kneedleapp.utils.CheckGPSSetting;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 
@@ -58,14 +57,15 @@ public class RegistrationActivity extends BaseActivity {
     }
 
 
-
     @Override
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()) {
             case R.id.btn_let_me_in:
                 if (!((TextView) findViewById(R.id.txt_name)).getText().toString().isEmpty() && !((TextView) findViewById(R.id.txt_username)).getText().toString().isEmpty() && !((TextView) findViewById(R.id.txt_password)).getText().toString().isEmpty() && !((TextView) findViewById(R.id.txt_dob)).getText().toString().isEmpty()) {
-                    RegisterData();
+                    if (Utils.isNetworkConnected(this, true)) {
+                        RegisterData();
+                    }
                 } else {
                     ((TextView) findViewById(R.id.textview_error_show)).setVisibility(View.VISIBLE);
 
@@ -106,9 +106,9 @@ public class RegistrationActivity extends BaseActivity {
                             if (jObject.getString("status_id").equals("1")) {
                                 Log.e("responce....::>>>", response);
                                 startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
-                            } else {
-                                Toast.makeText(RegistrationActivity.this, "not successd", Toast.LENGTH_SHORT).show();
                             }
+                            Toast.makeText(RegistrationActivity.this, jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -125,7 +125,7 @@ public class RegistrationActivity extends BaseActivity {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("fullname", ((TextView) findViewById(R.id.txt_name)).getText().toString().trim());
-                params.put("profiletype", "1");
+                params.put("profiletype", ((Spinner) findViewById(R.id.spinner_profile_type)).getSelectedItem().toString());
                 params.put("companyInfo", "");
                 params.put("city", "");
                 params.put("password", ((TextView) findViewById(R.id.txt_password)).getText().toString().trim());
@@ -133,12 +133,13 @@ public class RegistrationActivity extends BaseActivity {
                 params.put("state", "");
                 params.put("country", "");
                 params.put("username", ((TextView) findViewById(R.id.txt_username)).getText().toString().trim());
-                params.put("latitude", "");
-                params.put("langitude", "");
+                params.put("latitude", preferences.getLatitude());
+                params.put("langitude", preferences.getLongitude());
                 params.put("email", "");
                 params.put("devicekey", preferences.getFirebaseId());
                 params.put("category", "");
 
+                Log.v(TAG, "Params>> " + params.toString());
                 return params;
             }
         };
@@ -147,11 +148,13 @@ public class RegistrationActivity extends BaseActivity {
                 30000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
+        Log.v(TAG, "URL>> " + requestRegister.getUrl());
         RequestQueue registerqueue = Volley.newRequestQueue(RegistrationActivity.this);
         registerqueue.add(requestRegister);
     }
+
     ArrayList<String> spinnerDataList;
+
     private void setArrayAdapter() {
 
         spinnerDataList = new ArrayList<>();
@@ -210,20 +213,14 @@ public class RegistrationActivity extends BaseActivity {
     }
 
 
-
-
-
-
-
-
-    public class SpinnerAdapter extends ArrayAdapter<String>{
+    public class SpinnerAdapter extends ArrayAdapter<String> {
 
         public SpinnerAdapter(Context context, int textViewResourceId, ArrayList<String> objects) {
             super(context, textViewResourceId, objects);
         }
 
         @Override
-        public View getDropDownView(int position, View convertView,ViewGroup parent) {
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
             return getCustomView(position, convertView, parent);
         }
 
@@ -233,9 +230,9 @@ public class RegistrationActivity extends BaseActivity {
         }
 
         public View getCustomView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater=getLayoutInflater();
-            View row=inflater.inflate(R.layout.layout_spinner_item, parent, false);
-            TextView label=(TextView)row.findViewById(R.id.txt_item);
+            LayoutInflater inflater = getLayoutInflater();
+            View row = inflater.inflate(R.layout.layout_spinner_item, parent, false);
+            TextView label = (TextView) row.findViewById(R.id.txt_item);
             Utils.setTypeface(RegistrationActivity.this, label, Config.CENTURY_GOTHIC_REGULAR);
             label.setText(spinnerDataList.get(position));
             return row;

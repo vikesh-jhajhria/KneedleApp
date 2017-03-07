@@ -58,9 +58,7 @@ public class ForgotPasswordActivity extends BaseActivity {
                     break;
                 }
                 if (Utils.isNetworkConnected(this, true)) {
-                    //ForgotPasswordData();
-                    startActivity(new Intent(ForgotPasswordActivity.this, MailSentActivity.class));
-                    finish();
+                    ForgotPasswordData();
                 }
                 break;
         }
@@ -74,17 +72,14 @@ public class ForgotPasswordActivity extends BaseActivity {
                     @Override
                     public void onResponse(String response) {
                         dismissProgressDialog();
+                        Log.e(TAG, "responce forgot...::>>>" + response);
                         try {
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
-
-                                Log.e(TAG, "responce forgot...::>>>" + response);
                                 startActivity(new Intent(ForgotPasswordActivity.this, MailSentActivity.class));
                                 finish();
-                            } else {
-                                Toast.makeText(ForgotPasswordActivity.this, jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
-
                             }
+                            Toast.makeText(ForgotPasswordActivity.this, jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -110,7 +105,7 @@ public class ForgotPasswordActivity extends BaseActivity {
                 30000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
+        Log.e(TAG, "URL...::>>>" + requestForgotPassword.getUrl());
         RequestQueue forgotpasswordqueue = Volley.newRequestQueue(ForgotPasswordActivity.this);
         forgotpasswordqueue.add(requestForgotPassword);
 

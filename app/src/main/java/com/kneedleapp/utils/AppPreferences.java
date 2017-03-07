@@ -43,7 +43,7 @@ public class AppPreferences {
     }
 
     public String getLatitude() {
-        return mPrefs.getString(LATITUDE, "");
+        return mPrefs.getString(LATITUDE, "0");
     }
 
     public void setLatitude(String value) {
@@ -52,7 +52,7 @@ public class AppPreferences {
         editor.commit();
     }
     public String getLongitude() {
-        return mPrefs.getString(LONGITUDE, "");
+        return mPrefs.getString(LONGITUDE, "0");
     }
 
     public void setLongitude(String value) {

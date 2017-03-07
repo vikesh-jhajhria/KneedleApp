@@ -2,12 +2,8 @@ package com.kneedleapp.fragment;
 
 
 import android.annotation.SuppressLint;
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,11 +12,9 @@ import android.transition.ChangeImageTransform;
 import android.transition.ChangeTransform;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -43,7 +37,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -117,6 +110,7 @@ public class HomeFragment extends Fragment implements FeedItemAdapter.FeedItemLi
                                     feedItemVo.setmContentImage("http://kneedleapp.com/restAPIs/uploads/post_images/" + jsonObject.getString("image"));
                                     feedItemVo.setmDesciption(jsonObject.getString("caption"));
                                     feedItemVo.setmLikes(jsonObject.getString("likes_count"));
+                                    feedItemVo.setLiked(jsonObject.getString("likes_status").equals("1"));
 
                                     mList.add(feedItemVo);
                                 }

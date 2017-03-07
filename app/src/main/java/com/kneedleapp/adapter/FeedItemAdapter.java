@@ -56,20 +56,26 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         mHolder = holder;
-        FeedItemVo feedItemVo = mList.get(position);
+        final FeedItemVo feedItemVo = mList.get(position);
         holder.tvTitle.setText(feedItemVo.getmUserTitle());
         holder.tvSubTitle.setText(feedItemVo.getmUserSubTitle());
         holder.tvDescription.setText(feedItemVo.getmDesciption());
         holder.tvLikes.setText(feedItemVo.getmLikes());
+        if(feedItemVo.getLiked()){
+            holder.imgHeart.setImageResource(R.drawable.heart);
+        } else {
+            holder.imgHeart.setImageResource(R.drawable.heart_unselected);
+        }
         Log.e("imageurl", "" + feedItemVo.getmUserImage());
         holder.imgHeart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                count++;
-                if (count % 2 == 0) {
-                    holder.imgHeart.setImageResource(R.drawable.heart);
-                } else {
+                if(feedItemVo.getLiked()){
+                    feedItemVo.setLiked(false);
                     holder.imgHeart.setImageResource(R.drawable.heart_unselected);
+                } else {
+                    feedItemVo.setLiked(true);
+                    holder.imgHeart.setImageResource(R.drawable.heart);
                 }
             }
         });

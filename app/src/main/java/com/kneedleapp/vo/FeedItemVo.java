@@ -7,6 +7,7 @@ package com.kneedleapp.vo;
 public class FeedItemVo {
 
     private String mUserImage, mUserTitle, mUserSubTitle, mContentImage, mDesciption, mLikes;
+    private boolean mLiked;
 
     public String getmUserImage() {
         return mUserImage;
@@ -54,5 +55,13 @@ public class FeedItemVo {
 
     public void setmLikes(String mLikes) {
         this.mLikes = mLikes;
+    }
+
+    public boolean getLiked() {
+        return mLiked;
+    }
+
+    public void setLiked(boolean value) {
+        this.mLiked = value;
     }
 }

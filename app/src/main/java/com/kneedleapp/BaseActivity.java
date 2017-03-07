@@ -32,6 +32,7 @@ import com.kneedleapp.utils.Utils;
 
 import java.util.List;
 
+import static com.kneedleapp.utils.Config.CENTURY_GOTHIC_REGULAR;
 import static com.kneedleapp.utils.Config.fragmentManager;
 
 public class BaseActivity extends AppCompatActivity implements View.OnClickListener, Utils.LocationFoundListener, Utils.GPSSettingListener {
@@ -264,7 +265,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     private void showPermissionSnakeBar() {
         Snackbar snackbar = Snackbar
-                .make(findViewById(R.id.top_layout), "Allow location permission", Snackbar.LENGTH_INDEFINITE)
+                .make(findViewById(R.id.top_layout), "Please allow location permission", Snackbar.LENGTH_INDEFINITE)
                 .setAction("ALLOW", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -278,6 +279,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         View snackbarView = snackbar.getView();
         snackbarView.setBackgroundColor(Color.BLACK);
         TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+        Utils.setTypeface(this,textView,CENTURY_GOTHIC_REGULAR);
         textView.setTextColor(Color.WHITE);
         snackbar.show();
 
@@ -285,7 +287,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     private void showSettingSnakeBar() {
         Snackbar snackbar = Snackbar
-                .make(findViewById(R.id.top_layout), "Turn on GPS", Snackbar.LENGTH_INDEFINITE)
+                .make(findViewById(R.id.top_layout), "Please turn on GPS", Snackbar.LENGTH_INDEFINITE)
                 .setAction("OK", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -296,6 +298,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         View snackbarView = snackbar.getView();
         snackbarView.setBackgroundColor(Color.BLACK);
         TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+        Utils.setTypeface(this,textView,CENTURY_GOTHIC_REGULAR);
         textView.setTextColor(Color.WHITE);
         snackbar.show();
 

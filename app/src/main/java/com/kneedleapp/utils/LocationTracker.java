@@ -132,6 +132,7 @@ public class LocationTracker implements LocationListener {
     private void sendMessageToActivity(Double latitude, Double longitude, String msg) {
         Log.e("Kneedle", "Location: " + latitude + "   " + longitude);
         locationListener.onLocationFoundStatus(latitude, longitude, msg);
+        locationManager.removeUpdates(this);
     }
 
 }
