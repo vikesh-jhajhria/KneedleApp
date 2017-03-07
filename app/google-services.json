@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "74688969787",
+    "firebase_url": "https://kneedleapp.firebaseio.com",
+    "project_id": "kneedleapp",
+    "storage_bucket": "kneedleapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:74688969787:android:bc20f639dd79da4c",
+        "android_client_info": {
+          "package_name": "com.kneedleapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "74688969787-p95nar4im06kud4uogd6our0aanf3ot7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVbELgdWAk0epp0vT6RcGPH0jiuIMMbIg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

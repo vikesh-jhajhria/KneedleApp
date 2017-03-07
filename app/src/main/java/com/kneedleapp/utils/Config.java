@@ -10,7 +10,8 @@ public class Config {
 
     public final static String CENTURY_GOTHIC_REGULAR = "CENTURY_GOTHIC_REGULAR";
     public final static String CENTURY_GOTHIC_BOLD = "CENTURY_GOTHIC_BOLD";
-
+    public static final int LOCATION_PERMISSION = 1001;
+    public static final int REQUEST_CHECK_SETTINGS = 0x1;
     public static FragmentManager fragmentManager;
 
 

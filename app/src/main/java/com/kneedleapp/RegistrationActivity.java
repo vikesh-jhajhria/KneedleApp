@@ -23,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.kneedleapp.utils.CheckGPSSetting;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 
@@ -39,17 +40,23 @@ import java.util.Map;
 public class RegistrationActivity extends BaseActivity {
     private Calendar myCalendar;
     private DatePickerDialog.OnDateSetListener date;
+    private String gender = "male";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+
+        fetchUserLocation();
+
         applyFonts();
         findViews();
         setArrayAdapter();
         showCalender();
 
+
     }
+
 
 
     @Override
@@ -74,10 +81,12 @@ public class RegistrationActivity extends BaseActivity {
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
                 break;
             case R.id.ll_homme:
+                gender = "male";
                 ((ImageView) findViewById(R.id.img_homme)).setImageResource(R.drawable.ic_homme_red);
                 ((ImageView) findViewById(R.id.img_femme)).setImageResource(R.drawable.ic_femme_white);
                 break;
             case R.id.ll_femme:
+                gender = "female";
                 ((ImageView) findViewById(R.id.img_femme)).setImageResource(R.drawable.ic_femme_red);
                 ((ImageView) findViewById(R.id.img_homme)).setImageResource(R.drawable.ic_homme_white);
                 break;
@@ -117,18 +126,18 @@ public class RegistrationActivity extends BaseActivity {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("fullname", ((TextView) findViewById(R.id.txt_name)).getText().toString().trim());
                 params.put("profiletype", "1");
-                params.put("companyInfo", "vertex plus");
-                params.put("city", "jaipur");
+                params.put("companyInfo", "");
+                params.put("city", "");
                 params.put("password", ((TextView) findViewById(R.id.txt_password)).getText().toString().trim());
-                params.put("gender", "male");
-                params.put("state", "rajasthan");
-                params.put("country", "india");
+                params.put("gender", gender);
+                params.put("state", "");
+                params.put("country", "");
                 params.put("username", ((TextView) findViewById(R.id.txt_username)).getText().toString().trim());
-                params.put("latitude", "0.00");
-                params.put("langitude", "0.00");
-                params.put("email", "vikeshkumar@gmail.com");
-                params.put("devicekey", "aman");
-                params.put("category", "job");
+                params.put("latitude", "");
+                params.put("langitude", "");
+                params.put("email", "");
+                params.put("devicekey", preferences.getFirebaseId());
+                params.put("category", "");
 
                 return params;
             }

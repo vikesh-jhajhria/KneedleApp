@@ -1,30 +1,47 @@
 package com.kneedleapp;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.kneedleapp.utils.AppPreferences;
+import com.kneedleapp.utils.CheckGPSSetting;
+import com.kneedleapp.utils.Config;
+import com.kneedleapp.utils.LocationTracker;
+import com.kneedleapp.utils.Utils;
 
 import java.util.List;
 
 import static com.kneedleapp.utils.Config.fragmentManager;
 
-public class BaseActivity extends AppCompatActivity implements View.OnClickListener {
+public class BaseActivity extends AppCompatActivity implements View.OnClickListener, Utils.LocationFoundListener, Utils.GPSSettingListener {
 
     private boolean isExit;
     private ProgressDialog dialog;
     public String TAG = "KNEEDLE";
     private Context mContext;
+    AppPreferences preferences;
+
 
 
     public enum BottomBarTab {
@@ -35,6 +52,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
+        preferences = AppPreferences.getAppPreferences(this);
         dialog = new ProgressDialog(this);
         dialog.setMessage("Please wait...");
         dialog.setCancelable(false);
@@ -149,7 +167,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     protected void hideAllFragment() {
         try {
             for (Fragment fragment : fragmentManager.getFragments()) {
-                if(fragment != null) {
+                if (fragment != null) {
                     hideFragment(fragment);
                 }
             }
@@ -165,5 +183,123 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
     }
+
+
+    /*Check permissions*/
+    public boolean hasPermission(int permissionType) {
+        if (Build.VERSION.SDK_INT >= 23) {
+            switch (permissionType) {
+                case Config.LOCATION_PERMISSION:
+                    int hasLocationPermission = ContextCompat.checkSelfPermission(this,
+                            android.Manifest.permission.ACCESS_FINE_LOCATION);
+                    if (hasLocationPermission != PackageManager.PERMISSION_GRANTED) {
+                        showPermissionSnakeBar();
+                        return false;
+                    } else {
+                        return true;
+                    }
+            }
+        }
+        return true;
+    }
+
+    /* For permission popup result*/
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case Config.LOCATION_PERMISSION:
+                if (grantResults.length > 0 && grantResults[0] == 0) {
+                    CheckGPSSetting.getInstance(this, this);
+                } else {
+                    fetchUserLocation();
+                }
+                break;
+        }
+    }
+
+    /*For location setting .................*/
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case Config.REQUEST_CHECK_SETTINGS:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        onLocationSettingStatus(true);
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        onLocationSettingStatus(false);
+                        break;
+                }
+                break;
+        }
+    }
+
+    public void fetchUserLocation() {
+        if (hasPermission(Config.LOCATION_PERMISSION)) {
+            CheckGPSSetting.getInstance(this, this);
+        }
+    }
+
+    @Override
+    public void onLocationFoundStatus(double latitude, double longitude, String message) {
+        if(message.equalsIgnoreCase("1")){
+            preferences.setLatitude(String.valueOf(latitude));
+            preferences.setLongitude(String.valueOf(longitude));
+            Utils.showSnakeBar(findViewById(R.id.top_layout),"Location found.");
+        } else
+        {
+            Utils.showSnakeBar(findViewById(R.id.top_layout),"Location not found !");
+        }
+    }
+
+
+    @Override
+    public void onLocationSettingStatus(boolean status) {
+        if (status) {
+            new LocationTracker(this,this);
+        } else {
+            showSettingSnakeBar();
+        }
+    }
+
+    private void showPermissionSnakeBar() {
+        Snackbar snackbar = Snackbar
+                .make(findViewById(R.id.top_layout), "Allow location permission", Snackbar.LENGTH_INDEFINITE)
+                .setAction("ALLOW", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ActivityCompat.requestPermissions(BaseActivity.this,
+                                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
+                                        Manifest.permission.ACCESS_COARSE_LOCATION},
+                                Config.LOCATION_PERMISSION);
+                    }
+                });
+        snackbar.setActionTextColor(Color.RED);
+        View snackbarView = snackbar.getView();
+        snackbarView.setBackgroundColor(Color.BLACK);
+        TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(Color.WHITE);
+        snackbar.show();
+
+    }
+
+    private void showSettingSnakeBar() {
+        Snackbar snackbar = Snackbar
+                .make(findViewById(R.id.top_layout), "Turn on GPS", Snackbar.LENGTH_INDEFINITE)
+                .setAction("OK", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        CheckGPSSetting.getInstance(BaseActivity.this, BaseActivity.this);
+                    }
+                });
+        snackbar.setActionTextColor(Color.RED);
+        View snackbarView = snackbar.getView();
+        snackbarView.setBackgroundColor(Color.BLACK);
+        TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(Color.WHITE);
+        snackbar.show();
+
+    }
+
 
 }

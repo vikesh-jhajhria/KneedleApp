@@ -16,6 +16,9 @@ public class AppPreferences {
     public static final String USER_PHONE = "USERPHONE";
     public static final String USER_IMAGE = "USERIMAGE";
     public static final String USER_IMAGE_URL = "USERIMAGEURL";
+    public static final String LATITUDE = "LATITUDE";
+    public static final String LONGITUDE = "LONGITUDE";
+    public static final String FIREBASE_ID = "FIREBASE_ID";
     private static final String SHARED_PREFERENCE_NAME = "KNEEDLEAPP";
     private SharedPreferences mPrefs;
 
@@ -27,6 +30,35 @@ public class AppPreferences {
     public static AppPreferences getAppPreferences(Context context) {
         return new AppPreferences(context);
 
+    }
+
+    public String getFirebaseId() {
+        return mPrefs.getString(FIREBASE_ID, "");
+    }
+
+    public void setFirebaseId(String firebaseId) {
+        SharedPreferences.Editor editor = mPrefs.edit();
+        editor.putString(FIREBASE_ID, firebaseId);
+        editor.commit();
+    }
+
+    public String getLatitude() {
+        return mPrefs.getString(LATITUDE, "");
+    }
+
+    public void setLatitude(String value) {
+        SharedPreferences.Editor editor = mPrefs.edit();
+        editor.putString(LATITUDE, value);
+        editor.commit();
+    }
+    public String getLongitude() {
+        return mPrefs.getString(LONGITUDE, "");
+    }
+
+    public void setLongitude(String value) {
+        SharedPreferences.Editor editor = mPrefs.edit();
+        editor.putString(LONGITUDE, value);
+        editor.commit();
     }
 
     public String getStringValue(String Key) {

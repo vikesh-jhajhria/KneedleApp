@@ -109,7 +109,7 @@ public class LoginActivity extends BaseActivity {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("username", username);
                 params.put("password", password);
-                params.put("devicekey", "fashion01");
+                params.put("devicekey", preferences.getFirebaseId());
                 Log.v(TAG, "Params : " + params.toString());
                 return params;
             }
