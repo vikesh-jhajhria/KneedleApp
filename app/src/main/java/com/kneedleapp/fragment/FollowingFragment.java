@@ -2,7 +2,6 @@ package com.kneedleapp.fragment;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -25,7 +24,6 @@ import com.kneedleapp.R;
 import com.kneedleapp.adapter.FollowerAdapter;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
-import com.kneedleapp.vo.FeedItemVo;
 import com.kneedleapp.vo.FollowersVo;
 import com.kneedleapp.vo.SearchResultVO;
 
@@ -35,20 +33,15 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.kneedleapp.utils.Config.fragmentManager;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FollowerFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FollowerFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Created by abc on 08-Mar-17.
  */
-public class FollowerFragment extends BaseFragment {
+
+public class FollowingFragment extends BaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -57,9 +50,9 @@ public class FollowerFragment extends BaseFragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private BaseActivity context;
+    private static BaseActivity context;
 
-    private OnFragmentInteractionListener mListener;
+    private FollowerFragment.OnFragmentInteractionListener mListener;
     private FollowerAdapter followerAdapter;
     private ArrayList<SearchResultVO> List = new ArrayList<>();
     public static RecyclerView recyclerView;
@@ -67,12 +60,12 @@ public class FollowerFragment extends BaseFragment {
 
     private java.util.List<FollowersVo> followersList = new ArrayList<>();
 
-    public FollowerFragment() {
+    public FollowingFragment() {
         // Required empty public constructor
     }
 
-    public static FollowerFragment newInstance() {
-        FollowerFragment fragment = new FollowerFragment();
+    public static FollowingFragment newInstance() {
+        FollowingFragment fragment = new FollowingFragment();
         Bundle args = new Bundle();
         //args.putString(ARG_PARAM1, param1);
         fragment.setArguments(args);
@@ -87,6 +80,7 @@ public class FollowerFragment extends BaseFragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+
     @Override
     public void onClick(View view) {
 
@@ -101,7 +95,7 @@ public class FollowerFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_follow, container, false);
+        View view = inflater.inflate(R.layout.fragment_following, container, false);
         applyFonts(view);
 
         view.findViewById(R.id.img_back).setOnClickListener(this);
@@ -115,12 +109,10 @@ public class FollowerFragment extends BaseFragment {
         followerAdapter = new FollowerAdapter(followersList, getActivity());
         recyclerView.setAdapter(followerAdapter);
 
-        getFollowers();
+        getFollowing();
 
         return view;
     }
-
-
 
     @Override
     public void onDetach() {
@@ -128,16 +120,6 @@ public class FollowerFragment extends BaseFragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
@@ -167,11 +149,9 @@ public class FollowerFragment extends BaseFragment {
         });
 
     }
-
-
-    private void getFollowers(){
+    private void getFollowing(){
         context.showProgessDialog("Please wait...");
-        StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.FOLLOWERS,
+        StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.FOLLOWING,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -181,7 +161,7 @@ public class FollowerFragment extends BaseFragment {
                             if (jObject.getString("status_id").equals("1")) {
                                 Log.e("responce....::>>>", response);
 
-                                JSONArray jsonArray = jObject.getJSONArray("followers_data");
+                                JSONArray jsonArray = jObject.getJSONArray("following_data");
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                                     FollowersVo followersItemVo = new FollowersVo();
@@ -239,4 +219,7 @@ public class FollowerFragment extends BaseFragment {
         RequestQueue feedqueue = Volley.newRequestQueue(getContext());
         feedqueue.add(requestFeed);
     }
+
+
+
 }

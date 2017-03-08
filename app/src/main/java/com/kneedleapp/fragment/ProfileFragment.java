@@ -8,20 +8,43 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.kneedleapp.BaseActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.adapter.ProfileListAdapter;
+import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
+import com.kneedleapp.vo.FollowersVo;
 import com.kneedleapp.vo.ListVo;
+import com.kneedleapp.vo.UserDetailsVo;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.kneedleapp.utils.Config.fragmentManager;
 
@@ -35,6 +58,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public static RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
     private ImageView listBtn, gridBtn;
+    private static BaseActivity context;
+
+    private TextView num_of_posts,num_of_followers,num_of_following,address,designation;
+    private CircleImageView userImgView;
+    private AppPreferences mPrefernce;
+    private java.util.List<UserDetailsVo> userDetailsVoList = new ArrayList<>();
 
     public static ProfileFragment newInstance(String param1, String param2) {
         ProfileFragment fragment = new ProfileFragment();
@@ -42,6 +71,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -56,7 +86,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         view.findViewById(R.id.ll_followers).setOnClickListener(this);
         view.findViewById(R.id.ll_following).setOnClickListener(this);
         ((RelativeLayout) getActivity().findViewById(R.id.rl_toolbar)).setVisibility(View.GONE);
-
+        context = (BaseActivity) getActivity();
+        mPrefernce = AppPreferences.getAppPreferences(context);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         List = new ArrayList<>();
         for (int i = 1; i < 20; i++) {
@@ -100,6 +131,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         view.findViewById(R.id.img_back).setOnClickListener(this);
         view.findViewById(R.id.img_chat).setOnClickListener(this);
 
+       num_of_posts = (TextView) view.findViewById(R.id.txt_post_count);
+       num_of_followers = (TextView) view.findViewById(R.id.txt_follower_count);
+       num_of_following = (TextView) view.findViewById(R.id.txt_following_count);
+       address = (TextView) view.findViewById(R.id.txt_address);
+       designation = (TextView) view.findViewById(R.id.txt_designation);
+       userImgView = (CircleImageView) view.findViewById(R.id.user_img);
+
+        getUserDetails();
 
         return view;
     }
@@ -176,13 +215,68 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
                 break;
             case R.id.ll_following:
-                FollowerFragment followingFragment = new FollowerFragment();
+                FollowingFragment followingFragment = new FollowingFragment();
                 fragmentManager.beginTransaction().add(R.id.main_frame, followingFragment)
                         .addToBackStack(null).commit();
                 break;
 
 
         }
+    }
+
+    public void getUserDetails(){
+        context.showProgessDialog("Please wait...");
+        StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.USER_DETAILS,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        context.dismissProgressDialog();
+                        try {
+                            final JSONObject jObject = new JSONObject(response);
+                            if (jObject.getString("status_id").equals("1")) {
+                                Log.e("responce....::>>>", response);
+
+                                JSONObject userDataJsonObject = jObject.getJSONObject("user_data");
+                                num_of_posts.setText(userDataJsonObject.getString("posts"));
+                                num_of_following.setText(userDataJsonObject.getString("following"));
+                                num_of_followers.setText(userDataJsonObject.getString("followers"));
+
+                                Picasso.with(context).load(userDataJsonObject.getString("image")).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(userImgView);
+                                address.setText(userDataJsonObject.getString("city")+","+userDataJsonObject.getString("state"));
+                                designation.setText(userDataJsonObject.getString("profiletype"));
+                            } else {
+                                Toast.makeText(getContext(), "no data available", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(getContext(), volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d("error", volleyError.getMessage());
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("user_id", mPrefernce.getStringValue(AppPreferences.USER_ID));
+                params.put("username", mPrefernce.getStringValue(AppPreferences.USER_NAME));
+              /*  params.put("lmt", "10");
+                params.put("offset", "1");*/
+                return params;
+            }
+        };
+
+        requestFeed.setRetryPolicy(new DefaultRetryPolicy(
+                30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        RequestQueue feedqueue = Volley.newRequestQueue(getContext());
+        feedqueue.add(requestFeed);
     }
 
 }

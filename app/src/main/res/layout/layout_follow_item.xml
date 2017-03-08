@@ -68,15 +68,15 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/btn_hide"
-                    android:layout_width="70dp"
+                    android:id="@+id/btn_unfollow"
+                    android:layout_width="wrap_content"
                     android:gravity="center"
                     android:layout_height="wrap_content"
                     android:paddingBottom="@dimen/margin_5"
                     android:paddingLeft="@dimen/margin_10"
                     android:paddingRight="@dimen/margin_10"
                     android:paddingTop="@dimen/margin_5"
-                    android:text="Hide"
+                    android:text="Unfollow"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
                     android:layout_marginLeft="@dimen/margin_10"
@@ -87,7 +87,7 @@
 
                 <TextView
                     android:id="@+id/btn_follow"
-                    android:layout_width="70dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingBottom="@dimen/margin_5"
                     android:paddingLeft="@dimen/margin_10"

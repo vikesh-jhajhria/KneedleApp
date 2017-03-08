@@ -19,18 +19,31 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.CheckGPSSetting;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.LocationTracker;
 import com.kneedleapp.utils.Utils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.kneedleapp.utils.Config.CENTURY_GOTHIC_REGULAR;
 import static com.kneedleapp.utils.Config.fragmentManager;
@@ -303,6 +316,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         snackbar.show();
 
     }
+
 
 
 }

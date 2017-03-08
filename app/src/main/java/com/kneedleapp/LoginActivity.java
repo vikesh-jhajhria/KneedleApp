@@ -19,6 +19,7 @@ import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -86,7 +87,10 @@ public class LoginActivity extends BaseActivity {
                         try {
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
+                                JSONArray userJsonArray =jObject.getJSONArray("user_data");
+                                JSONObject userJsonObject = userJsonArray.getJSONObject(0);
                                 mPrefernce.putStringValue(AppPreferences.USER_NAME,username);
+                                mPrefernce.putStringValue(AppPreferences.USER_ID,userJsonObject.getString("id"));
                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                 finishAffinity();
                             } else {

@@ -24,5 +24,9 @@ public class Config {
     public final static String NONCE = BASE_URL + "get_nonce/?controller=user&method=register";
     public final static String FORGOT_PASSWORD = BASE_URL + "forgot_password";
     public final static String FEED_DATA = BASE_URL + "get_home_feeds";
+    public final static String FOLLOWERS = BASE_URL + "get_followers";
+    public final static String FOLLOWING = BASE_URL + "get_following";
+    public final static String FOLLOW_UNFOLLOW_USER = BASE_URL + "add_followers";
+    public final static String USER_DETAILS = BASE_URL + "get_user_details";
 
 }
