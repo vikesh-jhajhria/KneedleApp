@@ -108,7 +108,7 @@ public class HomeFragment extends Fragment implements FeedItemAdapter.FeedItemLi
                                     feedItemVo.setmUserSubTitle(jsonObject.getString("username"));
                                     feedItemVo.setmUserImage("http://kneedleapp.com/restAPIs/uploads/user_images/" + jsonObject.getString("mypic"));
                                     feedItemVo.setmContentImage("http://kneedleapp.com/restAPIs/uploads/post_images/" + jsonObject.getString("image"));
-                                    feedItemVo.setmDesciption(jsonObject.getString("caption"));
+                                    feedItemVo.setmDescription(jsonObject.getString("caption"));
                                     feedItemVo.setmLikes(jsonObject.getString("likes_count"));
                                     feedItemVo.setLiked(jsonObject.getString("likes_status").equals("1"));
 

@@ -1,5 +1,10 @@
 package com.kneedleapp.utils;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,12 +21,18 @@ import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -166,6 +177,39 @@ public class Utils {
         textView.setTextColor(Color.WHITE);
         snackbar.show();
 
+    }
+
+    public static void setBounceEffect(final View view){
+        PropertyValuesHolder scalex = PropertyValuesHolder.ofFloat(View.SCALE_X, .5f);
+        PropertyValuesHolder scaley = PropertyValuesHolder.ofFloat(View.SCALE_Y, .5f);
+        ObjectAnimator anim = ObjectAnimator.ofPropertyValuesHolder(view, scalex, scaley);
+        anim.setRepeatCount(1);
+        anim.setRepeatMode(ValueAnimator.REVERSE);
+        anim.setDuration(200);
+        anim.setInterpolator(new AccelerateDecelerateInterpolator());
+        anim.start();
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+
+                PropertyValuesHolder scalex = PropertyValuesHolder.ofFloat(View.SCALE_X, 1.2f);
+                PropertyValuesHolder scaley = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.2f);
+                ObjectAnimator anim = ObjectAnimator.ofPropertyValuesHolder(view, scalex, scaley);
+                anim.setRepeatCount(1);
+                anim.setRepeatMode(ValueAnimator.REVERSE);
+                anim.setDuration(100);
+                anim.setInterpolator(new DecelerateInterpolator());
+                anim.start();
+            }
+        });
+    }
+
+    public static String getCurrentDate(){
+        Calendar calendar = Calendar.getInstance(Locale.getDefault());
+        Date date  = calendar.getTime();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss Z");
+        return simpleDateFormat.format(date);
     }
 
     public interface AlertCallback {

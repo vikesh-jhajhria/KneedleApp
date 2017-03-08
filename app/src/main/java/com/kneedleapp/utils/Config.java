@@ -28,5 +28,6 @@ public class Config {
     public final static String FOLLOWING = BASE_URL + "get_following";
     public final static String FOLLOW_UNFOLLOW_USER = BASE_URL + "add_followers";
     public final static String USER_DETAILS = BASE_URL + "get_user_details";
+    public final static String ADD_LIKE = BASE_URL + "add_likes";
 
 }

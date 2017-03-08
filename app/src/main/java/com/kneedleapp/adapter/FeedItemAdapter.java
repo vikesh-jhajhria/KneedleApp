@@ -1,5 +1,10 @@
 package com.kneedleapp.adapter;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.widget.RecyclerView;
@@ -7,19 +12,33 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.kneedleapp.KneedleApp;
 import com.kneedleapp.MainActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.fragment.AddCommentFragment;
+import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.FeedItemVo;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.kneedleapp.utils.Config.fragmentManager;
 
@@ -59,7 +78,7 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
         final FeedItemVo feedItemVo = mList.get(position);
         holder.tvTitle.setText(feedItemVo.getmUserTitle());
         holder.tvSubTitle.setText(feedItemVo.getmUserSubTitle());
-        holder.tvDescription.setText(feedItemVo.getmDesciption());
+        holder.tvDescription.setText(feedItemVo.getmDescription());
         holder.tvLikes.setText(feedItemVo.getmLikes());
         if(feedItemVo.getLiked()){
             holder.imgHeart.setImageResource(R.drawable.heart);
@@ -70,12 +89,9 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
         holder.imgHeart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(feedItemVo.getLiked()){
-                    feedItemVo.setLiked(false);
-                    holder.imgHeart.setImageResource(R.drawable.heart_unselected);
-                } else {
-                    feedItemVo.setLiked(true);
-                    holder.imgHeart.setImageResource(R.drawable.heart);
+                Utils.setBounceEffect(holder.imgHeart);
+                if(Utils.isNetworkConnected(context,true)) {
+                    likeFeed( "4",feedItemVo.getmFeedId(),Utils.getCurrentDate());
                 }
             }
         });
@@ -155,4 +171,53 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
     }
 
 
+
+    private void likeFeed(String userId, String feedId, String date) {
+        ((MainActivity)context).showProgessDialog();
+
+        try {
+            final JSONObject jsonobj = new JSONObject();
+            jsonobj.put("user_id", userId);
+            jsonobj.put("feed_id", feedId);
+            jsonobj.put("like_date", date);
+            Log.e("params : ", "" + jsonobj);
+            final JsonObjectRequest postRequest = new JsonObjectRequest(Request.Method.POST,
+                    Config.ADD_LIKE, jsonobj, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject json) {
+                    ((MainActivity)context).dismissProgressDialog();
+                    Log.e("response : ", "" + json);
+
+                    try {
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.e("Error", "" + error);
+                            ((MainActivity)context).dismissProgressDialog();
+                        }
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> headers = new HashMap<String, String>();
+                    headers.put("Content-Type", "application/json; charset=utf-8");
+                    return headers;
+                }
+            };
+            postRequest.setRetryPolicy(new DefaultRetryPolicy(30000,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+            // Adding request to request queue
+            KneedleApp.getInstance().addToRequestQueue(postRequest);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
