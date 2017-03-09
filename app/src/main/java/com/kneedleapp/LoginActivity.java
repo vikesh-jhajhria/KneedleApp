@@ -90,7 +90,7 @@ public class LoginActivity extends BaseActivity {
                                 JSONArray userJsonArray =jObject.getJSONArray("user_data");
                                 JSONObject userJsonObject = userJsonArray.getJSONObject(0);
                                 mPrefernce.putStringValue(AppPreferences.USER_NAME,username);
-                                mPrefernce.putStringValue(AppPreferences.USER_ID,userJsonObject.getString("id"));
+                                mPrefernce.setUserId(userJsonObject.getString("id"));
                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                 finishAffinity();
                             } else {

@@ -42,6 +42,15 @@ public class AppPreferences {
         editor.commit();
     }
 
+    public String getUserId() {
+        return mPrefs.getString(USER_ID, "");
+    }
+
+    public void setUserId(String value) {
+        SharedPreferences.Editor editor = mPrefs.edit();
+        editor.putString(USER_ID, value);
+        editor.commit();
+    }
     public String getLatitude() {
         return mPrefs.getString(LATITUDE, "0");
     }

@@ -26,6 +26,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
@@ -205,11 +207,12 @@ public class Utils {
         });
     }
 
-    public static String getCurrentDate(){
+    public static String getCurrentDate() throws UnsupportedEncodingException {
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
         Date date  = calendar.getTime();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss Z");
-        return simpleDateFormat.format(date);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+
+        return URLEncoder.encode(simpleDateFormat.format(date),"utf-8").replace("+","%20");
     }
 
     public interface AlertCallback {

@@ -5,8 +5,39 @@ package com.kneedleapp.vo;
  */
 
 public class CommentVo {
-    private String mUserName, mDescription, mImageUrl;
 
+
+    private String mId;
+    private String mUserName;
+    private String mComment;
+    private String mUserImageUrl;
+    private String mCommentFrom;
+    private String mDate;
+
+    public String getmCommentFrom() {
+        return mCommentFrom;
+    }
+
+    public void setmCommentFrom(String mCommentFrom) {
+        this.mCommentFrom = mCommentFrom;
+    }
+
+    public String getmDate() {
+        return mDate;
+    }
+
+    public void setmDate(String mDate) {
+        this.mDate = mDate;
+    }
+
+
+    public String getmId() {
+        return mId;
+    }
+
+    public void setmId(String mId) {
+        this.mId = mId;
+    }
 
     public String getmUserName() {
         return mUserName;
@@ -16,19 +47,19 @@ public class CommentVo {
         this.mUserName = mUserName;
     }
 
-    public String getmDescription() {
-        return mDescription;
+    public String getmComment() {
+        return mComment;
     }
 
-    public void setmDescription(String mDescription) {
-        this.mDescription = mDescription;
+    public void setmComment(String mComment) {
+        this.mComment = mComment;
     }
 
-    public String getmImageUrl() {
-        return mImageUrl;
+    public String getmUserImageUrl() {
+        return mUserImageUrl;
     }
 
-    public void setmImageUrl(String mImageUrl) {
-        this.mImageUrl = mImageUrl;
+    public void setmUserImageUrl(String mUserImageUrl) {
+        this.mUserImageUrl = mUserImageUrl;
     }
 }

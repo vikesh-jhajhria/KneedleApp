@@ -78,7 +78,7 @@ public class HomeFragment extends Fragment implements FeedItemAdapter.FeedItemLi
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new FeedItemAdapter(getContext(), mList, ((MainActivity) getActivity()), this);
+        mAdapter = new FeedItemAdapter(getActivity(), mList, this);
         mRecyclerView.setAdapter(mAdapter);
         if (Utils.isNetworkConnected(getContext(), true)) {
             FeedData();
@@ -105,11 +105,16 @@ public class HomeFragment extends Fragment implements FeedItemAdapter.FeedItemLi
                                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                                     FeedItemVo feedItemVo = new FeedItemVo();
                                     feedItemVo.setmUserTitle(jsonObject.getString("fullname"));
+                                    feedItemVo.setmId(jsonObject.getString("id"));
+                                    feedItemVo.setmDate(jsonObject.getString("date"));
                                     feedItemVo.setmUserSubTitle(jsonObject.getString("username"));
-                                    feedItemVo.setmUserImage("http://kneedleapp.com/restAPIs/uploads/user_images/" + jsonObject.getString("mypic"));
-                                    feedItemVo.setmContentImage("http://kneedleapp.com/restAPIs/uploads/post_images/" + jsonObject.getString("image"));
+                                    feedItemVo.setmUserImage(Config.USER_IMAGE_URL + jsonObject.getString("mypic"));
+                                    feedItemVo.setmContentImage(Config.FEED_IMAGE_URL + jsonObject.getString("image"));
                                     feedItemVo.setmDescription(jsonObject.getString("caption"));
-                                    feedItemVo.setmLikes(jsonObject.getString("likes_count"));
+                                    feedItemVo.setmLikes(jsonObject.getInt("likes_count"));
+                                    feedItemVo.setmCommentCount(jsonObject.getInt("comment_count"));
+                                    feedItemVo.setmComment_1(jsonObject.getString("comment_1"));
+                                    feedItemVo.setmComment_2(jsonObject.getString("comment_2"));
                                     feedItemVo.setLiked(jsonObject.getString("likes_status").equals("1"));
 
                                     mList.add(feedItemVo);

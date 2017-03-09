@@ -18,7 +18,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(Config.fragmentManager == null){
+        if(Config.fragmentManager == null || getSupportFragmentManager().getFragments() == null){
             Config.fragmentManager = getSupportFragmentManager();
         }
         selectTab(BottomBarTab.HOME);

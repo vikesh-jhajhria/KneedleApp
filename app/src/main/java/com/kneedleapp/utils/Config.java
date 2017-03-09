@@ -18,6 +18,8 @@ public class Config {
     public final static int SPLASH_TIME = 2000;
 
     public final static String BASE_URL = "http://kneedleapp.com/restAPIs/api/";
+    public final static String USER_IMAGE_URL = "http://kneedleapp.com/restAPIs/uploads/user_images/";
+    public final static String FEED_IMAGE_URL = "http://kneedleapp.com/restAPIs/uploads/post_images/";
     public final static String LOGIN = BASE_URL + "user_login";
     public final static String SOCIAL_LOGIN = BASE_URL + "user/fb_connect/?insecure=cool";
     public final static String REGISTER = BASE_URL + "create_user";
@@ -29,5 +31,7 @@ public class Config {
     public final static String FOLLOW_UNFOLLOW_USER = BASE_URL + "add_followers";
     public final static String USER_DETAILS = BASE_URL + "get_user_details";
     public final static String ADD_LIKE = BASE_URL + "add_likes";
+    public final static String GET_FEED_COMMENTS = BASE_URL + "get_feed_comments";
+    public final static String ADD_COMMENT = BASE_URL + "add_comment";
 
 }

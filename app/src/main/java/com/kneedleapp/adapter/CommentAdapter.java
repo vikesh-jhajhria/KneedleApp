@@ -12,6 +12,7 @@ import com.kneedleapp.R;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.CommentVo;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -43,8 +44,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
         CommentVo obj = mList.get(position);
         holder.userName.setText(obj.getmUserName());
-        holder.userComment.setText(obj.getmDescription());
-        //Picasso.with(mContext).load(obj.getmImageUrl()).placeholder(R.drawable.shahrukhkhan).error(R.drawable.shahrukhkhan).into(holder.imgUser);
+        holder.userComment.setText(obj.getmComment());
+        Picasso.with(mContext).load(Config.USER_IMAGE_URL + obj.getmUserImageUrl()).placeholder(R.drawable.profile_img).error(R.drawable.profile_img).into(holder.imgUser);
 
 
     }

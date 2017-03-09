@@ -1,38 +1,24 @@
 package com.kneedleapp.vo;
 
 public class FeedItemVo {
+    private String mId, mUserImage, mUserTitle, mUserSubTitle, mContentImage,
+            mDescription, mComment_1, mComment_2, mDate;
+    private int mCommentCount, mLikes;
+    private boolean mLiked;
 
-
-    /*"id":"108",
-"user_id":"4",
-"fullname":"Srikanth Naladala",
-"username":"fashion09",
-"caption":"#new",
-"city":"Hyderabad",
-"state":"Andhra Pradesh",
-"date":"2015-09-16 19:19:07 +0530",
-"mypic":"1439098099_9173074.jpg",
-"country":"India",
-"image":"1442411350_2313632.jpg",
-"likes_count":"5",
-"comment_count":"0",
-"comment_1":"",
-"comment_2":"",
-"likes_status":"1"*/
-
-    public String getmFeedId() {
-        return mFeedId;
+    public String getmId() {
+        return mId;
     }
 
-    public void setmFeedId(String mFeedId) {
-        this.mFeedId = mFeedId;
+    public void setmId(String mId) {
+        this.mId = mId;
     }
 
-    public String getmCommentCount() {
+    public int getmCommentCount() {
         return mCommentCount;
     }
 
-    public void setmCommentCount(String value) {
+    public void setmCommentCount(int value) {
         this.mCommentCount = value;
     }
 
@@ -68,11 +54,7 @@ public class FeedItemVo {
         this.mLiked = mLiked;
     }
 
-    private String mFeedId, mUserImage, mUserTitle, mUserSubTitle, mContentImage,
-            mDescription, mLikes, mCommentCount, mComment_1, mComment_2, mDate;
-    private boolean mLiked;
-
-    public String getmUserImage() {
+   public String getmUserImage() {
         return mUserImage;
     }
 
@@ -112,11 +94,11 @@ public class FeedItemVo {
         this.mDescription = mDescription;
     }
 
-    public String getmLikes() {
+    public int getmLikes() {
         return mLikes;
     }
 
-    public void setmLikes(String mLikes) {
+    public void setmLikes(int mLikes) {
         this.mLikes = mLikes;
     }
 
