@@ -42,14 +42,13 @@ import static android.content.ContentValues.TAG;
 import static com.kneedleapp.utils.Config.fragmentManager;
 
 
-public class AddCommentFragment extends BaseFragment implements View.OnClickListener {
+public class AddCommentFragment extends BaseFragment implements View.OnClickListener, View.OnKeyListener {
     private RecyclerView mRecyclerView;
     private ArrayList<CommentVo> mList;
     private RecyclerView.LayoutManager mLayoutManager;
     private CommentAdapter mAdapter;
     private View view;
     private static final String FEEDID = "FEEDID";
-    private String names[] = {"aman", "ravi", "mukesh", "gurubhai"};
     private String mComment;
     private EditText mEdtComment;
     private String feedId;
@@ -102,6 +101,7 @@ public class AddCommentFragment extends BaseFragment implements View.OnClickList
     }
 
 
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -124,23 +124,22 @@ public class AddCommentFragment extends BaseFragment implements View.OnClickList
     }
 
     @Override
+    public boolean onKey(View view, int i, KeyEvent keyEvent) {
+        if (i == KeyEvent.KEYCODE_BACK) {
+            fragmentManager.popBackStackImmediate();
+
+            return true;
+        }
+        return false;
+    }
+    @Override
     public void onResume() {
         super.onResume();
 
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();
-        getView().setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-
-                if (i == KeyEvent.KEYCODE_BACK) {
-                    fragmentManager.popBackStackImmediate();
-
-                    return true;
-                }
-                return false;
-            }
-        });
+        getView().setOnKeyListener(this);
+        view.findViewById(R.id.edt_comment).setOnKeyListener(this);
 
     }
 
@@ -295,5 +294,6 @@ public class AddCommentFragment extends BaseFragment implements View.OnClickList
 
 
     }
+
 
 }

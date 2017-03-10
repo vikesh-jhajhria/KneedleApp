@@ -100,8 +100,16 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
             public void onClick(View view) {
                 Utils.setBounceEffect(holder.imgHeart);
                 if (Utils.isNetworkConnected(context, true)) {
+                    if (!feedItemVo.getLiked()) {
+                        holder.imgHeart.setImageResource(R.drawable.heart);
+                        holder.tvLikes.setText((feedItemVo.getmLikes()+1) + "");
+                    } else {
+                        holder.imgHeart.setImageResource(R.drawable.heart_unselected);
+                        holder.tvLikes.setText((feedItemVo.getmLikes()-1) + "");
+                    }
                     likeFeed(AppPreferences.getAppPreferences(context).getUserId(),
                             feedItemVo.getmId(), position);
+
                 }
             }
         });
@@ -188,15 +196,16 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
     }
 
 
+    //Like
     public void likeFeed(final String userId, final String feedId, final int position) {
 
-        ((MainActivity) context).showProgessDialog();
+        //((MainActivity) context).showProgessDialog();
         StringRequest requestLogin = new StringRequest(Request.Method.POST, Config.ADD_LIKE,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         Log.v(TAG, "Response : " + response.toString());
-                        ((MainActivity) context).dismissProgressDialog();
+                        //((MainActivity) context).dismissProgressDialog();
                         try {
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {

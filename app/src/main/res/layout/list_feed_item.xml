@@ -197,9 +197,9 @@
             android:id="@+id/card_comment_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_5"
+            android:layout_margin="@dimen/margin_5"
             android:visibility="gone"
-            app:cardBackgroundColor="#ececec"
+            app:cardBackgroundColor="#f5f4f4"
             app:cardCornerRadius="@dimen/margin_5">
 
             <TextView
@@ -220,10 +220,9 @@
             android:id="@+id/card_comment_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_5"
-            android:layout_marginBottom="@dimen/margin_5"
+            android:layout_margin="@dimen/margin_5"
             android:visibility="gone"
-            app:cardBackgroundColor="#ececec"
+            app:cardBackgroundColor="#f5f4f4"
             app:cardCornerRadius="@dimen/margin_5">
 
             <TextView

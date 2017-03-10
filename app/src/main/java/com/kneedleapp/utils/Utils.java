@@ -212,7 +212,8 @@ public class Utils {
         Date date  = calendar.getTime();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
 
-        return URLEncoder.encode(simpleDateFormat.format(date),"utf-8").replace("+","%20");
+        //return URLEncoder.encode(simpleDateFormat.format(date),"utf-8").replace("+","%20");
+        return simpleDateFormat.format(date);
     }
 
     public interface AlertCallback {

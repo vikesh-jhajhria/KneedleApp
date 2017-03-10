@@ -11,16 +11,35 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.kneedleapp.KneedleApp;
+import com.kneedleapp.MainActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.adapter.NotificationDataAdapter;
+import com.kneedleapp.utils.Config;
+import com.kneedleapp.vo.CommentVo;
 import com.kneedleapp.vo.NotificationItemVo;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import static android.content.ContentValues.TAG;
 
 
 public class NotificationFragment extends Fragment {
@@ -112,4 +131,69 @@ public class NotificationFragment extends Fragment {
         return list;
     }
 
+    public void getNotificatios(final String userId) {
+
+        ((MainActivity) getActivity()).showProgessDialog();
+        StringRequest requestLogin = new StringRequest(Request.Method.POST, Config.GET_NOTIFICATIONS,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.v(TAG, "Response : " + response.toString());
+                        ((MainActivity) getActivity()).dismissProgressDialog();
+                        try {
+                            final JSONObject jObject = new JSONObject(response);
+                            if (jObject.getString("status_id").equals("1")) {
+                                JSONArray jsonArray = jObject.getJSONObject("result").getJSONArray("likes");
+
+                                for(int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject commentObj = (JSONObject) jsonArray.get(i);
+                                    //NotificationItemVo obj = new NotificationItemVo();
+
+                                    //mList.add(obj);
+
+                                }
+                                mAdapter.notifyDataSetChanged();
+                            } else {
+                                Toast.makeText(getActivity(), jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(getActivity(), volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d("error", volleyError.getMessage());
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                try {
+                    params.put("user_id", userId);
+                    Log.v(TAG, "Params : " + params.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return params;
+            }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/x-www-form-urlencoded");
+                return headers;
+            }
+        };
+
+        requestLogin.setRetryPolicy(new DefaultRetryPolicy(
+                30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        KneedleApp.getInstance().addToRequestQueue(requestLogin);
+
+
+    }
 }

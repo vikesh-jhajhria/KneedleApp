@@ -11,10 +11,17 @@ public class NotificationItemVo {
     public static final int DAY = 0;
     public static final int NOTIFICATION = 1;
 
-    private String mTvHeader, mImgUser, mImgContent;
+    private String mId,mFeedId, mTime, mUserId,  mTvHeader, mImgUser, mImgContent;
     private SpannableString mTvNotiText;
     private int mType;
-
+/*"id":"119",
+"feed_id":"75",
+"time":"2015-09-21 09:48:29 +0530",
+"user_id":"4",
+"fullname":"Srikanth Naladala",
+"username":"fashion09",
+"profile_pic":"http:\/\/kneedleapp.com\/restAPIs\/uploads\/user_images\/1439098099_9173074.jpg",
+"notificationType":"Like"*/
     public int getmType() {
         return mType;
     }
