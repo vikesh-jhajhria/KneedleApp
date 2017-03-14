@@ -1,6 +1,7 @@
 package com.kneedleapp.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -51,37 +52,45 @@ import static com.kneedleapp.utils.Config.fragmentManager;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     private ProfileListAdapter profileListAdapter;
     private ArrayList<ListVo> List = new ArrayList<ListVo>();
     public static RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
     private ImageView listBtn, gridBtn;
     private static BaseActivity context;
+    private View view;
+    private String mUserId, mUserName, mUserTitle;
 
-    private TextView num_of_posts,num_of_followers,num_of_following,address,designation;
+    private TextView num_of_posts, num_of_followers, num_of_following, address, designation;
     private CircleImageView userImgView;
     private AppPreferences mPrefernce;
-    private java.util.List<UserDetailsVo> userDetailsVoList = new ArrayList<>();
 
-    public static ProfileFragment newInstance(String param1, String param2) {
+    public static ProfileFragment newInstance() {
         ProfileFragment fragment = new ProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
 
         return fragment;
     }
 
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            mUserName = bundle.getString("USERNAME");
+            mUserId = bundle.getString("USERID");
+            mUserTitle = bundle.getString("USERTITLE");
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        view = inflater.inflate(R.layout.fragment_profile, container, false);
         applyFonts(view);
+
 
         view.findViewById(R.id.ll_followers).setOnClickListener(this);
         view.findViewById(R.id.ll_following).setOnClickListener(this);
@@ -131,14 +140,21 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         view.findViewById(R.id.img_back).setOnClickListener(this);
         view.findViewById(R.id.img_chat).setOnClickListener(this);
 
-       num_of_posts = (TextView) view.findViewById(R.id.txt_post_count);
-       num_of_followers = (TextView) view.findViewById(R.id.txt_follower_count);
-       num_of_following = (TextView) view.findViewById(R.id.txt_following_count);
-       address = (TextView) view.findViewById(R.id.txt_address);
-       designation = (TextView) view.findViewById(R.id.txt_designation);
-       userImgView = (CircleImageView) view.findViewById(R.id.user_img);
+        num_of_posts = (TextView) view.findViewById(R.id.txt_post_count);
+        num_of_followers = (TextView) view.findViewById(R.id.txt_follower_count);
+        num_of_following = (TextView) view.findViewById(R.id.txt_following_count);
+        address = (TextView) view.findViewById(R.id.txt_address);
+        designation = (TextView) view.findViewById(R.id.txt_designation);
+        userImgView = (CircleImageView) view.findViewById(R.id.user_img);
+
+        if (mUserTitle != null) {
+            ((TextView) view.findViewById(R.id.txt_username)).setText(mUserTitle);
+        } else {
+            ((TextView) view.findViewById(R.id.txt_username)).setText(mPrefernce.getStringValue(AppPreferences.USER_NAME));
+        }
 
         getUserDetails();
+
 
         return view;
     }
@@ -174,7 +190,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
                 break;
             case R.id.img_back:
-
                 break;
             case R.id.img_chat:
                 final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -224,7 +239,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    public void getUserDetails(){
+    public void getUserDetails() {
         context.showProgessDialog("Please wait...");
         StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.USER_DETAILS,
                 new Response.Listener<String>() {
@@ -240,9 +255,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                                 num_of_posts.setText(userDataJsonObject.getString("posts"));
                                 num_of_following.setText(userDataJsonObject.getString("following"));
                                 num_of_followers.setText(userDataJsonObject.getString("followers"));
+                                if (!userDataJsonObject.getString("image").isEmpty()) {
+                                    Picasso.with(context).load(Config.USER_IMAGE_URL + userDataJsonObject.getString("image")).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(userImgView);
+                                }
 
-                                Picasso.with(context).load(userDataJsonObject.getString("image")).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(userImgView);
-                                address.setText(userDataJsonObject.getString("city")+","+userDataJsonObject.getString("state"));
+                                address.setText(userDataJsonObject.getString("city") + "," + userDataJsonObject.getString("state"));
                                 designation.setText(userDataJsonObject.getString("profiletype"));
                             } else {
                                 Toast.makeText(getContext(), "no data available", Toast.LENGTH_SHORT).show();
@@ -262,10 +279,20 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("user_id", mPrefernce.getStringValue(AppPreferences.USER_ID));
-                params.put("username", mPrefernce.getStringValue(AppPreferences.USER_NAME));
-              /*  params.put("lmt", "10");
-                params.put("offset", "1");*/
+
+
+                if (mUserId != null && mUserName != null) {
+                    params.put("user_id", getArguments().getString("USERID"));
+                    params.put("username", getArguments().getString("USERNAME"));
+                    Log.e("aman", "aman");
+
+                } else {
+                    params.put("user_id", mPrefernce.getStringValue(AppPreferences.USER_ID));
+                    params.put("username", mPrefernce.getStringValue(AppPreferences.USER_NAME));
+                    Log.e("aman", "sharma");
+                }
+
+
                 return params;
             }
         };
@@ -278,7 +305,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         RequestQueue feedqueue = Volley.newRequestQueue(getContext());
         feedqueue.add(requestFeed);
     }
-
 }
 
 

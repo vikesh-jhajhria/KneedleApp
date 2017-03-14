@@ -1,7 +1,12 @@
 package com.kneedleapp.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,10 +24,12 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.kneedleapp.BaseActivity;
 import com.kneedleapp.KneedleApp;
 import com.kneedleapp.MainActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.fragment.AddCommentFragment;
+import com.kneedleapp.fragment.ProfileFragment;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
@@ -102,10 +109,10 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
                 if (Utils.isNetworkConnected(context, true)) {
                     if (!feedItemVo.getLiked()) {
                         holder.imgHeart.setImageResource(R.drawable.heart);
-                        holder.tvLikes.setText((feedItemVo.getmLikes()+1) + "");
+                        holder.tvLikes.setText((feedItemVo.getmLikes() + 1) + "");
                     } else {
                         holder.imgHeart.setImageResource(R.drawable.heart_unselected);
-                        holder.tvLikes.setText((feedItemVo.getmLikes()-1) + "");
+                        holder.tvLikes.setText((feedItemVo.getmLikes() - 1) + "");
                     }
                     likeFeed(AppPreferences.getAppPreferences(context).getUserId(),
                             feedItemVo.getmId(), position);
@@ -148,6 +155,37 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
 
         Picasso.with(context).load(feedItemVo.getmUserImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(holder.imgUser);
         Picasso.with(context).load(feedItemVo.getmContentImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(holder.imgContent);
+
+
+        holder.imgUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Bundle bundle = new Bundle();
+                bundle.putString("USERID", feedItemVo.getmUserId());
+                bundle.putString("USERNAME", feedItemVo.getmUserSubTitle());
+                bundle.putString("USERTITLE", feedItemVo.getmUserTitle());
+                Fragment fragment = new ProfileFragment();
+                fragment.setArguments(bundle);
+                Config.fragmentManager.beginTransaction().replace(R.id.main_frame, fragment).addToBackStack(null).commit();
+
+
+            }
+        });
+
+
+        holder.tvTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putString("USERID", feedItemVo.getmUserId());
+                bundle.putString("USERNAME", feedItemVo.getmUserSubTitle());
+                bundle.putString("USERTITLE", feedItemVo.getmUserTitle());
+                Fragment fragment = new ProfileFragment();
+                fragment.setArguments(bundle);
+                Config.fragmentManager.beginTransaction().replace(R.id.main_frame, fragment).addToBackStack(null).commit();
+            }
+        });
 
 
     }

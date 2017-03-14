@@ -1,14 +1,45 @@
 package com.kneedleapp.vo;
 
-import android.graphics.drawable.Drawable;
-
-
 public class SearchResultVO {
-    public String Name;
-    public Drawable image;
-    public String  job;
-    public String place;
-    public String id;
-    public String fname;
+    private String mUserName, mFullName, mImgUrl, mProfileType, mCityName;
 
+    public String getmUserName() {
+        return mUserName;
+    }
+
+    public void setmUserName(String mUserName) {
+        this.mUserName = mUserName;
+    }
+
+    public String getmFullName() {
+        return mFullName;
+    }
+
+    public void setmFullName(String mFullName) {
+        this.mFullName = mFullName;
+    }
+
+    public String getmImgUrl() {
+        return mImgUrl;
+    }
+
+    public void setmImgUrl(String mImgUrl) {
+        this.mImgUrl = mImgUrl;
+    }
+
+    public String getmProfileType() {
+        return mProfileType;
+    }
+
+    public void setmProfileType(String mProfileType) {
+        this.mProfileType = mProfileType;
+    }
+
+    public String getmCityName() {
+        return mCityName;
+    }
+
+    public void setmCityName(String mCityName) {
+        this.mCityName = mCityName;
+    }
 }

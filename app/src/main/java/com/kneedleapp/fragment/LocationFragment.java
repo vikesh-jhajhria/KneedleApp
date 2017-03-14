@@ -2,7 +2,6 @@ package com.kneedleapp.fragment;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,7 @@ import com.kneedleapp.utils.Utils;
 import static com.kneedleapp.utils.Config.fragmentManager;
 
 
-public class LocationFragment extends Fragment implements View.OnClickListener {
+public class LocationFragment extends BaseFragment {
 
 
     @Override
@@ -29,16 +28,17 @@ public class LocationFragment extends Fragment implements View.OnClickListener {
 
         return view;
     }
-    private void applyFonts(View view){
-        Utils.setTypeface(getContext(),(TextView) view.findViewById(R.id.txt_edit_profile), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getContext(),(TextView) view.findViewById(R.id.txt_location), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getContext(),(TextView) view.findViewById(R.id.txt_state), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getContext(),(TextView) view.findViewById(R.id.txt_city), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getContext(),(TextView) view.findViewById(R.id.txt_zip), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getContext(),(TextView) view.findViewById(R.id.txt_info1), Config.CENTURY_GOTHIC_BOLD);
-        Utils.setTypeface(getContext(),(TextView) view.findViewById(R.id.txt_info2), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getContext(),(TextView) view.findViewById(R.id.txt_search_profile), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getContext(),(TextView) view.findViewById(R.id.txt_btn_save), Config.CENTURY_GOTHIC_REGULAR);
+
+    private void applyFonts(View view) {
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_edit_profile), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_location), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_state), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_city), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_zip), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_info1), Config.CENTURY_GOTHIC_BOLD);
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_info2), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_search_profile), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_btn_save), Config.CENTURY_GOTHIC_REGULAR);
     }
 
     @Override
@@ -62,9 +62,7 @@ public class LocationFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.img_back:
-                fragmentManager.popBackStack();
-                break;
+
         }
     }
 }

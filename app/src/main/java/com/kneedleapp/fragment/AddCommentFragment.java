@@ -19,7 +19,6 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.kneedleapp.KneedleApp;
 import com.kneedleapp.MainActivity;
@@ -42,7 +41,7 @@ import static android.content.ContentValues.TAG;
 import static com.kneedleapp.utils.Config.fragmentManager;
 
 
-public class AddCommentFragment extends BaseFragment implements View.OnClickListener, View.OnKeyListener {
+public class AddCommentFragment extends BaseFragment {
     private RecyclerView mRecyclerView;
     private ArrayList<CommentVo> mList;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -73,8 +72,8 @@ public class AddCommentFragment extends BaseFragment implements View.OnClickList
         view = inflater.inflate(R.layout.fragment_add_comment, container, false);
         findViews();
         applyFonts(view);
-        if(Utils.isNetworkConnected(getActivity(),true)){
-            loadComments(AppPreferences.getAppPreferences(getActivity()).getUserId(),feedId,30,1);
+        if (Utils.isNetworkConnected(getActivity(), true)) {
+            loadComments(AppPreferences.getAppPreferences(getActivity()).getUserId(), feedId, 30, 1);
         }
         return view;
     }
@@ -101,7 +100,6 @@ public class AddCommentFragment extends BaseFragment implements View.OnClickList
     }
 
 
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -112,26 +110,16 @@ public class AddCommentFragment extends BaseFragment implements View.OnClickList
                     Toast.makeText(getContext(), "Please write the comment", Toast.LENGTH_LONG).show();
                 } else {
                     mComment = mEdtComment.getText().toString();
-                    addComment(AppPreferences.getAppPreferences(getActivity()).getUserId(),feedId,mComment,"");
+                    addComment(AppPreferences.getAppPreferences(getActivity()).getUserId(), feedId, mComment, "");
                     mEdtComment.setText("");
                     hideKeyboard();
                 }
                 break;
-            case R.id.img_back:
-                fragmentManager.popBackStack();
-                break;
         }
     }
 
-    @Override
-    public boolean onKey(View view, int i, KeyEvent keyEvent) {
-        if (i == KeyEvent.KEYCODE_BACK) {
-            fragmentManager.popBackStackImmediate();
 
-            return true;
-        }
-        return false;
-    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -157,7 +145,7 @@ public class AddCommentFragment extends BaseFragment implements View.OnClickList
                             if (jObject.getString("status_id").equals("1")) {
                                 JSONArray jsonArray = jObject.getJSONObject("comment_data").getJSONArray("comments");
 
-                                for(int i = 0; i < jsonArray.length(); i++) {
+                                for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject commentObj = (JSONObject) jsonArray.get(i);
                                     CommentVo obj = new CommentVo();
                                     obj.setmId(commentObj.getString("id"));
@@ -192,14 +180,15 @@ public class AddCommentFragment extends BaseFragment implements View.OnClickList
                 try {
                     params.put("user_id", userId);
                     params.put("feed_id", feedId);
-                    params.put("lmt", limit+"");
-                    params.put("offset", page+"");
+                    params.put("lmt", limit + "");
+                    params.put("offset", page + "");
                     Log.v(TAG, "Params : " + params.toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 return params;
             }
+
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
@@ -232,7 +221,7 @@ public class AddCommentFragment extends BaseFragment implements View.OnClickList
                             if (jObject.getString("status_id").equals("1")) {
                                 JSONArray jsonArray = jObject.getJSONObject("comment_data").getJSONArray("comments");
 
-                                for(int i = 0; i < jsonArray.length(); i++) {
+                                for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject commentObj = (JSONObject) jsonArray.get(i);
                                     CommentVo obj = new CommentVo();
                                     obj.setmId(commentObj.getString("id"));
@@ -277,6 +266,7 @@ public class AddCommentFragment extends BaseFragment implements View.OnClickList
                 }
                 return params;
             }
+
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();

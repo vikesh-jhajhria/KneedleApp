@@ -2,7 +2,6 @@ package com.kneedleapp.fragment;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -25,7 +24,6 @@ import com.kneedleapp.R;
 import com.kneedleapp.adapter.FollowerAdapter;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
-import com.kneedleapp.vo.FeedItemVo;
 import com.kneedleapp.vo.FollowersVo;
 import com.kneedleapp.vo.SearchResultVO;
 
@@ -35,28 +33,12 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.kneedleapp.utils.Config.fragmentManager;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FollowerFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FollowerFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class FollowerFragment extends BaseFragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+public class FollowerFragment extends BaseFragment {
     private BaseActivity context;
 
     private OnFragmentInteractionListener mListener;
@@ -73,20 +55,14 @@ public class FollowerFragment extends BaseFragment {
 
     public static FollowerFragment newInstance() {
         FollowerFragment fragment = new FollowerFragment();
-        Bundle args = new Bundle();
-        //args.putString(ARG_PARAM1, param1);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
+
     @Override
     public void onClick(View view) {
 
@@ -121,25 +97,14 @@ public class FollowerFragment extends BaseFragment {
     }
 
 
-
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 
@@ -169,7 +134,7 @@ public class FollowerFragment extends BaseFragment {
     }
 
 
-    private void getFollowers(){
+    private void getFollowers() {
         context.showProgessDialog("Please wait...");
         StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.FOLLOWERS,
                 new Response.Listener<String>() {

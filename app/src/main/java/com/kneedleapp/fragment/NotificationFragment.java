@@ -2,7 +2,6 @@ package com.kneedleapp.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -24,7 +23,6 @@ import com.kneedleapp.MainActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.adapter.NotificationDataAdapter;
 import com.kneedleapp.utils.Config;
-import com.kneedleapp.vo.CommentVo;
 import com.kneedleapp.vo.NotificationItemVo;
 
 import org.json.JSONArray;
@@ -42,39 +40,25 @@ import java.util.Map;
 import static android.content.ContentValues.TAG;
 
 
-public class NotificationFragment extends Fragment {
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    private String mParam1;
-    private String mParam2;
+public class NotificationFragment extends BaseFragment {
     private NotificationDataAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private ArrayList<NotificationItemVo> mList;
     private LinearLayoutManager mLayoutManager;
 
-    public static NotificationFragment newInstance(String param1, String param2) {
+    public static NotificationFragment newInstance() {
         NotificationFragment fragment = new NotificationFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
         View view = inflater.inflate(R.layout.fragment_notification, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_notification);
         mRecyclerView.setHasFixedSize(true);
@@ -145,7 +129,7 @@ public class NotificationFragment extends Fragment {
                             if (jObject.getString("status_id").equals("1")) {
                                 JSONArray jsonArray = jObject.getJSONObject("result").getJSONArray("likes");
 
-                                for(int i = 0; i < jsonArray.length(); i++) {
+                                for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject commentObj = (JSONObject) jsonArray.get(i);
                                     //NotificationItemVo obj = new NotificationItemVo();
 
@@ -179,6 +163,7 @@ public class NotificationFragment extends Fragment {
                 }
                 return params;
             }
+
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();

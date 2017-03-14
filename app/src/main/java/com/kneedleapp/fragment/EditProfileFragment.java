@@ -22,8 +22,9 @@ import java.util.ArrayList;
 import static com.kneedleapp.utils.Config.fragmentManager;
 
 
-public class EditProfileFragment extends Fragment implements View.OnClickListener {
+public class EditProfileFragment extends BaseFragment {
     ArrayList<String> spinnerDataList;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -42,6 +43,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         ((Spinner) view.findViewById(R.id.spinner_profile_type)).setAdapter(spinnerAdapter);
         return view;
     }
+
     public class SpinnerAdapter extends ArrayAdapter<String> {
 
         public SpinnerAdapter(Context context, int textViewResourceId, ArrayList<String> objects) {
@@ -49,7 +51,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         }
 
         @Override
-        public View getDropDownView(int position, View convertView,ViewGroup parent) {
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
             return getCustomView(position, convertView, parent);
         }
 
@@ -59,44 +61,39 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         }
 
         public View getCustomView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater=getActivity().getLayoutInflater();
-            View row=inflater.inflate(R.layout.layout_spinner_item, parent, false);
-            TextView label=(TextView)row.findViewById(R.id.txt_item);
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            View row = inflater.inflate(R.layout.layout_spinner_item, parent, false);
+            TextView label = (TextView) row.findViewById(R.id.txt_item);
             Utils.setTypeface(getActivity(), label, Config.CENTURY_GOTHIC_REGULAR);
             label.setText(spinnerDataList.get(position));
             return row;
         }
     }
+
     @Override
     public void onClick(View view) {
 
         switch (view.getId()) {
-
-            case R.id.img_back:
-                fragmentManager.popBackStack();
-                break;
             case R.id.img_location:
                 Fragment fragment = new LocationFragment();
                 fragmentManager.beginTransaction().add(R.id.main_frame, fragment).addToBackStack(null).commit();
                 break;
-
-
         }
     }
 
-    private void applyFonts(View view){
-        Utils.setTypeface(getContext(),(TextView) view.findViewById(R.id.txt_edit_profile), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getContext(),(TextView) view.findViewById(R.id.txt_name), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getContext(),(TextView) view.findViewById(R.id.txt_username), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getContext(),(TextView) view.findViewById(R.id.txt_password), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getContext(),(TextView) view.findViewById(R.id.txt_edit), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getContext(),(TextView) view.findViewById(R.id.txt_bio_title), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getContext(),(TextView) view.findViewById(R.id.txt_bio), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getContext(),(TextView) view.findViewById(R.id.txt_email), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getContext(),(TextView) view.findViewById(R.id.txt_gender), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getContext(),(TextView) view.findViewById(R.id.txt_homme), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getContext(),(TextView) view.findViewById(R.id.txt_femme), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getContext(),(TextView) view.findViewById(R.id.btn_save_changes), Config.CENTURY_GOTHIC_REGULAR);
+    private void applyFonts(View view) {
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_edit_profile), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_name), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_username), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_password), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_edit), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_bio_title), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_bio), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_email), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_gender), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_homme), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_femme), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.btn_save_changes), Config.CENTURY_GOTHIC_REGULAR);
     }
 
     @Override

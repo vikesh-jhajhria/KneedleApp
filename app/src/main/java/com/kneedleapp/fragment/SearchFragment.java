@@ -4,9 +4,11 @@ package com.kneedleapp.fragment;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -26,8 +28,9 @@ public class SearchFragment extends BaseFragment {
 
     ArrayList<String> spinnerDataList;
     ArrayList<String> withinList;
+    private View mView;
 
-    public static SearchFragment newInstance(String param1, String param2) {
+    public static SearchFragment newInstance() {
         SearchFragment fragment = new SearchFragment();
         return fragment;
     }
@@ -42,16 +45,16 @@ public class SearchFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        final View view = inflater.inflate(R.layout.fragment_search, container, false);
-        ((Spinner) view.findViewById(R.id.spinner_home)).getBackground().setColorFilter(getResources().getColor(R.color.textColorPrimary), PorterDuff.Mode.SRC_ATOP);
+        mView = inflater.inflate(R.layout.fragment_search, container, false);
+        ((Spinner) mView.findViewById(R.id.spinner_home)).getBackground().setColorFilter(getResources().getColor(R.color.textColorPrimary), PorterDuff.Mode.SRC_ATOP);
 
-        ((CheckBox)view.findViewById(R.id.check_near_me)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        ((CheckBox) mView.findViewById(R.id.check_near_me)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if(isChecked){
-                    view.findViewById(R.id.rl_zip).setVisibility(View.VISIBLE);
+                if (isChecked) {
+                    mView.findViewById(R.id.rl_zip).setVisibility(View.VISIBLE);
                 } else {
-                    view.findViewById(R.id.rl_zip).setVisibility(View.INVISIBLE);
+                    mView.findViewById(R.id.rl_zip).setVisibility(View.INVISIBLE);
                 }
             }
         });
@@ -66,23 +69,51 @@ public class SearchFragment extends BaseFragment {
         withinList.add("100 KM");
         withinList.add("200 KM");
         WithinSpinnerAdapter withinAdapter = new WithinSpinnerAdapter(getActivity(), R.layout.layout_spinner_item, withinList);
-        ((Spinner) view.findViewById(R.id.spinner_within)).setAdapter(withinAdapter);
+        ((Spinner) mView.findViewById(R.id.spinner_within)).setAdapter(withinAdapter);
 
-        view.findViewById(R.id.img_search).setOnClickListener(this);
+        mView.findViewById(R.id.img_search).setOnClickListener(this);
 
         SpinnerAdapter spinnerAdapter = new SpinnerAdapter(getActivity(), R.layout.layout_spinner_item, spinnerDataList);
-        ((Spinner) view.findViewById(R.id.spinner_home)).setAdapter(spinnerAdapter);
+        ((Spinner) mView.findViewById(R.id.spinner_home)).setAdapter(spinnerAdapter);
 
-        applyFonts(view);
-        return view;
+        applyFonts(mView);
+
+        ((EditText) mView.findViewById(R.id.txt_search)).setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+
+                if (i == EditorInfo.IME_ACTION_SEARCH) {
+
+                    if (((EditText) mView.findViewById(R.id.txt_search)).getText().toString().trim().isEmpty()) {
+                        ((EditText) mView.findViewById(R.id.txt_search)).setError("Please enter key to search.");
+
+                    }
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("SEARCHTEXT", ((EditText) mView.findViewById(R.id.txt_search)).getText().toString().trim());
+
+                    SearchResultFragment fragment = SearchResultFragment.newInstance();
+                    fragment.setArguments(bundle);
+                    Config.fragmentManager.beginTransaction()
+                            .add(R.id.main_frame, fragment, "SEARCH_RESULT")
+                            .addToBackStack(null)
+                            .commit();
+                    hideKeyboard();
+
+                }
+
+                return false;
+            }
+        });
+
+        return mView;
     }
-
 
 
     public class SpinnerAdapter extends ArrayAdapter<String> {
 
-        public SpinnerAdapter(Context context, int textViewResourceId, ArrayList<String> objects) {
-            super(context, textViewResourceId, objects);
+        public SpinnerAdapter(Context context, int textmViewResourceId, ArrayList<String> objects) {
+            super(context, textmViewResourceId, objects);
         }
 
         @Override
@@ -136,16 +167,22 @@ public class SearchFragment extends BaseFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.img_search:
-                searchText = ((EditText) getView().findViewById(R.id.txt_search)).getText().toString().trim();
+                searchText = ((EditText) mView.findViewById(R.id.txt_search)).getText().toString().trim();
                 if (searchText.isEmpty()) {
-                    ((EditText) getView().findViewById(R.id.txt_search)).setError("Please enter key to search.");
+                    ((EditText) mView.findViewById(R.id.txt_search)).setError("Please enter key to search.");
                     break;
                 }
+
+                Bundle bundle = new Bundle();
+                bundle.putString("SEARCHTEXT", searchText);
+
                 SearchResultFragment fragment = SearchResultFragment.newInstance();
+                fragment.setArguments(bundle);
                 Config.fragmentManager.beginTransaction()
                         .add(R.id.main_frame, fragment, "SEARCH_RESULT")
-                        .disallowAddToBackStack()
+                        .addToBackStack(null)
                         .commit();
+                hideKeyboard();
                 break;
         }
     }
@@ -155,5 +192,6 @@ public class SearchFragment extends BaseFragment {
         Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_zip), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.check_near_me), Config.CENTURY_GOTHIC_REGULAR);
     }
+
 
 }

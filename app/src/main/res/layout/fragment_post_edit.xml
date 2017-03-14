@@ -19,6 +19,7 @@
             android:layout_marginRight="@dimen/activity_horizontal_margin">
 
             <ImageView
+                android:id="@+id/img_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -60,7 +61,8 @@
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:background="#1d000000"
-            android:scaleType="fitCenter" />
+            android:scaleType="fitCenter"
+            android:src="@drawable/default_feed"/>
 
         <RelativeLayout
             android:layout_width="match_parent"

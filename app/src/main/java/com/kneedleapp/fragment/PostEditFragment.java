@@ -18,13 +18,15 @@ import com.kneedleapp.utils.Utils;
 import static com.kneedleapp.utils.Config.fragmentManager;
 
 
-public class PostEditFragment extends Fragment {
+public class PostEditFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_post_edit, container, false);
+
+        view.findViewById(R.id.img_back).setOnClickListener(this);
 
         Bitmap bitmap = getArguments().getParcelable("POSTIMAGE");
         if (bitmap != null) {

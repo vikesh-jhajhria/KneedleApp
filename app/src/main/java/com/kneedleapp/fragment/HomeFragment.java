@@ -42,24 +42,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class HomeFragment extends Fragment implements FeedItemAdapter.FeedItemListener {
+public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedItemListener {
 
     private RecyclerView mRecyclerView;
     private FeedItemAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<FeedItemVo> mList;
     private String names[] = {"aman", "ravi", "manoj", "krishan"};
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     private BaseActivity context;
 
 
-    public static HomeFragment newInstance(String param1, String param2) {
+    public static HomeFragment newInstance() {
         HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 

@@ -34,23 +34,17 @@ import java.io.IOException;
 import static com.kneedleapp.utils.Config.fragmentManager;
 
 
-public class NewPostFragment extends Fragment implements View.OnClickListener {
+public class PostFragment extends BaseFragment {
     private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
     private ImageView mImgContent;
     private String userChoosenTask;
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     private boolean result;
     private View view_main;
 
-    public static NewPostFragment newInstance(String param1, String param2) {
+    public static PostFragment newInstance() {
 
-        NewPostFragment fragment = new NewPostFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
+        PostFragment fragment = new PostFragment();
         return fragment;
     }
 
@@ -58,7 +52,7 @@ public class NewPostFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view_main = inflater.inflate(R.layout.fragment_new_post, container, false);
+        view_main = inflater.inflate(R.layout.fragment_post, container, false);
         mImgContent = (ImageView) view_main.findViewById(R.id.img_content);
         result = checkPermission(getContext());
 

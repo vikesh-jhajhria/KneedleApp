@@ -12,14 +12,15 @@ import com.kneedleapp.R;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.SearchResultVO;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 
 public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.CheckViewHolder> {
 
-    Context context;
-    ArrayList<SearchResultVO> list;
+    private Context context;
+    private ArrayList<SearchResultVO> list;
 
 
     public SearchResultAdapter(ArrayList<SearchResultVO> list, Context context) {
@@ -39,11 +40,12 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
 
     @Override
     public void onBindViewHolder(final CheckViewHolder holder, final int position) {
-        final SearchResultVO checkVo = list.get(position);
-        holder.txt_name.setText(checkVo.Name);
-        holder.fullname.setText(checkVo.fname);
-        holder.job.setText(checkVo.job);
-        holder.place.setText(checkVo.place);
+        SearchResultVO checkVo = list.get(position);
+        holder.txt_name.setText(checkVo.getmUserName());
+        holder.fullname.setText(checkVo.getmFullName());
+        holder.job.setText(checkVo.getmProfileType());
+        holder.place.setText(checkVo.getmCityName());
+        Picasso.with(context).load(Config.USER_IMAGE_URL + checkVo.getmImgUrl()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(holder.img);
 
 
     }

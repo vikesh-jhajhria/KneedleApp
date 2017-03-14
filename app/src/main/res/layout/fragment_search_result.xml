@@ -29,6 +29,8 @@
                 android:background="@android:color/transparent"
                 android:gravity="center_vertical"
                 android:maxLines="1"
+                android:inputType="text"
+                android:imeOptions="actionSearch"
                 android:hint="Search"
                 android:textColor="@color/gray"
                 android:textSize="@dimen/font_16" />
@@ -40,6 +42,7 @@
                 android:layout_alignParentRight="true"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
+                android:visibility="gone"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_cross_red" />
         </LinearLayout>

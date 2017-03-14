@@ -5,7 +5,7 @@ import android.view.View;
 
 import com.kneedleapp.fragment.HomeFragment;
 import com.kneedleapp.fragment.SearchFragment;
-import com.kneedleapp.fragment.NewPostFragment;
+import com.kneedleapp.fragment.PostFragment;
 import com.kneedleapp.fragment.NotificationFragment;
 import com.kneedleapp.fragment.ProfileFragment;
 import com.kneedleapp.utils.Config;
@@ -58,23 +58,23 @@ public class MainActivity extends BaseActivity {
         switch (selectedTab) {
             case HOME:
                 findViewById(R.id.rl_home_selected).setVisibility(View.VISIBLE);
-                showFragment(R.id.main_frame, HomeFragment.newInstance("", ""), "HOME_FRAGMENT");
+                showFragment(R.id.main_frame, HomeFragment.newInstance(), "HOME_FRAGMENT");
                 break;
             case SEARCH:
                 findViewById(R.id.rl_search_selected).setVisibility(View.VISIBLE);
-                showFragment(R.id.main_frame, SearchFragment.newInstance("", ""), "SEARCH_FRAGMENT");
+                showFragment(R.id.main_frame, SearchFragment.newInstance(), "SEARCH_FRAGMENT");
                 break;
             case POST:
                 findViewById(R.id.rl_post_selected).setVisibility(View.VISIBLE);
-                showFragment(R.id.main_frame, NewPostFragment.newInstance("", ""), "NEWPOST_FRAGMENT");
+                showFragment(R.id.main_frame, PostFragment.newInstance(), "NEWPOST_FRAGMENT");
                 break;
             case NOTIFICATION:
                 findViewById(R.id.rl_notification_selected).setVisibility(View.VISIBLE);
-                showFragment(R.id.main_frame, NotificationFragment.newInstance("", ""), "NOTIFICATION_FRAGMENT");
+                showFragment(R.id.main_frame, NotificationFragment.newInstance(), "NOTIFICATION_FRAGMENT");
                 break;
             case PROFILE:
                 findViewById(R.id.rl_profile_selected).setVisibility(View.VISIBLE);
-                showFragment(R.id.main_frame, ProfileFragment.newInstance("", ""), "PROFILE_FRAGMENT");
+                showFragment(R.id.main_frame, ProfileFragment.newInstance(), "PROFILE_FRAGMENT");
                 break;
         }
     }

@@ -2,7 +2,6 @@ package com.kneedleapp.fragment;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
@@ -19,7 +18,7 @@ import java.util.ArrayList;
 import static com.kneedleapp.utils.Config.fragmentManager;
 
 
-public class UserFollowRequest extends Fragment implements View.OnClickListener {
+public class UserFollowRequest extends BaseFragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private UserRequestAdapter mAdapter;
@@ -49,17 +48,12 @@ public class UserFollowRequest extends Fragment implements View.OnClickListener 
 
     }
 
-    private void addDataIntoList() {
-    }
-
 
     @Override
     public void onClick(View view) {
 
         switch (view.getId()) {
-            case R.id.img_back:
-                fragmentManager.popBackStackImmediate();
-                break;
+
         }
 
 

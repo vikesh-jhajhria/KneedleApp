@@ -4,6 +4,7 @@ package com.kneedleapp.fragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +27,10 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.kneedleapp.utils.Config.fragmentManager;
 
-public class BaseFragment extends Fragment implements View.OnClickListener{
+
+public class BaseFragment extends Fragment implements View.OnClickListener, View.OnKeyListener{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,8 +48,21 @@ public class BaseFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
-
+        switch (view.getId()) {
+            case R.id.img_back:
+                fragmentManager.popBackStack();
+                break;
+        }
     }
 
 
+    @Override
+    public boolean onKey(View view, int i, KeyEvent keyEvent) {
+        if (i == KeyEvent.KEYCODE_BACK) {
+            fragmentManager.popBackStackImmediate();
+
+            return true;
+        }
+        return false;
+    }
 }

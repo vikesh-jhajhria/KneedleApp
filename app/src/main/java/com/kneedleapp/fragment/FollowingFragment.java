@@ -37,24 +37,11 @@ import java.util.Map;
 
 import static com.kneedleapp.utils.Config.fragmentManager;
 
-/**
- * Created by abc on 08-Mar-17.
- */
-
 public class FollowingFragment extends BaseFragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     private static BaseActivity context;
 
     private FollowerFragment.OnFragmentInteractionListener mListener;
     private FollowerAdapter followerAdapter;
-    private ArrayList<SearchResultVO> List = new ArrayList<>();
     public static RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
 
@@ -66,19 +53,12 @@ public class FollowingFragment extends BaseFragment {
 
     public static FollowingFragment newInstance() {
         FollowingFragment fragment = new FollowingFragment();
-        Bundle args = new Bundle();
-        //args.putString(ARG_PARAM1, param1);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -121,7 +101,6 @@ public class FollowingFragment extends BaseFragment {
     }
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 
@@ -149,7 +128,8 @@ public class FollowingFragment extends BaseFragment {
         });
 
     }
-    private void getFollowing(){
+
+    private void getFollowing() {
         context.showProgessDialog("Please wait...");
         StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.FOLLOWING,
                 new Response.Listener<String>() {
@@ -219,7 +199,6 @@ public class FollowingFragment extends BaseFragment {
         RequestQueue feedqueue = Volley.newRequestQueue(getContext());
         feedqueue.add(requestFeed);
     }
-
 
 
 }

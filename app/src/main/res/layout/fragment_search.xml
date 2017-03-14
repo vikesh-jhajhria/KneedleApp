@@ -33,6 +33,7 @@
                     android:background="@color/textColorPrimary"
                     android:gravity="center_vertical"
                     android:hint="SEARCH NAMES + HASHTAGS"
+                    android:imeOptions="actionSearch"
                     android:inputType="textCapWords|textPersonName"
                     android:maxLines="1"
                     android:paddingBottom="@dimen/margin_10"
