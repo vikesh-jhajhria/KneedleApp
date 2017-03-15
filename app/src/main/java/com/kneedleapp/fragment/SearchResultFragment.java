@@ -84,13 +84,16 @@ public class SearchResultFragment extends BaseFragment {
         searchResultAdapter = new SearchResultAdapter(mList, getActivity());
         recyclerView.setAdapter(searchResultAdapter);
 
+
+        ((EditText) mView.findViewById(R.id.txt_title)).setText(mSearchText);
+
+
         ((EditText) mView.findViewById(R.id.txt_title)).setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_SEARCH) {
                     getSearchItem();
                     hideKeyboard();
-
                     return true;
                 }
                 return false;
@@ -142,7 +145,6 @@ public class SearchResultFragment extends BaseFragment {
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();
         getView().setOnKeyListener(this);
-
     }
 
 
@@ -155,6 +157,8 @@ public class SearchResultFragment extends BaseFragment {
                         ((BaseActivity) getContext()).dismissProgressDialog();
                         try {
                             mList.clear();
+                            searchResultAdapter.notifyDataSetChanged();
+
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
                                 Log.e("responce....::>>>", response);

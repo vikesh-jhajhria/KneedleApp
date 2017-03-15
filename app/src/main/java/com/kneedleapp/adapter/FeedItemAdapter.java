@@ -51,9 +51,8 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
     private Context context;
     private ArrayList<FeedItemVo> mList;
     private FeedItemListener mListener;
-
     public interface FeedItemListener {
-        public void getItem(int position, ViewHolder holder);
+        public void getItem(int position, ViewHolder holder, boolean isLiked);
     }
 
     public FeedItemAdapter(Context context, ArrayList<FeedItemVo> mList, FeedItemListener mListener) {
@@ -100,7 +99,6 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
         } else {
             holder.imgHeart.setImageResource(R.drawable.heart_unselected);
         }
-
         Log.e("imageurl", "" + feedItemVo.getmUserImage());
         holder.imgHeart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,9 +112,10 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
                         holder.imgHeart.setImageResource(R.drawable.heart_unselected);
                         holder.tvLikes.setText((feedItemVo.getmLikes() - 1) + "");
                     }
-                    likeFeed(AppPreferences.getAppPreferences(context).getUserId(),
-                            feedItemVo.getmId(), position);
-
+                    if (Utils.isNetworkConnected(context, true)) {
+                        likeFeed(AppPreferences.getAppPreferences(context).getUserId(),
+                                feedItemVo.getmId(), position);
+                    }
                 }
             }
         });
@@ -139,7 +138,7 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
         holder.imgContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.getItem(position, holder);
+                mListener.getItem(position, holder, feedItemVo.getLiked());
             }
         });
         holder.comment.setOnClickListener(new View.OnClickListener() {

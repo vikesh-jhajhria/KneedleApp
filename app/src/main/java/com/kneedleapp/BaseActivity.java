@@ -58,7 +58,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-    public enum BottomBarTab {
+    public static enum BottomBarTab {
         HOME, SEARCH, POST, NOTIFICATION, PROFILE;
     }
 
@@ -198,8 +198,6 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
-    /*Check permissions*/
     public boolean hasPermission(int permissionType) {
         if (Build.VERSION.SDK_INT >= 23) {
             switch (permissionType) {
@@ -217,7 +215,6 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
-    /* For permission popup result*/
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
@@ -231,7 +228,6 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    /*For location setting .................*/
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -295,7 +291,6 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         Utils.setTypeface(this,textView,CENTURY_GOTHIC_REGULAR);
         textView.setTextColor(Color.WHITE);
         snackbar.show();
-
     }
 
     private void showSettingSnakeBar() {
@@ -314,9 +309,5 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         Utils.setTypeface(this,textView,CENTURY_GOTHIC_REGULAR);
         textView.setTextColor(Color.WHITE);
         snackbar.show();
-
     }
-
-
-
 }

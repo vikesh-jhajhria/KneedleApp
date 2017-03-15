@@ -149,64 +149,16 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
         feedqueue.add(requestFeed);
     }
 
+
     @Override
-    public void getItem(int position, FeedItemAdapter.ViewHolder holder) {
+    public void getItem(int position, FeedItemAdapter.ViewHolder holder, boolean isLiked) {
         Intent intent = new Intent(getActivity(), FullImageViewActivity.class);
         intent.putExtra("USERNAME", mList.get(position).getmUserTitle());
         intent.putExtra("IMAGE", mList.get(position).getmContentImage());
         intent.putExtra("USERIMAGE", mList.get(position).getmUserImage());
         intent.putExtra("LIKES", mList.get(position).getmLikes());
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-            try {
-
-               *//* Bitmap header = ((BitmapDrawable) ((ImageView) getActivity().findViewById(R.id.img_kneedle)).getDrawable()).getBitmap();
-                ByteArrayOutputStream headerstream = new ByteArrayOutputStream();
-                header.compress(Bitmap.CompressFormat.PNG, 100, headerstream);
-                byte[] headerByteArray = headerstream.toByteArray();
-*//*
-                Bitmap bmp = ((BitmapDrawable) holder.imgContent.getDrawable()).getBitmap();
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] mainImageByteArray = stream.toByteArray();
-
-               *//* byte[] userImageByteArray = new byte[0];
-                Bitmap imgUser = ((BitmapDrawable) holder.imgUser.getDrawable()).getBitmap();
-                ByteArrayOutputStream imgStream = new ByteArrayOutputStream();
-                imgUser.compress(Bitmap.CompressFormat.PNG, 100, imgStream);
-                userImageByteArray = imgStream.toByteArray();
-
-                byte[] likeByteArray = new byte[0];
-                Bitmap imglike = ((BitmapDrawable) holder.imgHeart.getDrawable()).getBitmap();
-                ByteArrayOutputStream likeStream = new ByteArrayOutputStream();
-                imglike.compress(Bitmap.CompressFormat.PNG, 100, likeStream);
-                likeByteArray = likeStream.toByteArray();*//*
-
-
-                intent.putExtra("transition", false);
-                //intent.putExtra("HEADER_IMAGE", headerByteArray);
-                intent.putExtra("MAIN_IMAGE", mainImageByteArray);
-                //intent.putExtra("USER_IMAGE", userImageByteArray);
-                //intent.putExtra("HEART_IMAGE", likeByteArray);
-                ActivityOptions options;
-
-                options = ActivityOptions.makeSceneTransitionAnimation(getActivity(),
-                        new Pair<View, String>(holder.imgContent, context.getResources().getString(R.string.main_image)),
-                        //new Pair<View, String>(holder.imgUser, context.getResources().getString(R.string.user_image)),
-                        //new Pair<View, String>(holder.imgHeart, context.getResources().getString(R.string.heart_image)),
-                        //new Pair<View, String>(((ImageView) getActivity().findViewById(R.id.img_kneedle)), context.getResources().getString(R.string.header_image)),
-                        new Pair<View, String>(holder.tvLikes, context.getResources().getString(R.string.likes)),
-                        new Pair<View, String>(holder.tvTitle, context.getResources().getString(R.string.user_name)));
-
-
-                context.startActivity(intent);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        } else {*/
-            startActivity(intent);
-        //}
+        intent.putExtra("LIKEDORNOT", isLiked);
+        startActivity(intent);
     }
 
 

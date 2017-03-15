@@ -10,6 +10,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -241,7 +242,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     public void getUserDetails() {
         context.showProgessDialog("Please wait...");
-        StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.USER_DETAILS,
+        StringRequest requestUser = new StringRequest(Request.Method.POST, Config.USER_DETAILS,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -297,14 +298,36 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             }
         };
 
-        requestFeed.setRetryPolicy(new DefaultRetryPolicy(
+        requestUser.setRetryPolicy(new DefaultRetryPolicy(
                 30000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-        RequestQueue feedqueue = Volley.newRequestQueue(getContext());
-        feedqueue.add(requestFeed);
+        RequestQueue userqueue = Volley.newRequestQueue(getContext());
+        userqueue.add(requestUser);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+
+                if (i == KeyEvent.KEYCODE_BACK) {
+                    fragmentManager.popBackStack();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+    }
+
+
 }
 
 

@@ -97,23 +97,23 @@ public class EditProfileFragment extends BaseFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+        public void onResume() {
+            super.onResume();
 
-        getView().setFocusableInTouchMode(true);
-        getView().requestFocus();
-        getView().setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+            getView().setFocusableInTouchMode(true);
+            getView().requestFocus();
+            getView().setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View view, int i, KeyEvent keyEvent) {
 
-                if (i == KeyEvent.KEYCODE_BACK) {
-                    fragmentManager.popBackStackImmediate();
+                    if (i == KeyEvent.KEYCODE_BACK) {
+                        fragmentManager.popBackStack();
 
-                    return true;
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
 
     }
 }

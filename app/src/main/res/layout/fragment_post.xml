@@ -29,7 +29,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:src="@drawable/ic_cross_red"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/txt_new_post"
@@ -45,18 +45,13 @@
             </RelativeLayout>
 
 
-
-
-                <ImageView
-                    android:id="@+id/img_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:layout_centerVertical="true"
-                    android:background="#1d000000"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/default_feed" />
-
-
+            <ImageView
+                android:id="@+id/img_content"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_centerVertical="true"
+                android:background="#1d000000"
+                android:scaleType="fitCenter" />
 
 
             <LinearLayout

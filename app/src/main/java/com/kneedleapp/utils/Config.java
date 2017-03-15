@@ -35,5 +35,6 @@ public class Config {
     public final static String ADD_COMMENT = BASE_URL + "add_comment";
     public final static String GET_NOTIFICATIONS = BASE_URL + "get_notifications";
     public final static String GET_SEARCH_ITEM = BASE_URL + "searchtext";
+    public final static String POST_COMMENT = BASE_URL + "add_feed";
 
 }
