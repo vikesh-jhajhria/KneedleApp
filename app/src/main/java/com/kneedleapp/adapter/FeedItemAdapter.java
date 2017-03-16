@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -21,9 +22,11 @@ import android.widget.Toast;
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.kneedleapp.BaseActivity;
 import com.kneedleapp.KneedleApp;
 import com.kneedleapp.MainActivity;
@@ -39,6 +42,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,6 +55,8 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
     private Context context;
     private ArrayList<FeedItemVo> mList;
     private FeedItemListener mListener;
+    private FeedItemVo feedItemVo;
+
     public interface FeedItemListener {
         public void getItem(int position, ViewHolder holder, boolean isLiked);
     }
@@ -59,6 +65,7 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
         this.context = context;
         this.mList = mList;
         this.mListener = mListener;
+
     }
 
     @Override
@@ -70,7 +77,7 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final FeedItemVo feedItemVo = mList.get(position);
+        feedItemVo = mList.get(position);
         holder.tvTitle.setText(feedItemVo.getmUserTitle());
         holder.tvSubTitle.setText(feedItemVo.getmUserSubTitle());
         holder.tvDescription.setText(feedItemVo.getmDescription());
@@ -125,13 +132,44 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
                 int popupWidth = 300;//ViewGroup.LayoutParams.WRAP_CONTENT;
                 int popupHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
                 View popupView = LayoutInflater.from(context).inflate(R.layout.menu_popup, null);
-                PopupWindow attachmentPopup = new PopupWindow(context);
+                final PopupWindow attachmentPopup = new PopupWindow(context);
                 attachmentPopup.setFocusable(true);
                 attachmentPopup.setWidth(popupWidth);
                 attachmentPopup.setHeight(popupHeight);
                 attachmentPopup.setContentView(popupView);
                 attachmentPopup.setBackgroundDrawable(new BitmapDrawable());
                 attachmentPopup.showAsDropDown(view, -5, 0);
+                if (AppPreferences.getAppPreferences(context).getStringValue(AppPreferences.USER_ID).equalsIgnoreCase(feedItemVo.getmUserId())) {
+                    ((TextView) popupView.findViewById(R.id.txt_delete)).setVisibility(View.VISIBLE);
+                }
+
+                if (AppPreferences.getAppPreferences(context).getStringValue(AppPreferences.USER_ID).equalsIgnoreCase(feedItemVo.getmUserId())) {
+                    ((TextView) popupView.findViewById(R.id.txt_block)).setVisibility(View.VISIBLE);
+                }
+
+
+                ((TextView) popupView.findViewById(R.id.txt_report)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        reportProblem();
+                        attachmentPopup.dismiss();
+                    }
+                });
+                ((TextView) popupView.findViewById(R.id.txt_block)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        block();
+                        attachmentPopup.dismiss();
+                    }
+                });
+                ((TextView) popupView.findViewById(R.id.txt_delete)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        delete();
+                        attachmentPopup.dismiss();
+                    }
+                });
+
 
             }
         });
@@ -299,5 +337,150 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
         KneedleApp.getInstance().addToRequestQueue(requestLogin);
 
 
+    }
+
+
+    public void reportProblem() {
+        ((BaseActivity) context).showProgessDialog("Please wait...");
+        StringRequest requestReportProblem = new StringRequest(Request.Method.POST, Config.REPORT_PROBLEM,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        ((BaseActivity) context).dismissProgressDialog();
+                        try {
+                            final JSONObject jObject = new JSONObject(response);
+                            if (jObject.getString("status_id").equals("1")) {
+                                Log.e("reponce...::>>", response);
+
+                            } else {
+                                Toast.makeText(context, "no data available", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+
+                        Toast.makeText(context, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d("error", volleyError.getMessage());
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("feed_id", feedItemVo.getmId());
+                params.put("user_id", AppPreferences.getAppPreferences(context).getStringValue(AppPreferences.USER_ID));
+
+                return params;
+            }
+        };
+
+        requestReportProblem.setRetryPolicy(new DefaultRetryPolicy(
+                30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(requestReportProblem);
+    }
+
+    public void block() {
+        ((BaseActivity) context).showProgessDialog("Please wait...");
+        StringRequest block = new StringRequest(Request.Method.POST, Config.BLOCK,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        ((BaseActivity) context).dismissProgressDialog();
+                        try {
+                            final JSONObject jObject = new JSONObject(response);
+                            if (jObject.getString("status_id").equals("1")) {
+                                Log.e("reponce...::>>", response);
+
+                            } else {
+                                Toast.makeText(context, "no data available", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+
+                        Toast.makeText(context, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d("error", volleyError.getMessage());
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("friend_user_id", feedItemVo.getmUserId());
+                params.put("user_id", AppPreferences.getAppPreferences(context).getStringValue(AppPreferences.USER_ID));
+
+                return params;
+            }
+        };
+
+        block.setRetryPolicy(new DefaultRetryPolicy(
+                30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(block);
+    }
+
+    public void delete() {
+        ((BaseActivity) context).showProgessDialog("Please wait...");
+        StringRequest delete = new StringRequest(Request.Method.POST, Config.DELETE_FEED,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        ((BaseActivity) context).dismissProgressDialog();
+                        try {
+                            final JSONObject jObject = new JSONObject(response);
+                            if (jObject.getString("status_id").equals("1")) {
+                                Log.e("reponce...::>>", response);
+
+                            } else {
+                                Toast.makeText(context, "no data available", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+
+                        Toast.makeText(context, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d("error", volleyError.getMessage());
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+
+
+                params.put("feed_id", feedItemVo.getmId());
+                params.put("user_id", AppPreferences.getAppPreferences(context).getStringValue(AppPreferences.USER_ID));
+
+
+                return params;
+            }
+        };
+
+        delete.setRetryPolicy(new DefaultRetryPolicy(
+                30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(delete);
     }
 }

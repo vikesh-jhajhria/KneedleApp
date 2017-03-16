@@ -105,7 +105,8 @@ public class LoginActivity extends BaseActivity {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         Toast.makeText(LoginActivity.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
-                        Log.d("error", volleyError.getMessage());
+                        dismissProgressDialog();
+                      //  Log.d("error", volleyError.getMessage());
                     }
                 }) {
             @Override

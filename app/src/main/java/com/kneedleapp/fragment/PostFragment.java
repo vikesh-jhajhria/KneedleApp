@@ -31,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kneedleapp.BaseActivity;
 import com.kneedleapp.MainActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.utils.Config;
@@ -230,14 +231,12 @@ public class PostFragment extends BaseFragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
 
     public void onSelectFromGalleryResult(Intent data) {
         Uri selectedImage = data.getData();
         String[] filePath = {MediaStore.Images.Media.DATA};
-        Cursor c = ((MainActivity)getContext()).getContentResolver().query(selectedImage, filePath, null, null, null);
+        Cursor c = ((BaseActivity) getContext()).getContentResolver().query(selectedImage, filePath, null, null, null);
         c.moveToFirst();
         int columnIndex = c.getColumnIndex(filePath[0]);
         String picturePath = c.getString(columnIndex);

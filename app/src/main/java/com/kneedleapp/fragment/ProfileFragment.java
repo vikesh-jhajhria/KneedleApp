@@ -3,6 +3,7 @@ package com.kneedleapp.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -90,6 +91,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_profile, container, false);
+        view = inflater.inflate(R.layout.fragment_profile, container, false);
         applyFonts(view);
 
 
@@ -155,6 +157,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         }
 
         getUserDetails();
+        ((SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getUserDetails();
+                ((SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout)).setRefreshing(false);
+            }
+        });
 
 
         return view;
@@ -182,13 +191,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         switch (view.getId()) {
 
             case R.id.txt_btn_edit:
+                Bundle bundle = new Bundle();
                 Fragment fragment = new EditProfileFragment();
                 fragmentManager.beginTransaction().add(R.id.main_frame, fragment).addToBackStack(null).commit();
-
-                /*Fragment fragment = new UserFollowRequest();
-                getFragmentManager().beginTransaction().add(R.id.main_frame,fragment).addToBackStack(null).commit();
-*/
-
                 break;
             case R.id.img_back:
                 break;
@@ -285,12 +290,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 if (mUserId != null && mUserName != null) {
                     params.put("user_id", getArguments().getString("USERID"));
                     params.put("username", getArguments().getString("USERNAME"));
-                    Log.e("aman", "aman");
+
 
                 } else {
                     params.put("user_id", mPrefernce.getStringValue(AppPreferences.USER_ID));
                     params.put("username", mPrefernce.getStringValue(AppPreferences.USER_NAME));
-                    Log.e("aman", "sharma");
+
                 }
 
 

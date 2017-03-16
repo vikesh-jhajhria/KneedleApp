@@ -36,5 +36,9 @@ public class Config {
     public final static String GET_NOTIFICATIONS = BASE_URL + "get_notifications";
     public final static String GET_SEARCH_ITEM = BASE_URL + "searchtext";
     public final static String POST_COMMENT = BASE_URL + "add_feed";
+    public final static String REPORT_PROBLEM = BASE_URL + "report_a_problem";
+    public final static String BLOCK = BASE_URL + "block_unblock_user";
+    public final static String DELETE_FEED = BASE_URL + "delete_feed";
+    public final static String GET_USER_DETAILS = BASE_URL + "get_user_details";
 
 }

@@ -32,6 +32,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,6 +42,7 @@ import static com.kneedleapp.utils.Config.fragmentManager;
 
 public class PostEditFragment extends BaseFragment {
     private View view;
+    private byte[] byteArray;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,6 +56,12 @@ public class PostEditFragment extends BaseFragment {
         if (bitmap != null) {
             ((ImageView) view.findViewById(R.id.img_post)).setImageBitmap(bitmap);
         }
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byteArray = stream.toByteArray();
+        Log.e("Byte Array", "" + byteArray);
+
 
         applyFonts(view);
 
@@ -108,7 +116,7 @@ public class PostEditFragment extends BaseFragment {
                                 Log.e("responce....::>>>", response);
                              /*   Fragment fragment = new HomeFragment();
                                 getFragmentManager().beginTransaction().replace(R.id.main_frame, fragment).commit();*/
-                                ((MainActivity)getActivity()).selectTab(BaseActivity.BottomBarTab.HOME);
+                                ((MainActivity) getActivity()).selectTab(BaseActivity.BottomBarTab.HOME);
 
 
                             } else {
@@ -133,6 +141,7 @@ public class PostEditFragment extends BaseFragment {
                 params.put("user_id", AppPreferences.getAppPreferences(getContext()).getStringValue(AppPreferences.USER_ID));
                 params.put("caption", ((EditText) view.findViewById(R.id.txt_caption)).getText().toString().trim());
                 params.put("privacy", "");
+                params.put("file", "" +"{\"serialDataByte\":\""+ new String(byteArray) +"\"}");
                 try {
                     params.put("cur_date", Utils.getCurrentDate());
                 } catch (UnsupportedEncodingException e) {

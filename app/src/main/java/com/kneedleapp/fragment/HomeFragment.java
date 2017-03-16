@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.ChangeImageTransform;
@@ -29,6 +30,7 @@ import com.kneedleapp.FullImageViewActivity;
 import com.kneedleapp.MainActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.adapter.FeedItemAdapter;
+import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.FeedItemVo;
@@ -50,6 +52,8 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
     private ArrayList<FeedItemVo> mList;
     private String names[] = {"aman", "ravi", "manoj", "krishan"};
     private BaseActivity context;
+    private View mView;
+    private FeedItemAdapter.ViewHolder viewHolder;
 
 
     public static HomeFragment newInstance() {
@@ -63,12 +67,13 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        mView = inflater.inflate(R.layout.fragment_home, container, false);
 
         context = (BaseActivity) getActivity();
 
+
         mList = new ArrayList<>();
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        mRecyclerView = (RecyclerView) mView.findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -78,7 +83,17 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
             FeedData();
         }
 
-        return view;
+        ((SwipeRefreshLayout) mView.findViewById(R.id.swipeRefreshLayout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                FeedData();
+                ((SwipeRefreshLayout) mView.findViewById(R.id.swipeRefreshLayout)).setRefreshing(false);
+            }
+        });
+
+
+
+        return mView;
     }
 
     public void FeedData() {
@@ -133,7 +148,7 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("user_id", "4");
+                params.put("user_id", AppPreferences.getAppPreferences(getContext()).getStringValue(AppPreferences.USER_ID));
                 params.put("lmt", "10");
                 params.put("offset", "1");
                 return params;
@@ -183,6 +198,7 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
                     addTransition(new ChangeImageTransform());
         }
     }
+
 
 }
 

@@ -2,6 +2,7 @@ package com.kneedleapp.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -22,6 +23,7 @@ import com.kneedleapp.KneedleApp;
 import com.kneedleapp.MainActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.adapter.NotificationDataAdapter;
+import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.vo.NotificationItemVo;
 
@@ -45,6 +47,7 @@ public class NotificationFragment extends BaseFragment {
     private RecyclerView mRecyclerView;
     private ArrayList<NotificationItemVo> mList;
     private LinearLayoutManager mLayoutManager;
+    private View mView;
 
     public static NotificationFragment newInstance() {
         NotificationFragment fragment = new NotificationFragment();
@@ -59,16 +62,23 @@ public class NotificationFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_notification, container, false);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_notification);
+        mView = inflater.inflate(R.layout.fragment_notification, container, false);
+        mRecyclerView = (RecyclerView) mView.findViewById(R.id.recyclerview_notification);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new NotificationDataAdapter(getContext(), getData());
         mRecyclerView.setAdapter(mAdapter);
 
+        ((SwipeRefreshLayout) mView.findViewById(R.id.swipeRefreshLayout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getNotificatios();
+                ((SwipeRefreshLayout) mView.findViewById(R.id.swipeRefreshLayout)).setRefreshing(false);
+            }
+        });
 
-        return view;
+        return mView;
     }
 
     public ArrayList<NotificationItemVo> getData() {
@@ -115,7 +125,7 @@ public class NotificationFragment extends BaseFragment {
         return list;
     }
 
-    public void getNotificatios(final String userId) {
+    public void getNotificatios() {
 
         ((MainActivity) getActivity()).showProgessDialog();
         StringRequest requestLogin = new StringRequest(Request.Method.POST, Config.GET_NOTIFICATIONS,
@@ -156,7 +166,7 @@ public class NotificationFragment extends BaseFragment {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
                 try {
-                    params.put("user_id", userId);
+                    params.put("user_id", AppPreferences.getAppPreferences(getContext()).getStringValue(AppPreferences.USER_ID));
                     Log.v(TAG, "Params : " + params.toString());
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -118,6 +118,7 @@ public class RegistrationActivity extends BaseActivity {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         Toast.makeText(RegistrationActivity.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                        dismissProgressDialog();
                         Log.e("error", volleyError.getMessage());
                     }
                 }) {
