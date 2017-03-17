@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
+
+import com.kneedleapp.fragment.EditProfileFragment;
 import com.kneedleapp.fragment.HomeFragment;
 import com.kneedleapp.fragment.SearchFragment;
 import com.kneedleapp.fragment.PostFragment;
@@ -24,6 +26,7 @@ public class MainActivity extends BaseActivity {
             Config.fragmentManager = getSupportFragmentManager();
         }
         selectTab(BottomBarTab.HOME);
+        fragment = new EditProfileFragment();
     }
 
     @Override
@@ -85,10 +88,17 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+
         if (data != null) {
             super.onActivityResult(requestCode, resultCode, data);
-            if (fragment instanceof PostFragment)
+            if (fragment instanceof PostFragment) {
                 ((PostFragment) fragment).onActivityResult(requestCode, resultCode, data);
+            } else if (fragment instanceof EditProfileFragment) {
+                ((EditProfileFragment) fragment).onActivityResult(requestCode, resultCode, data);
+            }
+
+
         }
 
     }

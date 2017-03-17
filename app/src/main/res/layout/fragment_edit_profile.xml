@@ -251,8 +251,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="@dimen/margin_5"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/male_red" />
+                            android:scaleType="fitCenter" />
 
                         <TextView
                             android:id="@+id/txt_homme"
@@ -277,8 +276,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="@dimen/margin_5"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/female" />
+                            android:scaleType="fitCenter" />
 
                         <TextView
                             android:id="@+id/txt_femme"

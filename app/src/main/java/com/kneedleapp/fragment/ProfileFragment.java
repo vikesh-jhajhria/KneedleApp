@@ -193,7 +193,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             case R.id.txt_btn_edit:
                 Bundle bundle = new Bundle();
                 Fragment fragment = new EditProfileFragment();
-                fragmentManager.beginTransaction().add(R.id.main_frame, fragment).addToBackStack(null).commit();
+                fragmentManager.beginTransaction().add(R.id.main_frame, fragment,"EDITPROFILE").addToBackStack(null).commit();
                 break;
             case R.id.img_back:
                 break;

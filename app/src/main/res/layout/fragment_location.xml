@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_10"
                 android:text="@string/location"
-                android:textColor="@color/colorPrimary"
+
                 android:textSize="@dimen/font_16" />
 
         </LinearLayout>
@@ -68,29 +68,24 @@
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginBottom="@dimen/margin_2"
-                android:src="@drawable/drop_down_red" />
-
-            <Spinner
-                android:id="@+id/spinner_profile_type"
+            <EditText
+                android:id="@+id/txt_country"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:popupBackground="@color/spinner_background" />
+                android:hint="@string/country"
+                android:maxLines="1"
+                android:textColorHint="@color/colourBlack"
+                android:textSize="@dimen/font_14" />
+
         </RelativeLayout>
 
-        <View
+        <!--<View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/margin_10"
-            android:background="@color/gray"></View>
+            android:background="@color/gray"></View>-->
 
         <LinearLayout
             android:layout_width="match_parent"

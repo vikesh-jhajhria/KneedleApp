@@ -1,11 +1,26 @@
 package com.kneedleapp.fragment;
 
 
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -29,10 +44,16 @@ import com.kneedleapp.R;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,17 +65,21 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
     ArrayList<String> spinnerDataList;
     private View view;
     private String mUserName;
+    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
+    private String userChoosenTask;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
+        checkPermission(getContext());
         applyFonts(view);
         view.findViewById(R.id.img_back).setOnClickListener(this);
         view.findViewById(R.id.img_location).setOnClickListener(this);
         view.findViewById(R.id.img_homme).setOnClickListener(this);
         view.findViewById(R.id.img_femme).setOnClickListener(this);
+        view.findViewById(R.id.img_profile).setOnClickListener(this);
         ((Spinner) view.findViewById(R.id.spinner_profile_type)).getBackground().setColorFilter(getResources().getColor(R.color.textColorPrimary), PorterDuff.Mode.SRC_ATOP);
 
         spinnerDataList = new ArrayList<>();
@@ -114,6 +139,9 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
             case R.id.img_homme:
                 ((ImageView) view.findViewById(R.id.img_femme)).setImageResource(R.drawable.female);
                 ((ImageView) view.findViewById(R.id.img_homme)).setImageResource(R.drawable.male_red);
+                break;
+            case R.id.img_profile:
+                selectImage();
                 break;
         }
     }
@@ -176,6 +204,10 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
                                 } else {
                                     ((ImageView) view.findViewById(R.id.img_femme)).setImageResource(R.drawable.female_red);
                                 }
+
+                                Picasso.with(getContext()).load(Config.USER_IMAGE_URL + jsonObject.getString("image")).placeholder(R.drawable.profile_img).error(R.drawable.profile_img).into(((ImageView) view.findViewById(R.id.img_profile)));
+
+
                             } else {
                                 Toast.makeText(getContext(), "no data available", Toast.LENGTH_SHORT).show();
                             }
@@ -212,5 +244,124 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
         queue.add(editProfile);
     }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (data != null)
+                onCaptureImageResult(data);
+        } else if (requestCode == 2) {
+            if (data != null)
+                onSelectFromGalleryResult(data);
+        }
+    }
+
+    private void selectImage() {
+
+        final CharSequence[] options = {"Take Photo", "Choose from Gallery", "Cancel"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Add Photo!");
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (options[item].equals("Take Photo")) {
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+                    startActivityForResult(intent, 1);
+                    userChoosenTask = "Take Photo";
+                } else if (options[item].equals("Choose from Gallery")) {
+                    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(intent, 2);
+                    userChoosenTask = "Choose from Gallery";
+                } else if (options[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
+    private void onSelectFromGalleryResult(Intent data) {
+        Bitmap bm = null;
+        if (data != null) {
+            try {
+                bm = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        ((ImageView) view.findViewById(R.id.img_profile)).setImageBitmap(bm);
+    }
+
+    private void onCaptureImageResult(Intent data) {
+        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        File destination = new File(Environment.getExternalStorageDirectory(),
+                System.currentTimeMillis() + ".jpg");
+        FileOutputStream fo;
+        try {
+            destination.createNewFile();
+            fo = new FileOutputStream(destination);
+            fo.write(bytes.toByteArray());
+            fo.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ((ImageView) view.findViewById(R.id.img_profile)).setImageBitmap(thumbnail);
+    }
+
+    public static boolean checkPermission(final Context context) {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    android.app.AlertDialog.Builder alertBuilder = new android.app.AlertDialog.Builder(context);
+                    alertBuilder.setCancelable(true);
+                    alertBuilder.setTitle("Permission necessary");
+                    alertBuilder.setMessage("External storage permission is necessary");
+                    alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                        }
+                    });
+                    android.app.AlertDialog alert = alertBuilder.create();
+                    alert.show();
+
+                } else {
+                    ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                }
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
+
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    if (userChoosenTask.equals("Take Photo")) {
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+                        startActivityForResult(intent, 1);
+
+                    } else if (userChoosenTask.equals("Choose From Library")) {
+                        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(intent, 2);
+                    }
+                }
+        }
+    }
 
 }

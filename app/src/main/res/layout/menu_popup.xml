@@ -5,26 +5,29 @@
     android:background="#ffffff">
 
     <TextView
-        android:id="@+id/txt_one"
+        android:id="@+id/txt_report"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/margin_10"
-        android:text="One" />
+        android:text="Report A Problem" />
 
     <TextView
-        android:id="@+id/txt_two"
+        android:id="@+id/txt_block"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/txt_one"
+        android:layout_below="@id/txt_report"
         android:padding="@dimen/margin_10"
-        android:text="Two" />
+        android:text="Block"
+        android:visibility="gone" />
 
     <TextView
+        android:id="@+id/txt_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txt_two"
+        android:layout_below="@+id/txt_block"
         android:padding="@dimen/margin_10"
-        android:text="Three" />
+        android:text="Delete Feed"
+        android:visibility="gone" />
 
 
 </RelativeLayout>

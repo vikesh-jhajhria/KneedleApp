@@ -57,6 +57,7 @@
     <string name="heart_image">HEART_IMAGE</string>
     <string name="user_name">USERNAME</string>
     <string name="likes">LIKES</string>
+    <string name="country">COUNTRY</string>
 
 
 </resources>
