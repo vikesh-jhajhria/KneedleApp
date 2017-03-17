@@ -11,5 +11,6 @@
     <color name="colourLightGrey">#cfcaca</color>
     <color name="colourRed">#B00000</color>
     <color name="spinner_background">#b0000000</color>
+    <color name="colourSettingView">#ede9e9</color>
 
 </resources>

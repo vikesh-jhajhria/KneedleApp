@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,10 +18,12 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,7 +60,6 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     AppPreferences preferences;
 
 
-
     public static enum BottomBarTab {
         HOME, SEARCH, POST, NOTIFICATION, PROFILE;
     }
@@ -67,27 +69,55 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         mContext = this;
         preferences = AppPreferences.getAppPreferences(this);
-        dialog = new ProgressDialog(this);
-        dialog.setMessage("Please wait...");
+       /* dialog = new ProgressDialog(this);
         dialog.setCancelable(false);
+*/
+        dialog = new ProgressDialog(this);
+       /* try {
+            dialog.show();
+        } catch (WindowManager.BadTokenException e) {
+
+        }*/
+
+        //    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        dialog.setCancelable(false);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+
     }
 
     public void showProgessDialog() {
         if (dialog != null && !dialog.isShowing() && !this.isFinishing())
-            dialog.show();
+            try {
+                dialog.show();
+                dialog.setContentView(R.layout.progress_dialogue);
+            } catch (WindowManager.BadTokenException e) {
+
+            }
     }
 
     public void showProgessDialog(String message) {
         if (dialog != null && !dialog.isShowing() && !this.isFinishing()) {
             dialog.setMessage(message);
-            dialog.show();
+            try {
+                dialog.show();
+                dialog.setContentView(R.layout.progress_dialogue);
+            } catch (WindowManager.BadTokenException e) {
+
+            }
         }
     }
 
     public void dismissProgressDialog() {
         if (dialog != null && dialog.isShowing() && !this.isFinishing())
-            dialog.dismiss();
+            try {
+                dialog.dismiss();
+            } catch (WindowManager.BadTokenException e) {
+
+            }
     }
+
 
     @Override
     public void onBackPressed() {
@@ -252,13 +282,12 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onLocationFoundStatus(double latitude, double longitude, String message) {
-        if(message.equalsIgnoreCase("1")){
+        if (message.equalsIgnoreCase("1")) {
             preferences.setLatitude(String.valueOf(latitude));
             preferences.setLongitude(String.valueOf(longitude));
-            Utils.showSnakeBar(findViewById(R.id.top_layout),"Location found.");
-        } else
-        {
-            Utils.showSnakeBar(findViewById(R.id.top_layout),"Location not found !");
+            Utils.showSnakeBar(findViewById(R.id.top_layout), "Location found.");
+        } else {
+            Utils.showSnakeBar(findViewById(R.id.top_layout), "Location not found !");
         }
     }
 
@@ -266,7 +295,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onLocationSettingStatus(boolean status) {
         if (status) {
-            new LocationTracker(this,this);
+            new LocationTracker(this, this);
         } else {
             showSettingSnakeBar();
         }
@@ -288,7 +317,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         View snackbarView = snackbar.getView();
         snackbarView.setBackgroundColor(Color.BLACK);
         TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
-        Utils.setTypeface(this,textView,CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(this, textView, CENTURY_GOTHIC_REGULAR);
         textView.setTextColor(Color.WHITE);
         snackbar.show();
     }
@@ -306,8 +335,9 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         View snackbarView = snackbar.getView();
         snackbarView.setBackgroundColor(Color.BLACK);
         TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
-        Utils.setTypeface(this,textView,CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(this, textView, CENTURY_GOTHIC_REGULAR);
         textView.setTextColor(Color.WHITE);
         snackbar.show();
     }
+
 }

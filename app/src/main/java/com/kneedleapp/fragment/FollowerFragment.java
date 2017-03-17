@@ -135,7 +135,7 @@ public class FollowerFragment extends BaseFragment {
 
 
     private void getFollowers() {
-        context.showProgessDialog("Please wait...");
+        context.showProgessDialog();
         StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.FOLLOWERS,
                 new Response.Listener<String>() {
                     @Override
@@ -190,8 +190,7 @@ public class FollowerFragment extends BaseFragment {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("user_id", "4");
-              /*  params.put("lmt", "10");
-                params.put("offset", "1");*/
+
                 return params;
             }
         };

@@ -40,5 +40,6 @@ public class Config {
     public final static String BLOCK = BASE_URL + "block_unblock_user";
     public final static String DELETE_FEED = BASE_URL + "delete_feed";
     public final static String GET_USER_DETAILS = BASE_URL + "get_user_details";
+    public final static String LOG_OUT = BASE_URL + "logout";
 
 }

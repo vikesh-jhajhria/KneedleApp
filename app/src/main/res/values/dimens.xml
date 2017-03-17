@@ -34,5 +34,6 @@
     <dimen name="font_20">20sp</dimen>
     <dimen name="font_35">35sp</dimen>
     <dimen name="margin_4">4dp</dimen>
+    <dimen name="font_10">10sp</dimen>
 
 </resources>

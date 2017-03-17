@@ -85,7 +85,7 @@ public class LocationFragment extends BaseFragment {
     }
 
     public void editProfile() {
-        ((BaseActivity) getActivity()).showProgessDialog("Please wait...");
+        ((BaseActivity) getActivity()).showProgessDialog();
         StringRequest editProfile = new StringRequest(Request.Method.POST, Config.GET_USER_DETAILS,
                 new Response.Listener<String>() {
                     @Override

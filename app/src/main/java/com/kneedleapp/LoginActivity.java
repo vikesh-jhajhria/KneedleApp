@@ -77,7 +77,7 @@ public class LoginActivity extends BaseActivity {
 
     public void LoginData() {
 
-        showProgessDialog("Please wait...");
+        showProgessDialog();
         StringRequest requestLogin = new StringRequest(Request.Method.POST, Config.LOGIN,
                 new Response.Listener<String>() {
                     @Override
@@ -106,7 +106,7 @@ public class LoginActivity extends BaseActivity {
                     public void onErrorResponse(VolleyError volleyError) {
                         Toast.makeText(LoginActivity.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
                         dismissProgressDialog();
-                      //  Log.d("error", volleyError.getMessage());
+
                     }
                 }) {
             @Override

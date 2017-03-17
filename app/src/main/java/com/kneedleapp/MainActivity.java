@@ -16,6 +16,7 @@ import com.kneedleapp.utils.Config;
 
 public class MainActivity extends BaseActivity {
     Fragment fragment;
+    public static boolean isPost = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +27,7 @@ public class MainActivity extends BaseActivity {
             Config.fragmentManager = getSupportFragmentManager();
         }
         selectTab(BottomBarTab.HOME);
-        fragment = new EditProfileFragment();
+
     }
 
     @Override
@@ -72,6 +73,7 @@ public class MainActivity extends BaseActivity {
             case POST:
                 findViewById(R.id.rl_post_selected).setVisibility(View.VISIBLE);
                 fragment = PostFragment.newInstance();
+                isPost = true;
                 showFragment(R.id.main_frame, fragment, "NEWPOST_FRAGMENT");
                 break;
             case NOTIFICATION:
@@ -85,17 +87,28 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    public Fragment getActiveFragment() {
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            return null;
+        }
+        String tag = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
+        return getSupportFragmentManager().findFragmentByTag(tag);
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-
         if (data != null) {
             super.onActivityResult(requestCode, resultCode, data);
+
+            if(!isPost){
+                fragment = getSupportFragmentManager().findFragmentByTag("EDITPROFILE");
+            }
+
+
             if (fragment instanceof PostFragment) {
                 ((PostFragment) fragment).onActivityResult(requestCode, resultCode, data);
-            } else if (fragment instanceof EditProfileFragment) {
-                ((EditProfileFragment) fragment).onActivityResult(requestCode, resultCode, data);
+            } else if (fragment != null && fragment instanceof EditProfileFragment) {
+                fragment.onActivityResult(requestCode, resultCode, data);
             }
 
 

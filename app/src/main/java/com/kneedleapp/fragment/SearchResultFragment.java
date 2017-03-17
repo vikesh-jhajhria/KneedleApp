@@ -156,7 +156,7 @@ public class SearchResultFragment extends BaseFragment {
 
 
     public void getSearchItem() {
-        ((BaseActivity) getContext()).showProgessDialog("Please wait...");
+        ((BaseActivity) getContext()).showProgessDialog();
         StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.GET_SEARCH_ITEM,
                 new Response.Listener<String>() {
                     @Override

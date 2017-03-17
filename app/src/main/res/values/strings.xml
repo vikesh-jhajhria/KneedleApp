@@ -58,6 +58,17 @@
     <string name="user_name">USERNAME</string>
     <string name="likes">LIKES</string>
     <string name="country">COUNTRY</string>
+    <string name="options">OPTIONS</string>
+    <string name="photos_liked">PHOTOS YOU\'VE LIKED</string>
+    <string name="support">SUPPORT</string>
+    <string name="report_problem">REPORT A PROBLEM</string>
+    <string name="privacy_policy">PRIVACY POLICY</string>
+    <string name="terms_of_service">TERMS OF SERVICE</string>
+    <string name="prefernces">PREFERENCES</string>
+    <string name="share_settings">SHARE SETTINGS</string>
+    <string name="push_noti">PUSH NOTIFICATION</string>
+    <string name="save_ori">SAVE ORIGINAL PHOTOS</string>
+    <string name="logout">LOG OUT</string>
 
 
 </resources>

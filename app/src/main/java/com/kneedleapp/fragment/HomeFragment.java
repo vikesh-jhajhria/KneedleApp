@@ -65,7 +65,7 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
 
         mView = inflater.inflate(R.layout.fragment_home, container, false);
 
@@ -92,13 +92,12 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
         });
 
 
-
         return mView;
     }
 
     public void FeedData() {
 
-        context.showProgessDialog("Please wait...");
+        context.showProgessDialog();
         StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.FEED_DATA,
                 new Response.Listener<String>() {
                     @Override
@@ -143,6 +142,7 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
                     public void onErrorResponse(VolleyError volleyError) {
                         Toast.makeText(getContext(), volleyError.getMessage(), Toast.LENGTH_LONG).show();
                         Log.d("error", volleyError.getMessage());
+                        context.dismissProgressDialog();
                     }
                 }) {
             @Override
@@ -183,9 +183,6 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
             init();
         }
 
-        /**
-         * This constructor allows us to use this transition in XML
-         */
         public DetailsTransition(Context context, AttributeSet attrs) {
             super(context, attrs);
             init();
@@ -198,7 +195,5 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
                     addTransition(new ChangeImageTransform());
         }
     }
-
-
 }
 

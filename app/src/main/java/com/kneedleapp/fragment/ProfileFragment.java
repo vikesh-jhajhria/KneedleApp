@@ -91,7 +91,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_profile, container, false);
-        view = inflater.inflate(R.layout.fragment_profile, container, false);
+
         applyFonts(view);
 
 
@@ -193,12 +193,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             case R.id.txt_btn_edit:
                 Bundle bundle = new Bundle();
                 Fragment fragment = new EditProfileFragment();
-                fragmentManager.beginTransaction().add(R.id.main_frame, fragment,"EDITPROFILE").addToBackStack(null).commit();
+                fragmentManager.beginTransaction().add(R.id.main_frame, fragment, "EDITPROFILE").addToBackStack(null).commit();
                 break;
             case R.id.img_back:
                 break;
             case R.id.img_chat:
-                final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+               /* final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 View view1 = LayoutInflater.from(getContext()).inflate(R.layout.unfollow_popup, null);
                 builder.setCancelable(false);
                 builder.setView(view1);
@@ -226,7 +226,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                         alertDialog.dismiss();
                     }
                 });
-                alertDialog.show();
+                alertDialog.show();*/
+
+                Fragment fragment1 = new SettingFragment();
+                getFragmentManager().beginTransaction().add(R.id.main_frame, fragment1).addToBackStack(null).commit();
+
 
                 break;
             case R.id.ll_followers:
@@ -246,7 +250,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     }
 
     public void getUserDetails() {
-        context.showProgessDialog("Please wait...");
+        context.showProgessDialog();
         StringRequest requestUser = new StringRequest(Request.Method.POST, Config.USER_DETAILS,
                 new Response.Listener<String>() {
                     @Override

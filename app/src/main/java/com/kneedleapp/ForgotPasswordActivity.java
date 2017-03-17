@@ -66,7 +66,7 @@ public class ForgotPasswordActivity extends BaseActivity {
 
     public void ForgotPasswordData() {
 
-        showProgessDialog("Please wait...");
+        showProgessDialog();
         StringRequest requestForgotPassword = new StringRequest(Request.Method.POST, Config.FORGOT_PASSWORD,
                 new Response.Listener<String>() {
                     @Override
@@ -90,6 +90,7 @@ public class ForgotPasswordActivity extends BaseActivity {
                     public void onErrorResponse(VolleyError volleyError) {
                         Toast.makeText(ForgotPasswordActivity.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
                         Log.d("error", volleyError.getMessage());
+                        dismissProgressDialog();
                     }
                 }) {
             @Override

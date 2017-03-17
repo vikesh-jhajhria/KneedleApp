@@ -44,7 +44,7 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.CheckV
     List<FollowersVo> list;
     String currentDate;
     BaseActivity baseContext;
-    ProgressDialog progressDialog;
+
 
 
     public FollowerAdapter(List<FollowersVo> list, Context context) {
@@ -57,9 +57,7 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.CheckV
         SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
         currentDate = df.format(c.getTime());
 
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage("Please wait...");
-        progressDialog.setCancelable(false);
+
     }
 
     @Override
@@ -136,12 +134,12 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.CheckV
 
 
     public void followUnfollowUser(final String friendId, final String date){
-        progressDialog.show();
+        ((BaseActivity)context).showProgessDialog();
         StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.FOLLOW_UNFOLLOW_USER,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                      progressDialog.dismiss();
+                        ((BaseActivity)context).showProgessDialog();
                         try {
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
@@ -162,6 +160,7 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.CheckV
                     public void onErrorResponse(VolleyError volleyError) {
                         Toast.makeText(context, volleyError.getMessage(), Toast.LENGTH_LONG).show();
                         Log.d("error", volleyError.getMessage());
+                        ((BaseActivity)context).dismissProgressDialog();
                     }
                 }) {
             @Override
@@ -170,8 +169,7 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.CheckV
                 params.put("user_id", "4");
                 params.put("friend_id",friendId );
                 params.put("follow_date", date);
-              /*  params.put("lmt", "10");
-                params.put("offset", "1");*/
+
                 return params;
             }
         };

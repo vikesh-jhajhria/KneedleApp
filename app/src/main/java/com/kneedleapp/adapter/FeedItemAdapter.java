@@ -341,7 +341,7 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
 
 
     public void reportProblem() {
-        ((BaseActivity) context).showProgessDialog("Please wait...");
+        ((BaseActivity) context).showProgessDialog();
         StringRequest requestReportProblem = new StringRequest(Request.Method.POST, Config.REPORT_PROBLEM,
                 new Response.Listener<String>() {
                     @Override
@@ -388,7 +388,7 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
     }
 
     public void block() {
-        ((BaseActivity) context).showProgessDialog("Please wait...");
+        ((BaseActivity) context).showProgessDialog();
         StringRequest block = new StringRequest(Request.Method.POST, Config.BLOCK,
                 new Response.Listener<String>() {
                     @Override
@@ -435,7 +435,7 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
     }
 
     public void delete() {
-        ((BaseActivity) context).showProgessDialog("Please wait...");
+        ((BaseActivity) context).showProgessDialog();
         StringRequest delete = new StringRequest(Request.Method.POST, Config.DELETE_FEED,
                 new Response.Listener<String>() {
                     @Override

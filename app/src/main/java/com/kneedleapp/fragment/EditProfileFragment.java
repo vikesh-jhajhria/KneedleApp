@@ -8,8 +8,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -40,6 +44,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.kneedleapp.BaseActivity;
+import com.kneedleapp.MainActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
@@ -54,6 +59,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,6 +73,8 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
     private String mUserName;
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     private String userChoosenTask;
+    private Bitmap bitmap;
+    public int REQUEST_CAMERA = 0, SELECT_FILE = 1;
 
 
     @Override
@@ -161,9 +169,13 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
         Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.btn_save_changes), Config.CENTURY_GOTHIC_REGULAR);
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
+
+            MainActivity.isPost = false;
+
 
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();
@@ -183,7 +195,7 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
     }
 
     public void editProfile() {
-        ((BaseActivity) getActivity()).showProgessDialog("Please wait...");
+        ((BaseActivity) getActivity()).showProgessDialog();
         StringRequest editProfile = new StringRequest(Request.Method.POST, Config.GET_USER_DETAILS,
                 new Response.Listener<String>() {
                     @Override
@@ -244,11 +256,15 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
         queue.add(editProfile);
     }
 
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1) {
+        // super.onActivityResult(requestCode, resultCode, data);
+        Log.e("CALLED", "CALLINg.....;;...");
+        if (requestCode == REQUEST_CAMERA) {
             if (data != null)
                 onCaptureImageResult(data);
-        } else if (requestCode == 2) {
+        } else if (requestCode == SELECT_FILE) {
             if (data != null)
                 onSelectFromGalleryResult(data);
         }
@@ -264,14 +280,10 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
             @Override
             public void onClick(DialogInterface dialog, int item) {
                 if (options[item].equals("Take Photo")) {
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
-                    startActivityForResult(intent, 1);
+                    cameraIntent();
                     userChoosenTask = "Take Photo";
                 } else if (options[item].equals("Choose from Gallery")) {
-                    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(intent, 2);
+                    gallaryIntent();
                     userChoosenTask = "Choose from Gallery";
                 } else if (options[item].equals("Cancel")) {
                     dialog.dismiss();
@@ -281,36 +293,78 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
         builder.show();
     }
 
-    private void onSelectFromGalleryResult(Intent data) {
-        Bitmap bm = null;
-        if (data != null) {
-            try {
-                bm = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        ((ImageView) view.findViewById(R.id.img_profile)).setImageBitmap(bm);
+
+  /*  public void onSelectFromGalleryResult(Intent data) {
+        Uri selectedImage = data.getData();
+        String[] filePath = {MediaStore.Images.Media.DATA};
+        Cursor c = ((BaseActivity) getContext()).getContentResolver().query(selectedImage, filePath, null, null, null);
+        c.moveToFirst();
+        int columnIndex = c.getColumnIndex(filePath[0]);
+        String picturePath = c.getString(columnIndex);
+        c.close();
+        bitmap = (BitmapFactory.decodeFile(picturePath));
+        Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+
+        ((ImageView) view.findViewById(R.id.img_profile)).setImageDrawable(drawable);
     }
 
-    private void onCaptureImageResult(Intent data) {
-        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        File destination = new File(Environment.getExternalStorageDirectory(),
-                System.currentTimeMillis() + ".jpg");
-        FileOutputStream fo;
+*/
+  private void onSelectFromGalleryResult(Intent data) {
+      bitmap = null;
+      if (data != null) {
+          if (getContext() != null){
+              try {
+                  bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
+              } catch (IOException e) {
+                  e.printStackTrace();
+              }
+          }
+      }
+      Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+
+      ((ImageView) view.findViewById(R.id.img_profile)).setImageDrawable(drawable);
+  }
+
+
+    public void onCaptureImageResult(Intent data) {
+        File f = new File(Environment.getExternalStorageDirectory().toString());
+        for (File temp : f.listFiles()) {
+            if (temp.getName().equals("temp.jpg")) {
+                f = temp;
+                break;
+            }
+        }
         try {
-            destination.createNewFile();
-            fo = new FileOutputStream(destination);
-            fo.write(bytes.toByteArray());
-            fo.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+
+            BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+
+            bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(),
+                    bitmapOptions);
+            Drawable d = new BitmapDrawable(getResources(), bitmap);
+            ((ImageView) view.findViewById(R.id.img_profile)).setImageDrawable(d);
+
+            String path = android.os.Environment
+                    .getExternalStorageDirectory()
+                    + File.separator
+                    + "Phoenix" + File.separator + "default";
+            f.delete();
+            OutputStream outFile = null;
+            File file = new File(path, String.valueOf(System.currentTimeMillis()) + ".jpg");
+            try {
+                outFile = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outFile);
+                outFile.flush();
+                outFile.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        ((ImageView) view.findViewById(R.id.img_profile)).setImageBitmap(thumbnail);
     }
 
     public static boolean checkPermission(final Context context) {
@@ -351,17 +405,28 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     if (userChoosenTask.equals("Take Photo")) {
-                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
-                        startActivityForResult(intent, 1);
+                        cameraIntent();
 
                     } else if (userChoosenTask.equals("Choose From Library")) {
-                        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        startActivityForResult(intent, 2);
+                        gallaryIntent();
                     }
                 }
         }
     }
 
+    private void cameraIntent() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+        ((MainActivity) getActivity()).startActivityForResult(intent, REQUEST_CAMERA);
+    }
+
+    private void gallaryIntent() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        ((MainActivity) getActivity()).startActivityForResult(galleryIntent, SELECT_FILE);
+    }
+
+
 }
+

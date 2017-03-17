@@ -94,7 +94,7 @@ public class RegistrationActivity extends BaseActivity {
     }
 
     public void RegisterData() {
-        showProgessDialog("Please wait...");
+        showProgessDialog();
         StringRequest requestRegister = new StringRequest(Request.Method.POST, Config.REGISTER,
                 new Response.Listener<String>() {
                     @Override

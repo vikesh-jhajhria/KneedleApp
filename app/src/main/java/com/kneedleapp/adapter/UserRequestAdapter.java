@@ -43,11 +43,6 @@ public class UserRequestAdapter extends RecyclerView.Adapter<UserRequestAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-
-
-
-
-
     }
 
     @Override

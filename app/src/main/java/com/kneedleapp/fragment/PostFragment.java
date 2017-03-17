@@ -45,7 +45,7 @@ import java.io.OutputStream;
 
 import static com.kneedleapp.utils.Config.fragmentManager;
 
-
+@SuppressWarnings("ConstantConditions")
 public class PostFragment extends BaseFragment {
     public int REQUEST_CAMERA = 0, SELECT_FILE = 1;
     public ImageView mImgContent;
@@ -66,6 +66,7 @@ public class PostFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view_main = inflater.inflate(R.layout.fragment_post, container, false);
+        checkPermission(getContext());
         mImgContent = (ImageView) view_main.findViewById(R.id.img_content);
         result = checkPermission(getContext());
 
@@ -75,7 +76,7 @@ public class PostFragment extends BaseFragment {
         Utils.setTypeface(getActivity(), (TextView) view_main.findViewById(R.id.txt_new_post), Config.CENTURY_GOTHIC_BOLD);
         Utils.setTypeface(getActivity(), (TextView) view_main.findViewById(R.id.txt_library), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(getActivity(), (TextView) view_main.findViewById(R.id.txt_photo), Config.CENTURY_GOTHIC_REGULAR);
-        checkPermission(getContext());
+
         return view_main;
     }
 
@@ -191,7 +192,6 @@ public class PostFragment extends BaseFragment {
         ((MainActivity) getActivity()).startActivityForResult(galleryIntent, SELECT_FILE);
     }
 
-
     public void onCaptureImageResult(Intent data) {
         File f = new File(Environment.getExternalStorageDirectory().toString());
         for (File temp : f.listFiles()) {
@@ -233,7 +233,7 @@ public class PostFragment extends BaseFragment {
         }
     }
 
-    public void onSelectFromGalleryResult(Intent data) {
+    /*public void onSelectFromGalleryResult(Intent data) {
         Uri selectedImage = data.getData();
         String[] filePath = {MediaStore.Images.Media.DATA};
         Cursor c = ((BaseActivity) getContext()).getContentResolver().query(selectedImage, filePath, null, null, null);
@@ -245,6 +245,21 @@ public class PostFragment extends BaseFragment {
         Drawable drawable = new BitmapDrawable(getResources(), bitmap);
 
         mImgContent.setImageDrawable(drawable);
-    }
 
+}*/
+    private void onSelectFromGalleryResult(Intent data) {
+        bitmap = null;
+        if (data != null) {
+            if (getContext() != null){
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+
+        mImgContent.setImageDrawable(drawable);
+    }
 }
