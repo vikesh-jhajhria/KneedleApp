@@ -45,6 +45,7 @@ public class KneedleApp extends MultiDexApplication {
         return mRequestQueue;
     }
 
+
     public <T> void addToRequestQueue(Request<T> req, String tag) {
         Log.e(TAG, req.toString());
         req.setTag(TextUtils.isEmpty(tag) ? TAG : tag);

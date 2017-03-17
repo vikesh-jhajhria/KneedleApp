@@ -86,6 +86,7 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
         ((SwipeRefreshLayout) mView.findViewById(R.id.swipeRefreshLayout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mList.clear();
                 FeedData();
                 ((SwipeRefreshLayout) mView.findViewById(R.id.swipeRefreshLayout)).setRefreshing(false);
             }

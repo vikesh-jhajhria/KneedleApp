@@ -21,44 +21,32 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.CheckGPSSetting;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.LocationTracker;
 import com.kneedleapp.utils.Utils;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.kneedleapp.utils.Config.CENTURY_GOTHIC_REGULAR;
 import static com.kneedleapp.utils.Config.fragmentManager;
 
-public class BaseActivity extends AppCompatActivity implements View.OnClickListener, Utils.LocationFoundListener, Utils.GPSSettingListener {
+public class BaseActivity extends AppCompatActivity implements View.OnClickListener, Utils.LocationFoundListener,
+        Utils.GPSSettingListener {
 
     private boolean isExit;
     private ProgressDialog dialog;
     public String TAG = "KNEEDLE";
     private Context mContext;
     AppPreferences preferences;
-
+    private Utils.MediaPermissionListener mediaPermissionListener;
 
     public static enum BottomBarTab {
         HOME, SEARCH, POST, NOTIFICATION, PROFILE;
@@ -87,6 +75,9 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    public void setMediaPermissionListener(Utils.MediaPermissionListener listener){
+        this.mediaPermissionListener = listener;
+    }
     public void showProgessDialog() {
         if (dialog != null && !dialog.isShowing() && !this.isFinishing())
             try {
@@ -240,6 +231,17 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
                     } else {
                         return true;
                     }
+                case Config.MEDIA_PERMISSION:
+                    int hasCameraPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+                    int hasStoragePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+                    if (hasCameraPermission != PackageManager.PERMISSION_GRANTED || hasStoragePermission != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(BaseActivity.this,
+                                new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                Config.MEDIA_PERMISSION);
+                        return false;
+                    } else {
+                        return true;
+                    }
             }
         }
         return true;
@@ -253,6 +255,13 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
                     CheckGPSSetting.getInstance(this, this);
                 } else {
                     fetchUserLocation();
+                }
+                break;
+            case Config.MEDIA_PERMISSION:
+                if (grantResults.length > 0 && grantResults[0] == 0) {
+                    if(mediaPermissionListener!= null){
+                        mediaPermissionListener.onMediaPermissionStatus(true);
+                    }
                 }
                 break;
         }
