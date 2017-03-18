@@ -66,9 +66,7 @@ public class PostFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view_main = inflater.inflate(R.layout.fragment_post, container, false);
-        checkPermission(getContext());
         mImgContent = (ImageView) view_main.findViewById(R.id.img_content);
-        result = checkPermission(getContext());
 
         ((ImageView) view_main.findViewById(R.id.img_next)).setOnClickListener(this);
         ((TextView) view_main.findViewById(R.id.txt_library)).setOnClickListener(this);
@@ -76,7 +74,7 @@ public class PostFragment extends BaseFragment {
         Utils.setTypeface(getActivity(), (TextView) view_main.findViewById(R.id.txt_new_post), Config.CENTURY_GOTHIC_BOLD);
         Utils.setTypeface(getActivity(), (TextView) view_main.findViewById(R.id.txt_library), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(getActivity(), (TextView) view_main.findViewById(R.id.txt_photo), Config.CENTURY_GOTHIC_REGULAR);
-
+        ((MainActivity)getActivity()).hasPermission(Config.MEDIA_PERMISSION);
         return view_main;
     }
 
@@ -96,13 +94,20 @@ public class PostFragment extends BaseFragment {
                     Toast.makeText(getContext(), "Please choose image", Toast.LENGTH_SHORT).show();
                 }
 
-
                 break;
 
             case R.id.txt_library:
                 userChoosenTask = "Choose From Library";
-                if (result)
+                if (((MainActivity)getActivity()).hasPermission(Config.MEDIA_PERMISSION)){
                     gallaryIntent();
+                } else {
+                    ((MainActivity)getActivity()).setMediaPermissionListener(new Utils.MediaPermissionListener() {
+                        @Override
+                        public void onMediaPermissionStatus(boolean status) {
+                            gallaryIntent();
+                        }
+                    });
+                }
                 Utils.setTypeface(getActivity(), (TextView) view_main.findViewById(R.id.txt_library), Config.CENTURY_GOTHIC_BOLD);
                 Utils.setTypeface(getActivity(), (TextView) view_main.findViewById(R.id.txt_photo), Config.CENTURY_GOTHIC_REGULAR);
                 ((TextView) view_main.findViewById(R.id.txt_library)).setTextColor(getResources().getColor(R.color.colorAccent));
@@ -111,8 +116,16 @@ public class PostFragment extends BaseFragment {
 
             case R.id.txt_photo:
                 userChoosenTask = "Take Photo";
-                if (result)
+                if (((MainActivity)getActivity()).hasPermission(Config.MEDIA_PERMISSION)){
                     cameraIntent();
+                } else {
+                    ((MainActivity)getActivity()).setMediaPermissionListener(new Utils.MediaPermissionListener() {
+                        @Override
+                        public void onMediaPermissionStatus(boolean status) {
+                            cameraIntent();
+                        }
+                    });
+                }
                 Utils.setTypeface(getActivity(), (TextView) view_main.findViewById(R.id.txt_library), Config.CENTURY_GOTHIC_REGULAR);
                 Utils.setTypeface(getActivity(), (TextView) view_main.findViewById(R.id.txt_photo), Config.CENTURY_GOTHIC_BOLD);
                 ((TextView) view_main.findViewById(R.id.txt_photo)).setTextColor(getResources().getColor(R.color.colorAccent));

@@ -3,7 +3,6 @@ package com.kneedleapp.fragment;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -15,24 +14,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.kneedleapp.BaseActivity;
 import com.kneedleapp.MainActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
+import com.kneedleapp.utils.CustomMultipartRequest;
 import com.kneedleapp.utils.Utils;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +41,7 @@ import static com.kneedleapp.utils.Config.fragmentManager;
 
 public class PostEditFragment extends BaseFragment {
     private View view;
-    private byte[] byteArray;
+    private Bitmap bitmap;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,15 +51,10 @@ public class PostEditFragment extends BaseFragment {
 
         view.findViewById(R.id.img_back).setOnClickListener(this);
 
-        Bitmap bitmap = getArguments().getParcelable("POSTIMAGE");
+        bitmap = getArguments().getParcelable("POSTIMAGE");
         if (bitmap != null) {
             ((ImageView) view.findViewById(R.id.img_post)).setImageBitmap(bitmap);
         }
-
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byteArray = stream.toByteArray();
-        Log.e("Byte Array", "" + byteArray);
 
 
         applyFonts(view);
@@ -105,7 +99,40 @@ public class PostEditFragment extends BaseFragment {
 
     public void postComment() {
         ((BaseActivity) getActivity()).showProgessDialog("Please wait...");
-        StringRequest requestPost = new StringRequest(Request.Method.POST, Config.POST_COMMENT,
+
+        File filesDir = getContext().getFilesDir();
+        File imageFile = new File(filesDir, ((BaseActivity) getActivity()).TAG + "_" + Math.random() + ".jpg");
+
+        OutputStream os;
+        try {
+            os = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+            Log.e(getClass().getSimpleName(), "Error writing bitmap", e);
+        }
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("user_id", AppPreferences.getAppPreferences(getContext()).getStringValue(AppPreferences.USER_ID));
+        params.put("caption", ((EditText) view.findViewById(R.id.txt_caption)).getText().toString().trim());
+        params.put("privacy", "");
+        try {
+            params.put("cur_date", Utils.getCurrentDate());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+
+        CustomMultipartRequest requestPost = new CustomMultipartRequest(Config.POST_COMMENT, params, imageFile, "file.jpg", "file",
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        ((BaseActivity) getActivity()).dismissProgressDialog();
+                        Toast.makeText(getContext(), volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d("error", volleyError.getMessage());
+                    }
+                },
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -126,31 +153,7 @@ public class PostEditFragment extends BaseFragment {
                             e.printStackTrace();
                         }
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        ((BaseActivity) getActivity()).dismissProgressDialog();
-                        Toast.makeText(getContext(), volleyError.getMessage(), Toast.LENGTH_LONG).show();
-                        Log.d("error", volleyError.getMessage());
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("user_id", AppPreferences.getAppPreferences(getContext()).getStringValue(AppPreferences.USER_ID));
-                params.put("caption", ((EditText) view.findViewById(R.id.txt_caption)).getText().toString().trim());
-                params.put("privacy", "");
-                params.put("file", "" +"{\"serialDataByte\":\""+ new String(byteArray) +"\"}");
-                try {
-                    params.put("cur_date", Utils.getCurrentDate());
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-
-                return params;
-            }
-        };
+                });
 
         requestPost.setRetryPolicy(new DefaultRetryPolicy(
                 30000,

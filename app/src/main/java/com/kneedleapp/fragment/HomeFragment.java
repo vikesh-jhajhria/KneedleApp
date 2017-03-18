@@ -86,6 +86,7 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
         ((SwipeRefreshLayout) mView.findViewById(R.id.swipeRefreshLayout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mList.clear();
                 FeedData();
                 ((SwipeRefreshLayout) mView.findViewById(R.id.swipeRefreshLayout)).setRefreshing(false);
             }
@@ -149,6 +150,7 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("user_id", AppPreferences.getAppPreferences(getContext()).getStringValue(AppPreferences.USER_ID));
+                params.put("login_id", AppPreferences.getAppPreferences(getContext()).getStringValue(AppPreferences.USER_ID));
                 params.put("lmt", "10");
                 params.put("offset", "1");
                 return params;

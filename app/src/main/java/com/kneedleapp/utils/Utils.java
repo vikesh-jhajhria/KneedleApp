@@ -27,7 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
@@ -175,13 +174,13 @@ public class Utils {
         View snackbarView = snackbar.getView();
         snackbarView.setBackgroundColor(Color.BLACK);
         TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
-        Utils.setTypeface(view.getContext(),textView,CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(view.getContext(), textView, CENTURY_GOTHIC_REGULAR);
         textView.setTextColor(Color.WHITE);
         snackbar.show();
 
     }
 
-    public static void setBounceEffect(final View view){
+    public static void setBounceEffect(final View view) {
         PropertyValuesHolder scalex = PropertyValuesHolder.ofFloat(View.SCALE_X, .5f);
         PropertyValuesHolder scaley = PropertyValuesHolder.ofFloat(View.SCALE_Y, .5f);
         ObjectAnimator anim = ObjectAnimator.ofPropertyValuesHolder(view, scalex, scaley);
@@ -206,10 +205,9 @@ public class Utils {
             }
         });
     }
-
     public static String getCurrentDate() throws UnsupportedEncodingException {
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
-        Date date  = calendar.getTime();
+        Date date = calendar.getTime();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
 
         //return URLEncoder.encode(simpleDateFormat.format(date),"utf-8").replace("+","%20");
@@ -219,8 +217,13 @@ public class Utils {
     public interface AlertCallback {
         void callback();
     }
+
     public interface GPSSettingListener {
         void onLocationSettingStatus(boolean status);
+    }
+
+    public interface MediaPermissionListener {
+        void onMediaPermissionStatus(boolean status);
     }
 
     public interface LocationFoundListener {
