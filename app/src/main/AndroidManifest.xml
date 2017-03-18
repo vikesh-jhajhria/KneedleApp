@@ -68,15 +68,11 @@
             android:name=".LandingActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Background"
-            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".FullImageViewActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
-        <activity
-            android:name=".WebView"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <service android:name=".utils.FirebaseMessagingService">
             <intent-filter>
@@ -88,6 +84,8 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
+        <activity android:name=".SignUpActivity"></activity>
     </application>
 
 </manifest>

@@ -8,8 +8,8 @@
     <string name="provide_email">Please provide the email address related to the account.</string>
     <string name="example_email">EX: IAM@GMAIL.COM</string>
     <string name="send_email">Send Email</string>
-    <string name="email_sent">Emal Sent</string>
-    <string name="send_again">DIDN\'T GET IT?, SEND AGAIN</string>
+    <string name="email_sent">Email Sent</string>
+    <string name="send_again">DIDN\'T GET IT?, SEND AGAIN.</string>
     <string name="name">Name</string>
     <string name="warning_register">You must fill <b>ALL</b> the highlighted sections</string>
     <string name="homme">Homme</string>
@@ -69,6 +69,8 @@
     <string name="push_noti">PUSH NOTIFICATION</string>
     <string name="save_ori">SAVE ORIGINAL PHOTOS</string>
     <string name="logout">LOG OUT</string>
+    <string name="signup_with_facebook">Signup with Facebook</string>
+    <string name="signup_with_twitter">Signup with Twitter</string>
     <string name="term_condition">I agree with Terms and Conditions</string>
 
 
