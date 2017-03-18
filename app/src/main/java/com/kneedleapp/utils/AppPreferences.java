@@ -51,6 +51,18 @@ public class AppPreferences {
         editor.putString(USER_ID, value);
         editor.commit();
     }
+
+    public String getUserName() {
+        return mPrefs.getString(USER_NAME, "");
+    }
+
+    public void setUserName(String name) {
+
+        SharedPreferences.Editor editor = mPrefs.edit();
+        editor.putString(USER_NAME, name);
+        editor.commit();
+    }
+
     public String getLatitude() {
         return mPrefs.getString(LATITUDE, "0");
     }
@@ -60,6 +72,7 @@ public class AppPreferences {
         editor.putString(LATITUDE, value);
         editor.commit();
     }
+
     public String getLongitude() {
         return mPrefs.getString(LONGITUDE, "0");
     }

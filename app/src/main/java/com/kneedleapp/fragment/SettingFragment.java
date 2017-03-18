@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 
 
         mView.findViewById(R.id.txt_logout).setOnClickListener(this);
+        mView.findViewById(R.id.img_back).setOnClickListener(this);
 
         return mView;
     }
@@ -52,6 +54,10 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
             case R.id.txt_logout:
                 logout();
 
+                break;
+
+            case R.id.img_back:
+                getFragmentManager().popBackStack();
                 break;
 
         }
@@ -69,6 +75,9 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                             if (jObject.getString("status_id").equals("1")) {
                                 Log.e("reponce...::>>", response);
                                 startActivity(new Intent(getActivity(), LoginActivity.class));
+                                AppPreferences.getAppPreferences(getContext()).setUserName("");
+                                AppPreferences.getAppPreferences(getContext()).setUserId("");
+                                getActivity().finishAffinity();
 
                             } else {
                                 Toast.makeText(getContext(), "no data available", Toast.LENGTH_SHORT).show();
@@ -106,5 +115,24 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 
         RequestQueue queue = Volley.newRequestQueue(getContext());
         queue.add(logout);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+
+                if (i == KeyEvent.KEYCODE_BACK) {
+                    getFragmentManager().popBackStack();
+                    return true;
+                }
+                return false;
+            }
+        });
+
     }
 }

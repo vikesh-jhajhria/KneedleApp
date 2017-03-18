@@ -69,6 +69,7 @@
     <string name="push_noti">PUSH NOTIFICATION</string>
     <string name="save_ori">SAVE ORIGINAL PHOTOS</string>
     <string name="logout">LOG OUT</string>
+    <string name="term_condition">I agree with Terms and Conditions</string>
 
 
 </resources>
