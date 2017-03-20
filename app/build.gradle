@@ -64,7 +64,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:10.0.1'
     compile 'org.apache.httpcomponents:httpcore:4.4.1'
     compile 'org.apache.httpcomponents:httpmime:4.3.6'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha7'
     testCompile 'junit:junit:4.12'
     compile 'ca.barrenechea.header-decor:header-decor:0.2.8'
 }

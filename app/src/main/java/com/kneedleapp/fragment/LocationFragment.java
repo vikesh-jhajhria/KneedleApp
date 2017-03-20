@@ -7,7 +7,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,11 +78,10 @@ public class LocationFragment extends BaseFragment {
 
     @Override
     public void onClick(View view) {
+        super.onClick(view);
         switch (view.getId()) {
 
-            case R.id.img_back:
-                fragmentManager.popBackStack();
-                break;
+
 
         }
     }

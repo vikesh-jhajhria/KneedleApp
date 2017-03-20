@@ -2,10 +2,6 @@ package com.kneedleapp.vo;
 
 import android.graphics.drawable.Drawable;
 
-/**
- * Created by saloni.bhansali on 11/7/2016.
- */
-
 public class ListVo {
     public String ProjectName;
     public Drawable image;

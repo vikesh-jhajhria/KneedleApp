@@ -1,17 +1,14 @@
 package com.kneedleapp.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,14 +25,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.kneedleapp.BaseActivity;
+import com.kneedleapp.FullImageViewActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.adapter.ProfileListAdapter;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
-import com.kneedleapp.vo.FollowersVo;
-import com.kneedleapp.vo.ListVo;
-import com.kneedleapp.vo.UserDetailsVo;
+import com.kneedleapp.vo.FeedItemVo;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -44,7 +40,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -52,10 +47,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.kneedleapp.utils.Config.fragmentManager;
 
 
-public class ProfileFragment extends Fragment implements View.OnClickListener {
+public class ProfileFragment extends BaseFragment
+        implements ProfileListAdapter.ProfileItemListener{
 
     private ProfileListAdapter profileListAdapter;
-    private ArrayList<ListVo> List = new ArrayList<ListVo>();
+    private ArrayList<FeedItemVo> mList = new ArrayList<>();
     public static RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
     private ImageView listBtn, gridBtn;
@@ -101,16 +97,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         context = (BaseActivity) getActivity();
         mPrefernce = AppPreferences.getAppPreferences(context);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        List = new ArrayList<>();
-        for (int i = 1; i < 20; i++) {
-            ListVo check = new ListVo();
-            check.ProjectName = "Android";
-            check.image = getResources().getDrawable(R.drawable.image);
-            List.add(check);
-        }
+        mList = new ArrayList<>();
+
         listBtn = (ImageView) view.findViewById(R.id.img_list);
         gridBtn = (ImageView) view.findViewById(R.id.img_grid);
-        profileListAdapter = new ProfileListAdapter(List, getContext(), "grid");
+        profileListAdapter = new ProfileListAdapter(mList, getActivity(), "Grid", this);
         StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(profileListAdapter);
@@ -118,22 +109,22 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         listBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                gridBtn.setVisibility(View.GONE);
-                listBtn.setVisibility(View.VISIBLE);
+                listBtn.setVisibility(View.GONE);
+                gridBtn.setVisibility(View.VISIBLE);
                 layoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(layoutManager);
-                profileListAdapter = new ProfileListAdapter(List, getContext(), "LIST");
+                profileListAdapter = new ProfileListAdapter(mList, getContext(), "LIST", ProfileFragment.this);
                 recyclerView.setAdapter(profileListAdapter);
             }
         });
         gridBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listBtn.setVisibility(View.GONE);
-                gridBtn.setVisibility(View.VISIBLE);
+                gridBtn.setVisibility(View.GONE);
+                listBtn.setVisibility(View.VISIBLE);
                 StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
                 recyclerView.setLayoutManager(gridLayoutManager);
-                profileListAdapter = new ProfileListAdapter(List, getContext(), "GRID");
+                profileListAdapter = new ProfileListAdapter(mList, getContext(), "GRID", ProfileFragment.this);
                 recyclerView.setAdapter(profileListAdapter);
             }
         });
@@ -259,6 +250,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                         try {
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
+                                FeedData();
                                 Log.e("responce....::>>>", response);
 
                                 JSONObject userDataJsonObject = jObject.getJSONObject("user_data");
@@ -316,27 +308,88 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         userqueue.add(requestUser);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    public void FeedData() {
 
-        getView().setFocusableInTouchMode(true);
-        getView().requestFocus();
-        getView().setOnKeyListener(new View.OnKeyListener() {
+        context.showProgessDialog();
+        StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.FEED_DATA,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        context.dismissProgressDialog();
+                        try {
+                            final JSONObject jObject = new JSONObject(response);
+                            if (jObject.getString("status_id").equals("1")) {
+                                Log.e("responce....::>>>", response);
+
+                                mList.clear();
+                                JSONArray jsonArray = jObject.getJSONArray("feed_data");
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                    FeedItemVo feedItemVo = new FeedItemVo();
+                                    feedItemVo.setmUserTitle(jsonObject.getString("fullname"));
+                                    feedItemVo.setmId(jsonObject.getString("id"));
+                                    feedItemVo.setmDate(jsonObject.getString("date"));
+                                    feedItemVo.setmUserSubTitle(jsonObject.getString("username"));
+                                    feedItemVo.setmUserImage(Config.USER_IMAGE_URL + jsonObject.getString("mypic"));
+                                    feedItemVo.setmContentImage(Config.FEED_IMAGE_URL + jsonObject.getString("image"));
+                                    feedItemVo.setmDescription(jsonObject.getString("caption"));
+                                    feedItemVo.setmLikes(jsonObject.getInt("likes_count"));
+                                    feedItemVo.setmCommentCount(jsonObject.getInt("comment_count"));
+                                    feedItemVo.setmComment_1(jsonObject.getString("comment_1"));
+                                    feedItemVo.setmComment_2(jsonObject.getString("comment_2"));
+                                    feedItemVo.setLiked(jsonObject.getString("likes_status").equals("1"));
+
+                                    mList.add(feedItemVo);
+                                }
+                                profileListAdapter.notifyDataSetChanged();
+
+                            } else {
+                                Toast.makeText(getContext(), "no data available", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(getContext(), volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d("error", volleyError.getMessage());
+                        context.dismissProgressDialog();
+                    }
+                }) {
             @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-
-                if (i == KeyEvent.KEYCODE_BACK) {
-                    fragmentManager.popBackStack();
-                    return true;
-                }
-                return false;
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("user_id", AppPreferences.getAppPreferences(getContext()).getStringValue(AppPreferences.USER_ID));
+                params.put("login_id", AppPreferences.getAppPreferences(getContext()).getStringValue(AppPreferences.USER_ID));
+                params.put("lmt", "10");
+                params.put("offset", "1");
+                return params;
             }
-        });
+        };
 
+        requestFeed.setRetryPolicy(new DefaultRetryPolicy(
+                30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        RequestQueue feedqueue = Volley.newRequestQueue(getContext());
+        feedqueue.add(requestFeed);
     }
 
 
+    @Override
+    public void getItem(int position, ProfileListAdapter.ViewHolder holder, boolean isLiked) {
+        Intent intent = new Intent(getActivity(), FullImageViewActivity.class);
+        intent.putExtra("USERNAME", mList.get(position).getmUserTitle());
+        intent.putExtra("IMAGE", mList.get(position).getmContentImage());
+        intent.putExtra("USERIMAGE", mList.get(position).getmUserImage());
+        intent.putExtra("LIKES", mList.get(position).getmLikes());
+        intent.putExtra("LIKEDORNOT", isLiked);
+        startActivity(intent);
+    }
 }
 
 
