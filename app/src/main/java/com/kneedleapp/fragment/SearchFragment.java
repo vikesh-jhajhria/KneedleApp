@@ -4,6 +4,7 @@ package com.kneedleapp.fragment;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,7 @@ public class SearchFragment extends BaseFragment {
     ArrayList<String> withinList;
     private View mView;
 
+
     public static SearchFragment newInstance() {
         SearchFragment fragment = new SearchFragment();
         return fragment;
@@ -46,7 +48,6 @@ public class SearchFragment extends BaseFragment {
                              Bundle savedInstanceState) {
 
         mView = inflater.inflate(R.layout.fragment_search, container, false);
-        ((Spinner) mView.findViewById(R.id.spinner_home)).getBackground().setColorFilter(getResources().getColor(R.color.textColorPrimary), PorterDuff.Mode.SRC_ATOP);
 
         ((CheckBox) mView.findViewById(R.id.check_near_me)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -58,10 +59,6 @@ public class SearchFragment extends BaseFragment {
                 }
             }
         });
-        spinnerDataList = new ArrayList<>();
-        spinnerDataList.add("PROFILE TYPE");
-        spinnerDataList.add("PROFILE 1");
-        spinnerDataList.add("PROFILE 2");
 
         withinList = new ArrayList<>();
         withinList.add("10 KM");
@@ -74,7 +71,7 @@ public class SearchFragment extends BaseFragment {
         mView.findViewById(R.id.img_search).setOnClickListener(this);
 
         SpinnerAdapter spinnerAdapter = new SpinnerAdapter(getActivity(), R.layout.layout_spinner_item, spinnerDataList);
-        ((Spinner) mView.findViewById(R.id.spinner_home)).setAdapter(spinnerAdapter);
+
 
         applyFonts(mView);
 
@@ -105,6 +102,15 @@ public class SearchFragment extends BaseFragment {
                 return false;
             }
         });
+
+        ((TextView) mView.findViewById(R.id.txt_category)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new CategoriesFragment();
+                getFragmentManager().beginTransaction().add(R.id.main_frame, fragment).addToBackStack(null).commit();
+            }
+        });
+
 
         return mView;
     }

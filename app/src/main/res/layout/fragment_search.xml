@@ -62,21 +62,14 @@
                 android:layout_marginBottom="@dimen/margin_5"
                 android:layout_marginTop="@dimen/margin_15">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginBottom="@dimen/margin_2"
-                    android:layout_marginRight="@dimen/margin_10"
-                    android:src="@drawable/drop_down_red" />
-
-                <Spinner
-                    android:id="@+id/spinner_home"
+                <TextView
+                    android:id="@+id/txt_category"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:popupBackground="@color/spinner_background" />
+                    android:ellipsize="end"
+                    android:padding="@dimen/margin_5"
+                    android:textColor="#ffffff"
+                    android:textSize="@dimen/font_18" />
             </RelativeLayout>
 
 
@@ -100,10 +93,10 @@
 
             <RelativeLayout
                 android:id="@+id/rl_zip"
-                android:visibility="invisible"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_10">
+                android:layout_marginTop="@dimen/margin_10"
+                android:visibility="invisible">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -142,7 +135,7 @@
                         android:id="@+id/spinner_within"
                         style="@style/spinnerarrow"
                         android:layout_width="150dp"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content" />
 
                     <View
                         android:layout_width="match_parent"

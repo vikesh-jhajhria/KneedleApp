@@ -46,10 +46,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         holder.userName.setText(obj.getmUserName());
         holder.userComment.setText(obj.getmComment());
         Picasso.with(mContext).load(Config.USER_IMAGE_URL + obj.getmUserImageUrl()).placeholder(R.drawable.profile_img).error(R.drawable.profile_img).into(holder.imgUser);
-
-
     }
-
 
     @Override
     public int getItemCount() {
@@ -68,10 +65,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
             Utils.setTypeface(mContext, userName, Config.CENTURY_GOTHIC_BOLD);
             Utils.setTypeface(mContext, userComment, Config.CENTURY_GOTHIC_REGULAR);
-
-
         }
     }
-
-
 }

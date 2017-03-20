@@ -96,7 +96,6 @@ public class AddCommentFragment extends BaseFragment {
         mEdtComment = ((EditText) view.findViewById(R.id.edt_comment));
         view.findViewById(R.id.txt_post).setOnClickListener(this);
         view.findViewById(R.id.img_back).setOnClickListener(this);
-
     }
 
 

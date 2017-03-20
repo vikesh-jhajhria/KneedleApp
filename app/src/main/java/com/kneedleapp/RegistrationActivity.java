@@ -63,7 +63,6 @@ public class RegistrationActivity extends BaseActivity {
     private Calendar myCalendar;
     private DatePickerDialog.OnDateSetListener date;
     private String gender = "male";
-    private WebView webView;
     private WebSettings wSettings;
     private ProgressDialog pd = null;
     private Dialog builder;
@@ -122,7 +121,9 @@ public class RegistrationActivity extends BaseActivity {
 
                     if (!((CheckBox) findViewById(R.id.checkbox)).isChecked()) {
                         Toast.makeText(RegistrationActivity.this, "Please sign term and conditions", Toast.LENGTH_LONG).show();
-                    }else if (Utils.isNetworkConnected(this, true)) {
+                    } else if (!BaseActivity.isValidEmail(((EditText) findViewById(R.id.txt_email)).getText().toString().trim())) {
+                        Toast.makeText(RegistrationActivity.this, "Invalid email address", Toast.LENGTH_LONG).show();
+                    } else if (Utils.isNetworkConnected(this, true)) {
                         RegisterData();
                     }
                 } else {
@@ -353,7 +354,6 @@ public class RegistrationActivity extends BaseActivity {
         RequestQueue queue = Volley.newRequestQueue(RegistrationActivity.this);
         queue.add(termsCondition);
     }
-
 }
 
 

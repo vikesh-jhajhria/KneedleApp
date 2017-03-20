@@ -9,12 +9,20 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.kneedleapp.utils.VolleySingleton;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by vikesh.kumar on 08-Mar-17.
  */
 
 public class KneedleApp extends MultiDexApplication {
+
+    // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
+    private static final String TWITTER_KEY = "aman.sharma@vertexplus.com";
+    private static final String TWITTER_SECRET = "vertexplus@2017";
+
     public static final String TAG = KneedleApp.class.getSimpleName();
     public static VolleySingleton volleyQueueInstance;
     private static KneedleApp mInstance;
@@ -25,6 +33,8 @@ public class KneedleApp extends MultiDexApplication {
     public void onCreate() {
         MultiDex.install(getApplicationContext());
         super.onCreate();
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+        Fabric.with(this, new Twitter(authConfig));
         mInstance = this;
         instantiateVolleyQueue();
     }

@@ -21,6 +21,7 @@ import com.android.volley.toolbox.Volley;
 import com.kneedleapp.BaseActivity;
 import com.kneedleapp.LoginActivity;
 import com.kneedleapp.R;
+import com.kneedleapp.WebViewActivity;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 
@@ -38,28 +39,41 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_setting, container, false);
 
-
         mView.findViewById(R.id.txt_logout).setOnClickListener(this);
         mView.findViewById(R.id.img_back).setOnClickListener(this);
+        mView.findViewById(R.id.txt_report_problem).setOnClickListener(this);
+        mView.findViewById(R.id.txt_privacy_policy).setOnClickListener(this);
+        mView.findViewById(R.id.txt_terms_of_service).setOnClickListener(this);
 
         return mView;
     }
 
     @Override
     public void onClick(View view) {
-
-
         switch (view.getId()) {
-
             case R.id.txt_logout:
                 logout();
-
                 break;
-
             case R.id.img_back:
                 getFragmentManager().popBackStack();
                 break;
-
+            case R.id.txt_report_problem:
+              /*  Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("plain/text");
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"some@email.address"});
+                intent.putExtra(Intent.EXTRA_SUBJECT, "subject");
+                intent.putExtra(Intent.EXTRA_TEXT, "mail body");
+                startActivity(Intent.createChooser(intent, ""));*/
+                Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                emailIntent.setType("text/plain");
+                startActivity(emailIntent);
+                break;
+            case R.id.txt_privacy_policy:
+                startActivity(new Intent(getActivity(), WebViewActivity.class));
+                break;
+            case R.id.txt_terms_of_service:
+                startActivity(new Intent(getActivity(), WebViewActivity.class));
+                break;
         }
     }
 
@@ -99,7 +113,6 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-
 
                 params.put("user_id", AppPreferences.getAppPreferences(getContext()).getStringValue(AppPreferences.USER_ID));
 

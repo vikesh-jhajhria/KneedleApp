@@ -85,7 +85,13 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".SignUpActivity"></activity>
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".WebViewActivity"></activity>
+        <activity android:name="com.twitter.sdk.android.core.identity.OAuthActivity" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="a7534d0515b9eb564c000e1c55ce36053b6d99fc" />
+
     </application>
 
 </manifest>

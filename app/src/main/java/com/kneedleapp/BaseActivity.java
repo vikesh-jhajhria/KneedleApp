@@ -349,4 +349,12 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         snackbar.show();
     }
 
+    public final static boolean isValidEmail(CharSequence target) {
+        if (target == null) {
+            return false;
+        } else {
+            return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+        }
+    }
+
 }

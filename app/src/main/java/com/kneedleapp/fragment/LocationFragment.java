@@ -81,6 +81,10 @@ public class LocationFragment extends BaseFragment {
     public void onClick(View view) {
         switch (view.getId()) {
 
+            case R.id.img_back:
+                fragmentManager.popBackStack();
+                break;
+
         }
     }
 

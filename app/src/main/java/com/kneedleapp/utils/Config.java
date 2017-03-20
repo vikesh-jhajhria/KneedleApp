@@ -15,9 +15,7 @@ public class Config {
     public static final int REQUEST_CHECK_SETTINGS = 0x1;
     public static FragmentManager fragmentManager;
 
-
     public final static int SPLASH_TIME = 2000;
-
     public final static String BASE_URL = "http://kneedleapp.com/restAPIs/api/";
     public final static String USER_IMAGE_URL = "http://kneedleapp.com/restAPIs/uploads/user_images/";
     public final static String FEED_IMAGE_URL = "http://kneedleapp.com/restAPIs/uploads/post_images/";
@@ -43,5 +41,6 @@ public class Config {
     public final static String GET_USER_DETAILS = BASE_URL + "get_user_details";
     public final static String LOG_OUT = BASE_URL + "logout";
     public final static String TERMS_CONDITION = BASE_URL + "terms_conditions";
+    public final static String GET_CATEGORY = BASE_URL + "get_categories";
 
 }
