@@ -9,8 +9,10 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -39,10 +41,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import ca.barrenechea.widget.recyclerview.decoration.DividerDecoration;
+import ca.barrenechea.widget.recyclerview.decoration.StickyHeaderDecoration;
+
 import static android.content.ContentValues.TAG;
 
 
-public class NotificationFragment extends BaseFragment {
+public class NotificationFragment extends BaseFragment implements RecyclerView.OnItemTouchListener{
     private NotificationDataAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private ArrayList<NotificationItemVo> mList;
@@ -54,20 +59,67 @@ public class NotificationFragment extends BaseFragment {
         return fragment;
     }
 
+    private StickyHeaderDecoration decor;
+
+
+    @Override
+    public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+        View v = rv.findChildViewUnder(e.getX(), e.getY());
+        return v == null;
+    }
+
+    @Override
+    public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+        if (e.getAction() != MotionEvent.ACTION_UP) {
+            return;
+        }
+
+        // find the header that was clicked
+        View view = decor.findHeaderViewUnder(e.getX(), e.getY());
+
+        if (view instanceof TextView) {
+            Toast.makeText(this.getActivity(), ((TextView) view).getText() + " clicked", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+        //Do nothing
+    }
+
+
+    protected void setAdapterAndDecor(RecyclerView list) {
+        final NotificationDataAdapter adapter = new NotificationDataAdapter(getContext(), mList);
+        decor = new StickyHeaderDecoration(adapter);
+        setHasOptionsMenu(true);
+
+        list.setAdapter(adapter);
+        list.addItemDecoration(decor, 1);
+        list.addOnItemTouchListener(this);
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mList = new ArrayList<>();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_notification, container, false);
-        mRecyclerView = (RecyclerView) mView.findViewById(R.id.recyclerview_notification);
+
+        final DividerDecoration divider = new DividerDecoration.Builder(this.getActivity())
+                .setHeight(R.dimen.default_divider_height)
+                .setColorResource(R.color.gray)
+                .build();
+        mRecyclerView = (RecyclerView) mView.findViewById(R.id.list_notification);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new NotificationDataAdapter(getContext(), getData());
+        mRecyclerView.addItemDecoration(divider);
+        mAdapter = new NotificationDataAdapter(getContext(), mList);
         mRecyclerView.setAdapter(mAdapter);
 
         ((SwipeRefreshLayout) mView.findViewById(R.id.swipeRefreshLayout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -78,10 +130,11 @@ public class NotificationFragment extends BaseFragment {
             }
         });
 
+        setAdapterAndDecor(mRecyclerView);
         return mView;
     }
 
-    public ArrayList<NotificationItemVo> getData() {
+    /*public ArrayList<NotificationItemVo> getData() {
 
         String offer = "Aishwarya Kaushik commented on your photo";
         SpannableString offerspannable = new SpannableString(offer);
@@ -123,7 +176,7 @@ public class NotificationFragment extends BaseFragment {
 
         }
         return list;
-    }
+    }*/
 
     public void getNotificatios() {
 
@@ -141,9 +194,9 @@ public class NotificationFragment extends BaseFragment {
 
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject commentObj = (JSONObject) jsonArray.get(i);
-                                    //NotificationItemVo obj = new NotificationItemVo();
+                                    NotificationItemVo obj = new NotificationItemVo();
 
-                                    //mList.add(obj);
+                                    mList.add(obj);
 
                                 }
                                 mAdapter.notifyDataSetChanged();

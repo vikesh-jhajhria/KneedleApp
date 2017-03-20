@@ -36,5 +36,6 @@
     <dimen name="font_35">35sp</dimen>
     <dimen name="margin_4">4dp</dimen>
     <dimen name="font_10">10sp</dimen>
+    <dimen name="default_divider_height">1dp</dimen>
 
 </resources>

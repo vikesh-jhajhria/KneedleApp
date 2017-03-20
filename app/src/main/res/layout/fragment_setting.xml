@@ -178,14 +178,12 @@
                     android:text="@string/save_ori"
                     android:textSize="@dimen/font_12" />
 
-                <com.kyleduo.switchbutton.SwitchButton
+                <android.support.v7.widget.SwitchCompat
                     android:id="@+id/switch_button"
-                    style="@style/SwitchButtonMD"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    app:kswBackColor="#36b317" />
+                    android:layout_centerVertical="true" />
 
             </RelativeLayout>
 

@@ -2,6 +2,7 @@ package com.kneedleapp.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,42 +16,72 @@ import com.kneedleapp.vo.NotificationItemVo;
 
 import java.util.ArrayList;
 
+import ca.barrenechea.widget.recyclerview.decoration.StickyHeaderAdapter;
+
 /**
  * Created by aman.sharma on 2/22/2017.
  */
 
-public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements StickyHeaderAdapter<NotificationDataAdapter.HeaderHolder>{
 
     private Context context;
     private ArrayList<NotificationItemVo> mList;
-
+    private LayoutInflater mInflater;
     public NotificationDataAdapter(Context context, ArrayList<NotificationItemVo> mList) {
         this.context = context;
         this.mList = mList;
+        mInflater = LayoutInflater.from(context);
 
     }
 
+    @Override
+    public long getHeaderId(int position) {
+        NotificationItemVo obj = mList.get(position);
+        Log.v("DAY",position+" : "+obj.getType());
+        if(obj.getType() ==  NotificationItemVo.DAY){
+            return 1;
+        }
+        return 0;
+    }
+
+    @Override
+    public HeaderHolder onCreateHeaderViewHolder(ViewGroup parent) {
+        final View view = mInflater.inflate(R.layout.notificationheader, parent, false);
+        return new HeaderHolder(view);
+    }
+
+    @Override
+    public void onBindHeaderViewHolder(HeaderHolder holder, int position) {
+        NotificationItemVo obj = mList.get(position);
+        ((HeaderHolder) holder).mTvHeader.setText(obj.getFullName());
+        /*if(obj.getmTvHeader() != null && obj.getmTvHeader().equalsIgnoreCase("today")){
+            ((HeaderHolder) holder).bell.setVisibility(View.VISIBLE);
+        } else {
+            ((HeaderHolder) holder).bell.setVisibility(View.GONE);
+        }*/
+        Utils.setTypeface(context, ((HeaderHolder) holder).mTvHeader , Config.CENTURY_GOTHIC_BOLD);
+    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
 
-        switch (viewType) {
+        /*switch (viewType) {
             case NotificationItemVo.DAY:
 
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.notificationheader, parent, false);
-                return new DayViewHolder(view);
+                view = mInflater.inflate(R.layout.notificationheader, parent, false);
+                return new HeaderHolder(view);
 
-            case NotificationItemVo.NOTIFICATION:
+            case NotificationItemVo.NOTIFICATION:*/
 
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.notification_item, parent, false);
+                view = mInflater.inflate(R.layout.notification_item, parent, false);
                 return new NotificationDataViewHolder(view);
 
 
-        }
+        //}
 
 
-        return null;
+        //return null;
     }
 
     @Override
@@ -59,24 +90,24 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
         NotificationItemVo obj = mList.get(position);
         if (obj != null) {
 
-            switch (obj.getmType()) {
+            /*switch (obj.getmType()) {
                 case NotificationItemVo.DAY:
-                    ((DayViewHolder) holder).mTvHeader.setText(obj.getmTvHeader());
+                    ((HeaderHolder) holder).mTvHeader.setText(obj.getmTvHeader());
                     if(obj.getmTvHeader().equalsIgnoreCase("today")){
-                        ((DayViewHolder) holder).bell.setVisibility(View.VISIBLE);
+                        ((HeaderHolder) holder).bell.setVisibility(View.VISIBLE);
                     } else {
-                        ((DayViewHolder) holder).bell.setVisibility(View.GONE);
+                        ((HeaderHolder) holder).bell.setVisibility(View.GONE);
                     }
-                    Utils.setTypeface(context, ((DayViewHolder) holder).mTvHeader , Config.CENTURY_GOTHIC_BOLD);
+                    Utils.setTypeface(context, ((HeaderHolder) holder).mTvHeader , Config.CENTURY_GOTHIC_BOLD);
                     break;
 
-                case NotificationItemVo.NOTIFICATION:
-                    ((NotificationDataViewHolder) holder).mTvNoti.setText(obj.getmTvNotiText());
+                case NotificationItemVo.NOTIFICATION:*/
+                    ((NotificationDataViewHolder) holder).mTvNoti.setText(obj.getFullName());
                     Utils.setTypeface(context, ((NotificationDataViewHolder) holder).mTvNoti , Config.CENTURY_GOTHIC_REGULAR);
 
-                    break;
+                   /* break;
 
-            }
+            }*/
 
 
         }
@@ -93,22 +124,22 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public int getItemViewType(int position) {
-        if (mList != null) {
+        /*if (mList != null) {
 
             NotificationItemVo notificationItemVo = mList.get(position);
             if (notificationItemVo != null) {
 
                 return notificationItemVo.getmType();
             }
-        }
+        }*/
         return 0;
     }
 
-    public static class DayViewHolder extends RecyclerView.ViewHolder {
+    public static class HeaderHolder extends RecyclerView.ViewHolder {
         private TextView mTvHeader;
         private ImageView bell;
 
-        public DayViewHolder(View itemView) {
+        public HeaderHolder(View itemView) {
             super(itemView);
             mTvHeader = (TextView) itemView.findViewById(R.id.txt_header);
             bell = (ImageView) itemView.findViewById(R.id.img_bell);
