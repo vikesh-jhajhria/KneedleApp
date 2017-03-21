@@ -42,5 +42,6 @@ public class Config {
     public final static String LOG_OUT = BASE_URL + "logout";
     public final static String TERMS_CONDITION = BASE_URL + "terms_conditions";
     public final static String GET_CATEGORY = BASE_URL + "get_categories";
+    public final static String GET_USER_FEEDS = BASE_URL + "get_user_feeds";
 
 }

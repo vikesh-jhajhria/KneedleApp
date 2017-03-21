@@ -79,13 +79,26 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         feedItemVo = mList.get(position);
+        holder.imgContent.setImageDrawable(null);
         holder.imgContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mListener.getItem(position, holder, feedItemVo.getLiked());
             }
         });
-        Picasso.with(context).load(feedItemVo.getmContentImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(holder.imgContent);
+        Log.v("Image Loading", "URL: "+feedItemVo.getmContentImage());
+
+        Picasso.with(context).load(feedItemVo.getmContentImage())
+                .placeholder(R.drawable.default_feed).error(R.drawable.default_feed)
+                .into(holder.imgContent);
+        /*new AsyncTask<Void, Void, Bitmap>(){
+            @Override
+            protected Bitmap doInBackground(Void... voids) {
+
+
+                return null;
+                        }
+        }.execute();*/
 
         if (viewType.equalsIgnoreCase("GRID")) {
             ViewGroup.LayoutParams lp = holder.imgContent.getLayoutParams();

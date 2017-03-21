@@ -250,7 +250,7 @@ public class ProfileFragment extends BaseFragment
                         try {
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
-                                FeedData();
+                                FeedData(mUserId);
                                 Log.e("responce....::>>>", response);
 
                                 JSONObject userDataJsonObject = jObject.getJSONObject("user_data");
@@ -282,18 +282,12 @@ public class ProfileFragment extends BaseFragment
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
 
-
-                if (mUserId != null && mUserName != null) {
-                    params.put("user_id", getArguments().getString("USERID"));
-                    params.put("username", getArguments().getString("USERNAME"));
-
-
-                } else {
-                    params.put("user_id", mPrefernce.getStringValue(AppPreferences.USER_ID));
-                    params.put("username", mPrefernce.getStringValue(AppPreferences.USER_NAME));
-
+                if (mUserId == null && mUserName == null) {
+                    mUserId =  mPrefernce.getStringValue(AppPreferences.USER_ID);
+                    mUserName = mPrefernce.getStringValue(AppPreferences.USER_NAME);
                 }
-
+                params.put("user_id", mUserId);
+                params.put("username", mUserName);
 
                 return params;
             }
@@ -308,10 +302,10 @@ public class ProfileFragment extends BaseFragment
         userqueue.add(requestUser);
     }
 
-    public void FeedData() {
+    public void FeedData(final String user_id) {
 
         context.showProgessDialog();
-        StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.FEED_DATA,
+        StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.GET_USER_FEEDS,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -362,8 +356,7 @@ public class ProfileFragment extends BaseFragment
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("user_id", AppPreferences.getAppPreferences(getContext()).getStringValue(AppPreferences.USER_ID));
-                params.put("login_id", AppPreferences.getAppPreferences(getContext()).getStringValue(AppPreferences.USER_ID));
+                params.put("user_id", user_id);
                 params.put("lmt", "10");
                 params.put("offset", "1");
                 return params;
