@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +15,12 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.kneedleapp.R;
+import com.kneedleapp.adapter.CategoryAdapter;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 
@@ -30,6 +33,7 @@ public class SearchFragment extends BaseFragment {
     ArrayList<String> spinnerDataList;
     ArrayList<String> withinList;
     private View mView;
+    private ArrayList<String> mListSearchData;
 
 
     public static SearchFragment newInstance() {
@@ -40,6 +44,11 @@ public class SearchFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            mListSearchData = getArguments().getStringArrayList("ARRAY");
+        }
+
     }
 
 
@@ -99,11 +108,12 @@ public class SearchFragment extends BaseFragment {
 
                 }
 
+
                 return false;
             }
         });
 
-        ((TextView) mView.findViewById(R.id.txt_category)).setOnClickListener(new View.OnClickListener() {
+        ((RelativeLayout) mView.findViewById(R.id.rl_profile_type)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Fragment fragment = new CategoriesFragment();
@@ -197,7 +207,19 @@ public class SearchFragment extends BaseFragment {
         Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_search), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_zip), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.check_near_me), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_category), Config.CENTURY_GOTHIC_REGULAR);
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mListSearchData != null) {
+            StringBuilder builder = new StringBuilder();
+            for (String details : mListSearchData) {
+                builder.append(details + ", ");
+            }
+            builder.setLength(builder.length() - 2);
+            ((TextView) mView.findViewById(R.id.txt_category)).setText(builder.toString());
+        }
+    }
 }

@@ -65,7 +65,6 @@ public class ProfileFragment extends BaseFragment
 
     public static ProfileFragment newInstance() {
         ProfileFragment fragment = new ProfileFragment();
-
         return fragment;
     }
 
@@ -155,6 +154,7 @@ public class ProfileFragment extends BaseFragment
                 ((SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout)).setRefreshing(false);
             }
         });
+
 
 
         return view;

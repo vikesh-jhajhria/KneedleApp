@@ -99,7 +99,6 @@ public class MainActivity extends BaseActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data != null) {
             super.onActivityResult(requestCode, resultCode, data);
-
             if(!isPost){
                 fragment = getSupportFragmentManager().findFragmentByTag("EDITPROFILE");
             }

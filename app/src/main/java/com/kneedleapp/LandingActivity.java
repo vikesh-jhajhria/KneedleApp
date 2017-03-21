@@ -14,6 +14,7 @@ import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 import com.twitter.sdk.android.core.models.User;
 
@@ -25,8 +26,8 @@ public class LandingActivity extends BaseActivity {
 
     //This is your KEY and SECRET
     //And it would be added automatically while the configuration
-    private static final String TWITTER_KEY = "b8X3lN6EbpHwnHROrObIEeMRW";
-    private static final String TWITTER_SECRET = "ezJAykSFBLlwPPaFk7Dfj5KWB6ioSZgMFyW0f3ViqqtYD0Hcod";
+    private static final String TWITTER_KEY = "pmvSTKaPNNXZDgvx4gqAlPhhb";
+    private static final String TWITTER_SECRET = "7l2CV6w2H06yxsvjCj6OcfUfZ3JRF3dnGpx0AF43rteGTTYjrn";
 
     //Tags to send the username and image url to next activity using intent
     public static final String KEY_USERNAME = "username";
@@ -34,7 +35,7 @@ public class LandingActivity extends BaseActivity {
     TwitterAuthConfig authConfig;
 
     //Twitter Login Button
-    TwitterLoginButton twitterLoginButton;
+    public static TwitterLoginButton twitterLoginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +46,26 @@ public class LandingActivity extends BaseActivity {
         applyFonts();
         findViewById(R.id.btn_login).setOnClickListener(this);
         findViewById(R.id.btn_register).setOnClickListener(this);
-
         twitterLoginButton = (TwitterLoginButton) findViewById(R.id.twitterLogin);
 
         //Adding callback to the button
+
+        TwitterAuthClient client = new TwitterAuthClient();
+
+        client.authorize(LandingActivity.this,new Callback<TwitterSession>() {
+            @Override
+            public void success(Result<TwitterSession> twitterSessionResult) {
+                Log.e(TAG, "Logged with twitter");
+                TwitterSession session = twitterSessionResult.data;
+            }
+
+            @Override
+            public void failure(com.twitter.sdk.android.core.TwitterException e) {
+                Log.e(TAG, "Failed login with twitter");
+                e.printStackTrace();
+            }
+        } );
+
         twitterLoginButton.setCallback(new Callback<TwitterSession>() {
 
             @Override
@@ -61,13 +78,18 @@ public class LandingActivity extends BaseActivity {
                 Log.e("TwitterKit", "Login with Twitter failure", exception);
             }
         });
+        twitterLoginButton.setOnClickListener(this);
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (twitterLoginButton != null)
-          twitterLoginButton.onActivityResult(requestCode, resultCode, data);
+        try {
+            twitterLoginButton.onActivityResult(requestCode, resultCode, data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -79,6 +101,9 @@ public class LandingActivity extends BaseActivity {
                 break;
             case R.id.btn_register:
                 startActivity(new Intent(getApplicationContext(), RegistrationActivity.class));
+                break;
+            case R.id.twitterLogin:
+                Log.e("TAG", "twitter button");
                 break;
         }
     }
@@ -104,7 +129,7 @@ public class LandingActivity extends BaseActivity {
         call.enqueue(new Callback<User>() {
             @Override
             public void failure(TwitterException e) {
-                //If any error occurs handle it here
+                Log.e("error::__>>", e.toString());
             }
 
             @Override

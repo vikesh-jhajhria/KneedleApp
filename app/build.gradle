@@ -66,5 +66,9 @@ dependencies {
     compile 'org.apache.httpcomponents:httpmime:4.3.6'
     testCompile 'junit:junit:4.12'
     compile 'ca.barrenechea.header-decor:header-decor:0.2.8'
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.7@aar') {
+        transitive = true;
+    }
+
 }
 apply plugin: 'com.google.gms.google-services'

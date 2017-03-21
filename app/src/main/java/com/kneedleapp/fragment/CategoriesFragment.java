@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -41,6 +42,9 @@ public class CategoriesFragment extends Fragment implements CategoryAdapter.Send
     private CategoryAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private View view;
+    private StringBuilder builder;
+    private ArrayList<String> mSendData;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,11 +63,25 @@ public class CategoriesFragment extends Fragment implements CategoryAdapter.Send
     private void findViews() {
 
         mList = new ArrayList<>();
+        mSendData = new ArrayList<>();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_category);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new CategoryAdapter(getContext(), mList, this);
         mRecyclerView.setAdapter(mAdapter);
+        ((TextView) view.findViewById(R.id.txt_done)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Bundle bundle = new Bundle();
+                Fragment fragment = new SearchFragment();
+                bundle.putStringArrayList("ARRAY", mSendData);
+                fragment.setArguments(bundle);
+                getFragmentManager().beginTransaction().replace(R.id.main_frame, fragment).commit();
+
+
+            }
+        });
 
     }
 
@@ -119,10 +137,10 @@ public class CategoriesFragment extends Fragment implements CategoryAdapter.Send
         queue.add(getCategory);
     }
 
-
     @Override
-    public void sendData(String data) {
-        mData = data;
-        Log.e("DATA", mData);
+    public void sendData(ArrayList<String> data) {
+        mSendData = data;
+
+
     }
 }
