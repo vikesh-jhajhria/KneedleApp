@@ -8,12 +8,17 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AlertDialog.Builder;
@@ -26,6 +31,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -62,6 +68,66 @@ public class Utils {
         }
 
 
+    }
+
+    public static void openGallery(Activity activity) {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+        activity.startActivityForResult(intent, Config.GALLERYIMAGE);
+
+    }
+
+    public static void launchCamera(Activity activity) {
+        Config.CAMERAFILEURI = null;
+        Config.CAMERAFILEURI = Utils.getOutputMediaFileUri();
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (Config.CAMERAFILEURI != null) {
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, Config.CAMERAFILEURI);
+            activity.startActivityForResult(intent, Config.CAMERAIMAGE);
+        }
+
+    }
+
+
+    public static Uri getOutputMediaFileUri() {
+        File file = getOutputMediaFile();
+        Uri uri = null;
+        if (file != null) {
+            uri = Uri.fromFile(file);
+        }
+        return uri;
+    }
+
+    public static File getOutputMediaFile() {
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                Config.IMAGE_DIRECTORY_NAME);
+
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d(Config.IMAGE_DIRECTORY_NAME, "Oops! Failed create " + Config.IMAGE_DIRECTORY_NAME + " directory");
+                return null;
+            }
+        }
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        File mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + ".jpg");
+
+        return mediaFile;
+    }
+
+    public static String getRealPathFromURI(Context context, Uri contentURI) {
+        String result;
+        Cursor cursor = context.getContentResolver().query(contentURI, null, null, null, null);
+        if (cursor == null) { // Source is Dropbox or other similar local file path
+            result = contentURI.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            result = cursor.getString(idx);
+            cursor.close();
+        }
+        return result;
     }
 
     public static String printKeyHash(Activity context) {
@@ -205,6 +271,7 @@ public class Utils {
             }
         });
     }
+
     public static String getCurrentDate() throws UnsupportedEncodingException {
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
         Date date = calendar.getTime();

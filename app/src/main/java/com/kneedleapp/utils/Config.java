@@ -1,5 +1,6 @@
 package com.kneedleapp.utils;
 
+import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 
 /**
@@ -14,6 +15,13 @@ public class Config {
     public static final int MEDIA_PERMISSION = 1002;
     public static final int REQUEST_CHECK_SETTINGS = 0x1;
     public static FragmentManager fragmentManager;
+    public static Uri CAMERAFILEURI;
+    public static Uri CROPPEDIMAGEURI;
+    public static final int CAMERAIMAGE = 123;
+    public static final int GALLERYIMAGE = 124;
+    public static final int CROPIMAGE = 127;
+    public static final int ROTATEIMAGE = 128;
+    public static final String IMAGE_DIRECTORY_NAME = "KNEEDLE";
 
     public final static int SPLASH_TIME = 2000;
     public final static String BASE_URL = "http://kneedleapp.com/restAPIs/api/";
