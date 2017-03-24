@@ -73,6 +73,9 @@
             android:name=".FullImageViewActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name="com.android.camera.CropImage"
+            android:screenOrientation="portrait" />
 
         <service android:name=".utils.FirebaseMessagingService">
             <intent-filter>

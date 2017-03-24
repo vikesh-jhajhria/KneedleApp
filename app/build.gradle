@@ -41,7 +41,13 @@ android {
         exclude 'META-INF/NOTICE.txt'
     }
 }
+repositories {
+    mavenCentral()
 
+    maven {
+        url 'http://lorenzo.villani.me/android-cropimage/'
+    }
+}
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -64,6 +70,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:10.0.1'
     compile 'org.apache.httpcomponents:httpcore:4.4.1'
     compile 'org.apache.httpcomponents:httpmime:4.3.6'
+    compile 'me.villani.lorenzo.android:android-cropimage:1.1.+'
     testCompile 'junit:junit:4.12'
     compile 'ca.barrenechea.header-decor:header-decor:0.2.8'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.7@aar') {
