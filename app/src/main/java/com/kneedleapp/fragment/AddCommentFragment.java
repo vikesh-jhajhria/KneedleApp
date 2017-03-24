@@ -73,7 +73,7 @@ public class AddCommentFragment extends BaseFragment {
         findViews();
         applyFonts(view);
         if (Utils.isNetworkConnected(getActivity(), true)) {
-            loadComments(AppPreferences.getAppPreferences(getActivity()).getUserId(), feedId, 30, 1);
+            loadComments(AppPreferences.getAppPreferences(getActivity()).getUserId(), feedId, 30, 0);
         }
         return view;
     }

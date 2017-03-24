@@ -357,8 +357,8 @@ public class ProfileFragment extends BaseFragment
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("user_id", user_id);
-                params.put("lmt", "10");
-                params.put("offset", "1");
+                params.put("lmt", "30");
+                params.put("offset", "0");
                 return params;
             }
         };

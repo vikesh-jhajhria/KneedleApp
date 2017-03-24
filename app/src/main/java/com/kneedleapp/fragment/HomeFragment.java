@@ -115,6 +115,7 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
                                     FeedItemVo feedItemVo = new FeedItemVo();
                                     feedItemVo.setmUserTitle(jsonObject.getString("fullname"));
                                     feedItemVo.setmId(jsonObject.getString("id"));
+                                    feedItemVo.setmUserId(jsonObject.getString("user_id"));
                                     feedItemVo.setmDate(jsonObject.getString("date"));
                                     feedItemVo.setmUserSubTitle(jsonObject.getString("username"));
                                     feedItemVo.setmUserImage(Config.USER_IMAGE_URL + jsonObject.getString("mypic"));
@@ -151,8 +152,8 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("user_id", AppPreferences.getAppPreferences(getContext()).getStringValue(AppPreferences.USER_ID));
                 params.put("login_id", AppPreferences.getAppPreferences(getContext()).getStringValue(AppPreferences.USER_ID));
-                params.put("lmt", "10");
-                params.put("offset", "1");
+                params.put("lmt", "30");
+                params.put("offset", "0");
                 return params;
             }
         };
