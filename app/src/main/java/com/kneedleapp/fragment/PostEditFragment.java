@@ -55,7 +55,7 @@ public class PostEditFragment extends BaseFragment {
         if (bitmap != null) {
             ((ImageView) view.findViewById(R.id.img_post)).setImageBitmap(bitmap);
         }
-
+        Config.LAST_PAGE = "";
 
         applyFonts(view);
 

@@ -105,8 +105,8 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
             lp.height = (int) Utils.getDeviceSize((BaseActivity) context).get("Width") / 3;
             holder.imgContent.setLayoutParams(lp);
         } else {
-            holder.tvTitle.setText(feedItemVo.getmUserTitle());
-            holder.tvSubTitle.setText(feedItemVo.getmUserSubTitle());
+            holder.tvTitle.setText(feedItemVo.getmFullName());
+            holder.tvSubTitle.setText(feedItemVo.getmUserName());
             holder.tvDescription.setText(feedItemVo.getmDescription());
             holder.tvComment.setText(feedItemVo.getmCommentCount() + "");
             if (feedItemVo.getmCommentCount() > 0) {
@@ -221,8 +221,8 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
 
                     Bundle bundle = new Bundle();
                     bundle.putString("USERID", feedItemVo.getmUserId());
-                    bundle.putString("USERNAME", feedItemVo.getmUserSubTitle());
-                    bundle.putString("USERTITLE", feedItemVo.getmUserTitle());
+                    bundle.putString("USERNAME", feedItemVo.getmUserName());
+                    bundle.putString("USERTITLE", feedItemVo.getmFullName());
                     Fragment fragment = new ProfileFragment();
                     fragment.setArguments(bundle);
                     fragmentManager.beginTransaction().replace(R.id.main_frame, fragment).addToBackStack(null).commit();
@@ -237,8 +237,8 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
                 public void onClick(View view) {
                     Bundle bundle = new Bundle();
                     bundle.putString("USERID", feedItemVo.getmUserId());
-                    bundle.putString("USERNAME", feedItemVo.getmUserSubTitle());
-                    bundle.putString("USERTITLE", feedItemVo.getmUserTitle());
+                    bundle.putString("USERNAME", feedItemVo.getmUserName());
+                    bundle.putString("USERTITLE", feedItemVo.getmFullName());
                     Fragment fragment = new ProfileFragment();
                     fragment.setArguments(bundle);
                     fragmentManager.beginTransaction().replace(R.id.main_frame, fragment).addToBackStack(null).commit();

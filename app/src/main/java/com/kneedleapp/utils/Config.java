@@ -16,7 +16,7 @@ public class Config {
     public static final int REQUEST_CHECK_SETTINGS = 0x1;
     public static FragmentManager fragmentManager;
     public static Uri CAMERAFILEURI;
-    public static Uri CROPPEDIMAGEURI;
+    public static String LAST_PAGE = "";
     public static final int CAMERAIMAGE = 123;
     public static final int GALLERYIMAGE = 124;
     public static final int CROPIMAGE = 127;

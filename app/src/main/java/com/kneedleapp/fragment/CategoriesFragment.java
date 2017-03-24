@@ -19,7 +19,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.JsonArray;
 import com.kneedleapp.BaseActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.adapter.CategoryAdapter;
@@ -50,7 +49,7 @@ public class CategoriesFragment extends Fragment implements CategoryAdapter.Send
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_categories, container, false);
-
+        Config.LAST_PAGE = "";
 
         findViews();
         getCategory();

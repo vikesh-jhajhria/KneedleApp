@@ -1,17 +1,11 @@
 package com.kneedleapp.fragment;
 
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.transition.ChangeImageTransform;
-import android.transition.ChangeTransform;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +21,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.kneedleapp.BaseActivity;
 import com.kneedleapp.FullImageViewActivity;
-import com.kneedleapp.MainActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.adapter.FeedItemAdapter;
 import com.kneedleapp.utils.AppPreferences;
@@ -113,11 +106,11 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                                     FeedItemVo feedItemVo = new FeedItemVo();
-                                    feedItemVo.setmUserTitle(jsonObject.getString("fullname"));
+                                    feedItemVo.setmFullName(jsonObject.getString("fullname"));
                                     feedItemVo.setmId(jsonObject.getString("id"));
                                     feedItemVo.setmUserId(jsonObject.getString("user_id"));
                                     feedItemVo.setmDate(jsonObject.getString("date"));
-                                    feedItemVo.setmUserSubTitle(jsonObject.getString("username"));
+                                    feedItemVo.setmUserName(jsonObject.getString("username"));
                                     feedItemVo.setmUserImage(Config.USER_IMAGE_URL + jsonObject.getString("mypic"));
                                     feedItemVo.setmContentImage(Config.FEED_IMAGE_URL + jsonObject.getString("image"));
                                     feedItemVo.setmDescription(jsonObject.getString("caption"));
@@ -171,32 +164,12 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
     @Override
     public void getItem(int position, FeedItemAdapter.ViewHolder holder, boolean isLiked) {
         Intent intent = new Intent(getActivity(), FullImageViewActivity.class);
-        intent.putExtra("USERNAME", mList.get(position).getmUserTitle());
+        intent.putExtra("USERNAME", mList.get(position).getmFullName());
         intent.putExtra("IMAGE", mList.get(position).getmContentImage());
         intent.putExtra("USERIMAGE", mList.get(position).getmUserImage());
         intent.putExtra("LIKES", mList.get(position).getmLikes());
         intent.putExtra("LIKEDORNOT", isLiked);
         startActivity(intent);
-    }
-
-
-    @SuppressLint("NewApi")
-    public class DetailsTransition extends android.transition.TransitionSet {
-        public DetailsTransition() {
-            init();
-        }
-
-        public DetailsTransition(Context context, AttributeSet attrs) {
-            super(context, attrs);
-            init();
-        }
-
-        private void init() {
-            setOrdering(ORDERING_TOGETHER);
-            addTransition(new android.transition.ChangeBounds()).
-                    addTransition(new ChangeTransform()).
-                    addTransition(new ChangeImageTransform());
-        }
     }
 }
 

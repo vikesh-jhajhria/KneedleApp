@@ -73,7 +73,7 @@ public class SearchResultFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_search_result, container, false);
         applyFonts(mView);
-
+        Config.LAST_PAGE = "";
 
         recyclerView = (RecyclerView) mView.findViewById(R.id.recycler_view);
         mList = new ArrayList<>();

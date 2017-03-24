@@ -7,10 +7,10 @@ import android.view.View;
 
 import com.kneedleapp.fragment.EditProfileFragment;
 import com.kneedleapp.fragment.HomeFragment;
-import com.kneedleapp.fragment.SearchFragment;
-import com.kneedleapp.fragment.PostFragment;
 import com.kneedleapp.fragment.NotificationFragment;
+import com.kneedleapp.fragment.PostFragment;
 import com.kneedleapp.fragment.ProfileFragment;
+import com.kneedleapp.fragment.SearchFragment;
 import com.kneedleapp.utils.Config;
 
 
@@ -54,6 +54,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public void selectTab(BottomBarTab selectedTab) {
+        Config.LAST_PAGE = "HOME";
         findViewById(R.id.rl_home_selected).setVisibility(View.INVISIBLE);
         findViewById(R.id.rl_search_selected).setVisibility(View.INVISIBLE);
         findViewById(R.id.rl_post_selected).setVisibility(View.INVISIBLE);
@@ -82,7 +83,13 @@ public class MainActivity extends BaseActivity {
                 break;
             case PROFILE:
                 findViewById(R.id.rl_profile_selected).setVisibility(View.VISIBLE);
-                showFragment(R.id.main_frame, ProfileFragment.newInstance(), "PROFILE_FRAGMENT");
+                ProfileFragment fragment = (ProfileFragment) Config.fragmentManager.findFragmentByTag("PROFILE_FRAGMENT");
+                showFragment(R.id.main_frame, ProfileFragment.newInstance(preferences.getUserId(),
+                        preferences.getUserName()), "PROFILE_FRAGMENT");
+
+                if (fragment != null && !fragment.getUserId().equalsIgnoreCase(preferences.getUserId())) {
+                    fragment.loadMyProfile();
+                }
                 break;
         }
     }
@@ -99,7 +106,7 @@ public class MainActivity extends BaseActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data != null) {
             super.onActivityResult(requestCode, resultCode, data);
-            if(!isPost){
+            if (!isPost) {
                 fragment = getSupportFragmentManager().findFragmentByTag("EDITPROFILE");
             }
 

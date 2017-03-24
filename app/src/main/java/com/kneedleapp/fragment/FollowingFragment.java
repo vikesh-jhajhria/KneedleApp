@@ -25,7 +25,6 @@ import com.kneedleapp.adapter.FollowerAdapter;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.FollowersVo;
-import com.kneedleapp.vo.SearchResultVO;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -77,7 +76,7 @@ public class FollowingFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_following, container, false);
         applyFonts(view);
-
+        Config.LAST_PAGE = "";
         view.findViewById(R.id.img_back).setOnClickListener(this);
 
         context = (BaseActivity) getActivity();

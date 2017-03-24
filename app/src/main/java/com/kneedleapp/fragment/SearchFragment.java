@@ -2,8 +2,8 @@ package com.kneedleapp.fragment;
 
 
 import android.content.Context;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -20,7 +20,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.kneedleapp.R;
-import com.kneedleapp.adapter.CategoryAdapter;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 
@@ -41,6 +40,7 @@ public class SearchFragment extends BaseFragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +57,7 @@ public class SearchFragment extends BaseFragment {
                              Bundle savedInstanceState) {
 
         mView = inflater.inflate(R.layout.fragment_search, container, false);
-
+        Config.LAST_PAGE = "HOME";
         ((CheckBox) mView.findViewById(R.id.check_near_me)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -213,6 +213,16 @@ public class SearchFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        Log.v("Kneedle","Search");
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getView().setFocusableInTouchMode(true);
+                getView().requestFocus();
+                getView().setOnKeyListener(SearchFragment.this);
+            }
+        },500);
+        
         if (mListSearchData != null) {
             StringBuilder builder = new StringBuilder();
             for (String details : mListSearchData) {

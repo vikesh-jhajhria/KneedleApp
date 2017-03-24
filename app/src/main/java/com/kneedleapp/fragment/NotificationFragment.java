@@ -1,12 +1,10 @@
 package com.kneedleapp.fragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -33,11 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,6 +60,20 @@ public class NotificationFragment extends BaseFragment implements RecyclerView.O
     public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
         View v = rv.findChildViewUnder(e.getX(), e.getY());
         return v == null;
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.v("Kneedle","Notification");
+         new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getView().setFocusableInTouchMode(true);
+                getView().requestFocus();
+                getView().setOnKeyListener(NotificationFragment.this);
+            }
+        },500);
+
     }
 
     @Override
@@ -109,7 +117,7 @@ public class NotificationFragment extends BaseFragment implements RecyclerView.O
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_notification, container, false);
-
+        Config.LAST_PAGE = "HOME";
         final DividerDecoration divider = new DividerDecoration.Builder(this.getActivity())
                 .setHeight(R.dimen.default_divider_height)
                 .setColorResource(R.color.gray)

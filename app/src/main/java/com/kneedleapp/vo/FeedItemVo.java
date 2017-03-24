@@ -1,7 +1,7 @@
 package com.kneedleapp.vo;
 
 public class FeedItemVo {
-    private String mId, mUserImage, mUserTitle, mUserSubTitle, mContentImage,
+    private String mId, mUserImage, mFullName, mUserName, mContentImage,
             mDescription, mComment_1, mComment_2, mDate, mUserId;
     private int mCommentCount, mLikes;
     private boolean mLiked;
@@ -71,20 +71,20 @@ public class FeedItemVo {
         this.mUserImage = mUserImage;
     }
 
-    public String getmUserTitle() {
-        return mUserTitle;
+    public String getmFullName() {
+        return mFullName;
     }
 
-    public void setmUserTitle(String mUserTitle) {
-        this.mUserTitle = mUserTitle;
+    public void setmFullName(String fullName) {
+        this.mFullName = fullName;
     }
 
-    public String getmUserSubTitle() {
-        return mUserSubTitle;
+    public String getmUserName() {
+        return mUserName;
     }
 
-    public void setmUserSubTitle(String mUserSubTitle) {
-        this.mUserSubTitle = mUserSubTitle;
+    public void setmUserName(String username) {
+        this.mUserName = username;
     }
 
     public String getmContentImage() {

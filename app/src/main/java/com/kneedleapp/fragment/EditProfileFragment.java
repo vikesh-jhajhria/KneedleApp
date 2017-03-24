@@ -24,7 +24,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,6 +78,7 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
         checkPermission(getContext());
+        Config.LAST_PAGE = "";
         applyFonts(view);
         view.findViewById(R.id.img_back).setOnClickListener(this);
         view.findViewById(R.id.img_location).setOnClickListener(this);
@@ -171,25 +171,16 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
     public void onResume() {
         super.onResume();
 
-            MainActivity.isPost = false;
+        MainActivity.isPost = false;
 
 
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();
-        getView().setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-
-                if (i == KeyEvent.KEYCODE_BACK) {
-                    fragmentManager.popBackStack();
-
-                    return true;
-                }
-                return false;
-            }
-        });
+        getView().setOnKeyListener(this);
 
     }
+
+
 
     public void editProfile() {
         ((BaseActivity) getActivity()).showProgessDialog();
@@ -291,36 +282,36 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
     }
 
 
-  /*  public void onSelectFromGalleryResult(Intent data) {
-        Uri selectedImage = data.getData();
-        String[] filePath = {MediaStore.Images.Media.DATA};
-        Cursor c = ((BaseActivity) getContext()).getContentResolver().query(selectedImage, filePath, null, null, null);
-        c.moveToFirst();
-        int columnIndex = c.getColumnIndex(filePath[0]);
-        String picturePath = c.getString(columnIndex);
-        c.close();
-        bitmap = (BitmapFactory.decodeFile(picturePath));
+    /*  public void onSelectFromGalleryResult(Intent data) {
+          Uri selectedImage = data.getData();
+          String[] filePath = {MediaStore.Images.Media.DATA};
+          Cursor c = ((BaseActivity) getContext()).getContentResolver().query(selectedImage, filePath, null, null, null);
+          c.moveToFirst();
+          int columnIndex = c.getColumnIndex(filePath[0]);
+          String picturePath = c.getString(columnIndex);
+          c.close();
+          bitmap = (BitmapFactory.decodeFile(picturePath));
+          Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+
+          ((ImageView) view.findViewById(R.id.img_profile)).setImageDrawable(drawable);
+      }
+
+  */
+    private void onSelectFromGalleryResult(Intent data) {
+        bitmap = null;
+        if (data != null) {
+            if (getContext() != null) {
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         Drawable drawable = new BitmapDrawable(getResources(), bitmap);
 
         ((ImageView) view.findViewById(R.id.img_profile)).setImageDrawable(drawable);
     }
-
-*/
-  private void onSelectFromGalleryResult(Intent data) {
-      bitmap = null;
-      if (data != null) {
-          if (getContext() != null){
-              try {
-                  bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
-              } catch (IOException e) {
-                  e.printStackTrace();
-              }
-          }
-      }
-      Drawable drawable = new BitmapDrawable(getResources(), bitmap);
-
-      ((ImageView) view.findViewById(R.id.img_profile)).setImageDrawable(drawable);
-  }
 
 
     public void onCaptureImageResult(Intent data) {

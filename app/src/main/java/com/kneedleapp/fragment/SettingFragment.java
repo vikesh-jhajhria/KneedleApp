@@ -44,7 +44,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         mView.findViewById(R.id.txt_report_problem).setOnClickListener(this);
         mView.findViewById(R.id.txt_privacy_policy).setOnClickListener(this);
         mView.findViewById(R.id.txt_terms_of_service).setOnClickListener(this);
-
+        Config.LAST_PAGE = "";
         return mView;
     }
 

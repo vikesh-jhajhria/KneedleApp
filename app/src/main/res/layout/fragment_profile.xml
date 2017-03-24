@@ -28,8 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#ffffff"
-                app:contentScrim="?attr/colorPrimary"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                app:contentScrim="?attr/colorPrimary">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -303,7 +302,6 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="ABIELKUNST"
             android:textColor="@color/colourBlack"
             android:textSize="@dimen/font_18"
             android:textStyle="bold" />

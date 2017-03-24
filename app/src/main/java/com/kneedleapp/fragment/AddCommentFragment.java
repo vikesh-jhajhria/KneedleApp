@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +37,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static android.content.ContentValues.TAG;
-import static com.kneedleapp.utils.Config.fragmentManager;
 
 
 public class AddCommentFragment extends BaseFragment {
@@ -70,6 +68,7 @@ public class AddCommentFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_add_comment, container, false);
+        Config.LAST_PAGE = "";
         findViews();
         applyFonts(view);
         if (Utils.isNetworkConnected(getActivity(), true)) {

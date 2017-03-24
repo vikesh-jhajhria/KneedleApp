@@ -3,30 +3,17 @@ package com.kneedleapp.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+import com.kneedleapp.MainActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.utils.Config;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
-
+import static com.kneedleapp.BaseActivity.BottomBarTab.HOME;
 import static com.kneedleapp.utils.Config.fragmentManager;
 
 
@@ -50,7 +37,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener, View
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.img_back:
-                fragmentManager.popBackStack();
+                goBack();
                 break;
         }
     }
@@ -59,10 +46,18 @@ public class BaseFragment extends Fragment implements View.OnClickListener, View
     @Override
     public boolean onKey(View view, int i, KeyEvent keyEvent) {
         if (i == KeyEvent.KEYCODE_BACK) {
-            fragmentManager.popBackStackImmediate();
-
+            goBack();
             return true;
         }
         return false;
+    }
+    private void goBack(){
+        switch (Config.LAST_PAGE){
+            case "HOME":
+                ((MainActivity)getActivity()).selectTab(HOME);
+                break;
+            default:
+                fragmentManager.popBackStack();
+        }
     }
 }

@@ -8,8 +8,10 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +51,7 @@ public class PostFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         view_main = inflater.inflate(R.layout.fragment_post, container, false);
         mImgContent = (ImageView) view_main.findViewById(R.id.img_content);
-
+        Config.LAST_PAGE = "HOME";
         ((ImageView) view_main.findViewById(R.id.img_next)).setOnClickListener(this);
         ((TextView) view_main.findViewById(R.id.txt_library)).setOnClickListener(this);
         ((TextView) view_main.findViewById(R.id.txt_photo)).setOnClickListener(this);
@@ -146,7 +148,19 @@ public class PostFragment extends BaseFragment {
         }
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.v("Kneedle","Post");
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getView().setFocusableInTouchMode(true);
+                getView().requestFocus();
+                getView().setOnKeyListener(PostFragment.this);
+            }
+        },500);
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {

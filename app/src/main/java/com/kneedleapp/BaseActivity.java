@@ -18,7 +18,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -75,9 +75,10 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    public void setMediaPermissionListener(Utils.MediaPermissionListener listener){
+    public void setMediaPermissionListener(Utils.MediaPermissionListener listener) {
         this.mediaPermissionListener = listener;
     }
+
     public void showProgessDialog() {
         if (dialog != null && !dialog.isShowing() && !this.isFinishing())
             try {
@@ -143,36 +144,47 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    protected void addFragment(@IdRes int containerViewId,
-                               @NonNull Fragment fragment,
-                               @NonNull String fragmentTag) {
-        fragmentManager
+    public void addFragment(@IdRes int containerViewId,
+                            @NonNull Fragment fragment,
+                            @NonNull String fragmentTag,
+                            @Nullable boolean addToBackStack) {
+        FragmentTransaction transaction = fragmentManager
                 .beginTransaction()
-                .add(containerViewId, fragment, fragmentTag)
-                .disallowAddToBackStack()
-                .commit();
+                .add(containerViewId, fragment, fragmentTag);
+        if (addToBackStack) {
+            transaction.addToBackStack(fragmentTag)
+                    .commit();
+        } else {
+            transaction.disallowAddToBackStack();
+            transaction.commit();
+        }
     }
 
     protected void replaceFragment(@IdRes int containerViewId,
                                    @NonNull Fragment fragment,
                                    @NonNull String fragmentTag,
-                                   @Nullable String backStackStateName) {
-        fragmentManager
+                                   @Nullable boolean addToBackStack) {
+        FragmentTransaction transaction = fragmentManager
                 .beginTransaction()
-                .replace(containerViewId, fragment, fragmentTag)
-                .addToBackStack(backStackStateName)
-                .commit();
-    }
-
-    protected void showFragment(@IdRes int containerViewId,
-                                @NonNull Fragment fragment,
-                                @NonNull String fragmentTag) {
-        if (!showFragment(fragmentTag)) {
-            addFragment(containerViewId, fragment, fragmentTag);
+                .replace(containerViewId, fragment, fragmentTag);
+        if (addToBackStack) {
+            transaction.addToBackStack(fragmentTag)
+                    .commit();
+        } else {
+            transaction.commit();
         }
     }
 
-    protected boolean showFragment(@NonNull String tag) {
+    public void showFragment(@IdRes int containerViewId,
+                             @NonNull Fragment fragment,
+                             @NonNull String fragmentTag) {
+        if (!showFragment(fragmentTag)) {
+            addFragment(containerViewId, fragment, fragmentTag, false);
+        }
+    }
+
+
+    public boolean showFragment(@NonNull String tag) {
         Fragment fragment = fragmentManager.findFragmentByTag(tag);
         if (fragment != null) {
             hideAllFragment();
@@ -193,10 +205,12 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     protected void removeFragment(@NonNull Fragment fragment) {
-        fragmentManager
-                .beginTransaction()
-                .remove(fragment)
-                .commit();
+        if (fragment != null) {
+            fragmentManager
+                    .beginTransaction()
+                    .remove(fragment)
+                    .commit();
+        }
     }
 
     protected void hideAllFragment() {
@@ -259,7 +273,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case Config.MEDIA_PERMISSION:
                 if (grantResults.length > 0 && grantResults[0] == 0) {
-                    if(mediaPermissionListener!= null){
+                    if (mediaPermissionListener != null) {
                         mediaPermissionListener.onMediaPermissionStatus(true);
                     }
                 }

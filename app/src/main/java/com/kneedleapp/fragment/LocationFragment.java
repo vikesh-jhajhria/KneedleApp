@@ -40,6 +40,7 @@ public class LocationFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_location, container, false);
         applyFonts(view);
+        Config.LAST_PAGE = "";
         view.findViewById(R.id.img_back).setOnClickListener(this);
         editProfile();
 

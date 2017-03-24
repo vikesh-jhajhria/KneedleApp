@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.kneedleapp.R;
 import com.kneedleapp.adapter.UserRequestAdapter;
+import com.kneedleapp.utils.Config;
 import com.kneedleapp.vo.UserRequestVo;
 
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class UserFollowRequest extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_user_follow_detail, container, false);
+        Config.LAST_PAGE = "";
         findViews();
         return view;
     }

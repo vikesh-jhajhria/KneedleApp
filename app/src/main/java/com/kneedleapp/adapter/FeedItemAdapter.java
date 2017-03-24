@@ -1,19 +1,13 @@
 package com.kneedleapp.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -29,7 +23,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.kneedleapp.BaseActivity;
 import com.kneedleapp.KneedleApp;
-import com.kneedleapp.MainActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.fragment.AddCommentFragment;
 import com.kneedleapp.fragment.ProfileFragment;
@@ -42,7 +35,6 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +47,7 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
     private Context context;
     private ArrayList<FeedItemVo> mList;
     private FeedItemListener mListener;
-    private FeedItemVo feedItemVo;
+    //private FeedItemVo feedItemVo;
 
     public interface FeedItemListener {
         public void getItem(int position, ViewHolder holder, boolean isLiked);
@@ -77,9 +69,9 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        feedItemVo = mList.get(position);
-        holder.tvTitle.setText(feedItemVo.getmUserTitle());
-        holder.tvSubTitle.setText(feedItemVo.getmUserSubTitle());
+        final FeedItemVo feedItemVo = mList.get(position);
+        holder.tvTitle.setText(feedItemVo.getmFullName());
+        holder.tvSubTitle.setText(feedItemVo.getmUserName());
         holder.tvDescription.setText(feedItemVo.getmDescription());
         holder.tvComment.setText(feedItemVo.getmCommentCount() + "");
         if (feedItemVo.getmCommentCount() > 0) {
@@ -151,21 +143,21 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
                 ((TextView) popupView.findViewById(R.id.txt_report)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        reportProblem();
+                        reportProblem(feedItemVo.getmId());
                         attachmentPopup.dismiss();
                     }
                 });
                 ((TextView) popupView.findViewById(R.id.txt_block)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        block();
+                        block(feedItemVo.getmUserId());
                         attachmentPopup.dismiss();
                     }
                 });
                 ((TextView) popupView.findViewById(R.id.txt_delete)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        delete();
+                        delete(feedItemVo.getmId());
                         attachmentPopup.dismiss();
                     }
                 });
@@ -197,15 +189,9 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
         holder.imgUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Bundle bundle = new Bundle();
-                bundle.putString("USERID", feedItemVo.getmUserId());
-                bundle.putString("USERNAME", feedItemVo.getmUserSubTitle());
-                bundle.putString("USERTITLE", feedItemVo.getmUserTitle());
-                Fragment fragment = new ProfileFragment();
-                fragment.setArguments(bundle);
-                Config.fragmentManager.beginTransaction().replace(R.id.main_frame, fragment).addToBackStack(null).commit();
-
+                ((BaseActivity) context).addFragment(R.id.main_frame,
+                        ProfileFragment.newInstance(feedItemVo.getmUserId(),
+                                feedItemVo.getmUserName()), "PROFILE_FRAGMENT",true);
 
             }
         });
@@ -214,13 +200,9 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
         holder.tvTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putString("USERID", feedItemVo.getmUserId());
-                bundle.putString("USERNAME", feedItemVo.getmUserSubTitle());
-                bundle.putString("USERTITLE", feedItemVo.getmUserTitle());
-                Fragment fragment = new ProfileFragment();
-                fragment.setArguments(bundle);
-                Config.fragmentManager.beginTransaction().replace(R.id.main_frame, fragment).addToBackStack(null).commit();
+                ((BaseActivity) context).addFragment(R.id.main_frame,
+                        ProfileFragment.newInstance(feedItemVo.getmUserId(),
+                                feedItemVo.getmUserName()), "PROFILE_FRAGMENT", true);
             }
         });
 
@@ -340,7 +322,7 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
     }
 
 
-    public void reportProblem() {
+    public void reportProblem(final String feedId) {
         ((BaseActivity) context).showProgessDialog();
         StringRequest requestReportProblem = new StringRequest(Request.Method.POST, Config.REPORT_PROBLEM,
                 new Response.Listener<String>() {
@@ -371,7 +353,7 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("feed_id", feedItemVo.getmId());
+                params.put("feed_id", feedId);
                 params.put("user_id", AppPreferences.getAppPreferences(context).getStringValue(AppPreferences.USER_ID));
 
                 return params;
@@ -387,7 +369,7 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
         queue.add(requestReportProblem);
     }
 
-    public void block() {
+    public void block(final String userId) {
         ((BaseActivity) context).showProgessDialog();
         StringRequest block = new StringRequest(Request.Method.POST, Config.BLOCK,
                 new Response.Listener<String>() {
@@ -418,7 +400,7 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("friend_user_id", feedItemVo.getmUserId());
+                params.put("friend_user_id", userId);
                 params.put("user_id", AppPreferences.getAppPreferences(context).getStringValue(AppPreferences.USER_ID));
 
                 return params;
@@ -434,7 +416,7 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
         queue.add(block);
     }
 
-    public void delete() {
+    public void delete(final String feedId) {
         ((BaseActivity) context).showProgessDialog();
         StringRequest delete = new StringRequest(Request.Method.POST, Config.DELETE_FEED,
                 new Response.Listener<String>() {
@@ -467,7 +449,7 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
                 Map<String, String> params = new HashMap<String, String>();
 
 
-                params.put("feed_id", feedItemVo.getmId());
+                params.put("feed_id", feedId);
                 params.put("user_id", AppPreferences.getAppPreferences(context).getStringValue(AppPreferences.USER_ID));
 
 

@@ -2,6 +2,7 @@ package com.kneedleapp.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,7 +48,7 @@ import static com.kneedleapp.utils.Config.fragmentManager;
 
 
 public class ProfileFragment extends BaseFragment
-        implements ProfileListAdapter.ProfileItemListener{
+        implements ProfileListAdapter.ProfileItemListener {
 
     private ProfileListAdapter profileListAdapter;
     private ArrayList<FeedItemVo> mList = new ArrayList<>();
@@ -57,17 +57,35 @@ public class ProfileFragment extends BaseFragment
     private ImageView listBtn, gridBtn;
     private static BaseActivity context;
     private View view;
-    private String mUserId, mUserName, mUserTitle;
+    private String mUserId = "", mUserName = "";
 
     private TextView num_of_posts, num_of_followers, num_of_following, address, designation;
     private CircleImageView userImgView;
     private AppPreferences mPrefernce;
 
-    public static ProfileFragment newInstance() {
+    private static final String USER_ID = "USER_ID";
+    private static final String USER_NAME = "USER_NAME";
+
+    public static ProfileFragment newInstance(String userId, String userName) {
         ProfileFragment fragment = new ProfileFragment();
+        Bundle args = new Bundle();
+        args.putString(USER_ID, userId);
+        args.putString(USER_NAME, userName);
+        fragment.setArguments(args);
         return fragment;
     }
 
+    public String getUserId() {
+        return mUserId;
+    }
+
+    public void loadMyProfile(){
+        mUserId = mPrefernce.getUserId();
+        mUserName = mPrefernce.getUserName();
+        if(Utils.isNetworkConnected(getActivity(),true)) {
+            getUserDetails();
+        }
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,9 +93,8 @@ public class ProfileFragment extends BaseFragment
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            mUserName = bundle.getString("USERNAME");
-            mUserId = bundle.getString("USERID");
-            mUserTitle = bundle.getString("USERTITLE");
+            mUserName = bundle.getString(USER_NAME);
+            mUserId = bundle.getString(USER_ID);
         }
     }
 
@@ -92,7 +109,7 @@ public class ProfileFragment extends BaseFragment
 
         view.findViewById(R.id.ll_followers).setOnClickListener(this);
         view.findViewById(R.id.ll_following).setOnClickListener(this);
-        ((RelativeLayout) getActivity().findViewById(R.id.rl_toolbar)).setVisibility(View.GONE);
+
         context = (BaseActivity) getActivity();
         mPrefernce = AppPreferences.getAppPreferences(context);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
@@ -140,13 +157,10 @@ public class ProfileFragment extends BaseFragment
         designation = (TextView) view.findViewById(R.id.txt_designation);
         userImgView = (CircleImageView) view.findViewById(R.id.user_img);
 
-        if (mUserTitle != null) {
-            ((TextView) view.findViewById(R.id.txt_username)).setText(mUserTitle);
-        } else {
-            ((TextView) view.findViewById(R.id.txt_username)).setText(mPrefernce.getStringValue(AppPreferences.USER_NAME));
-        }
 
-        getUserDetails();
+        if(Utils.isNetworkConnected(getActivity(),true)) {
+            getUserDetails();
+        }
         ((SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -154,7 +168,6 @@ public class ProfileFragment extends BaseFragment
                 ((SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout)).setRefreshing(false);
             }
         });
-
 
 
         return view;
@@ -174,6 +187,20 @@ public class ProfileFragment extends BaseFragment
         Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_designation), Config.CENTURY_GOTHIC_BOLD);
         Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_address), Config.CENTURY_GOTHIC_REGULAR);
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.v("Kneedle", "Profile");
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getView().setFocusableInTouchMode(true);
+                getView().requestFocus();
+                getView().setOnKeyListener(ProfileFragment.this);
+            }
+        }, 500);
     }
 
     @Override
@@ -263,6 +290,8 @@ public class ProfileFragment extends BaseFragment
 
                                 address.setText(userDataJsonObject.getString("city") + "," + userDataJsonObject.getString("state"));
                                 designation.setText(userDataJsonObject.getString("profiletype"));
+                                ((TextView) view.findViewById(R.id.txt_username))
+                                        .setText(userDataJsonObject.getString("fullname"));
                             } else {
                                 Toast.makeText(getContext(), "no data available", Toast.LENGTH_SHORT).show();
                             }
@@ -282,10 +311,6 @@ public class ProfileFragment extends BaseFragment
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
 
-                if (mUserId == null && mUserName == null) {
-                    mUserId =  mPrefernce.getStringValue(AppPreferences.USER_ID);
-                    mUserName = mPrefernce.getStringValue(AppPreferences.USER_NAME);
-                }
                 params.put("user_id", mUserId);
                 params.put("username", mUserName);
 
@@ -320,10 +345,10 @@ public class ProfileFragment extends BaseFragment
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                                     FeedItemVo feedItemVo = new FeedItemVo();
-                                    feedItemVo.setmUserTitle(jsonObject.getString("fullname"));
+                                    feedItemVo.setmFullName(jsonObject.getString("fullname"));
                                     feedItemVo.setmId(jsonObject.getString("id"));
                                     feedItemVo.setmDate(jsonObject.getString("date"));
-                                    feedItemVo.setmUserSubTitle(jsonObject.getString("username"));
+                                    feedItemVo.setmUserName(jsonObject.getString("username"));
                                     feedItemVo.setmUserImage(Config.USER_IMAGE_URL + jsonObject.getString("mypic"));
                                     feedItemVo.setmContentImage(Config.FEED_IMAGE_URL + jsonObject.getString("image"));
                                     feedItemVo.setmDescription(jsonObject.getString("caption"));
@@ -368,7 +393,7 @@ public class ProfileFragment extends BaseFragment
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-        RequestQueue feedqueue = Volley.newRequestQueue(getContext());
+        RequestQueue feedqueue = Volley.newRequestQueue(getActivity());
         feedqueue.add(requestFeed);
     }
 
@@ -376,7 +401,7 @@ public class ProfileFragment extends BaseFragment
     @Override
     public void getItem(int position, ProfileListAdapter.ViewHolder holder, boolean isLiked) {
         Intent intent = new Intent(getActivity(), FullImageViewActivity.class);
-        intent.putExtra("USERNAME", mList.get(position).getmUserTitle());
+        intent.putExtra("USERNAME", mList.get(position).getmFullName());
         intent.putExtra("IMAGE", mList.get(position).getmContentImage());
         intent.putExtra("USERIMAGE", mList.get(position).getmUserImage());
         intent.putExtra("LIKES", mList.get(position).getmLikes());
