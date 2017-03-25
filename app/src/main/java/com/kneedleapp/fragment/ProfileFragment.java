@@ -347,6 +347,7 @@ public class ProfileFragment extends BaseFragment
                                     FeedItemVo feedItemVo = new FeedItemVo();
                                     feedItemVo.setmFullName(jsonObject.getString("fullname"));
                                     feedItemVo.setmId(jsonObject.getString("id"));
+                                    feedItemVo.setmUserId(jsonObject.getString("user_id"));
                                     feedItemVo.setmDate(jsonObject.getString("date"));
                                     feedItemVo.setmUserName(jsonObject.getString("username"));
                                     feedItemVo.setmUserImage(Config.USER_IMAGE_URL + jsonObject.getString("mypic"));

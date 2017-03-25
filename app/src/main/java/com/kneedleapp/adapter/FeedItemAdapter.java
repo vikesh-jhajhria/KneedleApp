@@ -132,11 +132,13 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
                 attachmentPopup.setBackgroundDrawable(new BitmapDrawable());
                 attachmentPopup.showAsDropDown(view, -5, 0);
                 if (AppPreferences.getAppPreferences(context).getStringValue(AppPreferences.USER_ID).equalsIgnoreCase(feedItemVo.getmUserId())) {
-                    ((TextView) popupView.findViewById(R.id.txt_delete)).setVisibility(View.VISIBLE);
-                }
-
-                if (AppPreferences.getAppPreferences(context).getStringValue(AppPreferences.USER_ID).equalsIgnoreCase(feedItemVo.getmUserId())) {
-                    ((TextView) popupView.findViewById(R.id.txt_block)).setVisibility(View.VISIBLE);
+                    popupView.findViewById(R.id.txt_delete).setVisibility(View.VISIBLE);
+                    popupView.findViewById(R.id.txt_block).setVisibility(View.GONE);
+                    popupView.findViewById(R.id.txt_report).setVisibility(View.GONE);
+                } else {
+                    popupView.findViewById(R.id.txt_delete).setVisibility(View.GONE);
+                    popupView.findViewById(R.id.txt_block).setVisibility(View.VISIBLE);
+                    popupView.findViewById(R.id.txt_report).setVisibility(View.VISIBLE);
                 }
 
 
@@ -191,7 +193,7 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
             public void onClick(View view) {
                 ((BaseActivity) context).addFragment(R.id.main_frame,
                         ProfileFragment.newInstance(feedItemVo.getmUserId(),
-                                feedItemVo.getmUserName()), "PROFILE_FRAGMENT",true);
+                                feedItemVo.getmUserName()), "PROFILE_FRAGMENT", true);
 
             }
         });

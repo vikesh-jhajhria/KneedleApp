@@ -79,8 +79,9 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:ellipsize="end"
+                    android:paddingRight="@dimen/margin_15"
                     android:maxLines="1"
-                    android:text="ProfileType"
+                    android:text="Profile Type"
                     android:textColor="#ffffff"
                     android:textSize="@dimen/font_18" />
             </RelativeLayout>

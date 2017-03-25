@@ -50,7 +50,6 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
     private Context context;
     private ArrayList<FeedItemVo> mList;
     private ProfileItemListener mListener;
-    private FeedItemVo feedItemVo;
 
     public ProfileListAdapter(ArrayList<FeedItemVo> list, Context context, String viewType, ProfileItemListener mListener) {
         this.context = context;
@@ -78,7 +77,7 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        feedItemVo = mList.get(position);
+        final FeedItemVo feedItemVo = mList.get(position);
         holder.imgContent.setImageDrawable(null);
         holder.imgContent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,7 +155,7 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
             holder.imgMenu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int popupWidth = 300;//ViewGroup.LayoutParams.WRAP_CONTENT;
+                    int popupWidth = ViewGroup.LayoutParams.WRAP_CONTENT;
                     int popupHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
                     View popupView = LayoutInflater.from(context).inflate(R.layout.menu_popup, null);
                     final PopupWindow attachmentPopup = new PopupWindow(context);
@@ -178,21 +177,21 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
                     ((TextView) popupView.findViewById(R.id.txt_report)).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            reportProblem();
+                            reportProblem(feedItemVo.getmId());
                             attachmentPopup.dismiss();
                         }
                     });
                     ((TextView) popupView.findViewById(R.id.txt_block)).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            block();
+                            block(feedItemVo.getmUserId());
                             attachmentPopup.dismiss();
                         }
                     });
                     ((TextView) popupView.findViewById(R.id.txt_delete)).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            delete();
+                            delete(feedItemVo.getmId());
                             attachmentPopup.dismiss();
                         }
                     });
@@ -215,35 +214,7 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
             Picasso.with(context).load(feedItemVo.getmUserImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(holder.imgUser);
 
 
-            holder.imgUser.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
 
-                    Bundle bundle = new Bundle();
-                    bundle.putString("USERID", feedItemVo.getmUserId());
-                    bundle.putString("USERNAME", feedItemVo.getmUserName());
-                    bundle.putString("USERTITLE", feedItemVo.getmFullName());
-                    Fragment fragment = new ProfileFragment();
-                    fragment.setArguments(bundle);
-                    fragmentManager.beginTransaction().replace(R.id.main_frame, fragment).addToBackStack(null).commit();
-
-
-                }
-            });
-
-
-            holder.tvTitle.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("USERID", feedItemVo.getmUserId());
-                    bundle.putString("USERNAME", feedItemVo.getmUserName());
-                    bundle.putString("USERTITLE", feedItemVo.getmFullName());
-                    Fragment fragment = new ProfileFragment();
-                    fragment.setArguments(bundle);
-                    fragmentManager.beginTransaction().replace(R.id.main_frame, fragment).addToBackStack(null).commit();
-                }
-            });
         }
 
 
@@ -364,7 +335,7 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
     }
 
 
-    public void reportProblem() {
+    public void reportProblem(final String feedId) {
         ((BaseActivity) context).showProgessDialog();
         StringRequest requestReportProblem = new StringRequest(Request.Method.POST, Config.REPORT_PROBLEM,
                 new Response.Listener<String>() {
@@ -395,7 +366,7 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("feed_id", feedItemVo.getmId());
+                params.put("feed_id", feedId);
                 params.put("user_id", AppPreferences.getAppPreferences(context).getStringValue(AppPreferences.USER_ID));
 
                 return params;
@@ -411,7 +382,7 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
         queue.add(requestReportProblem);
     }
 
-    public void block() {
+    public void block(final String userId) {
         ((BaseActivity) context).showProgessDialog();
         StringRequest block = new StringRequest(Request.Method.POST, Config.BLOCK,
                 new Response.Listener<String>() {
@@ -442,7 +413,7 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("friend_user_id", feedItemVo.getmUserId());
+                params.put("friend_user_id", userId);
                 params.put("user_id", AppPreferences.getAppPreferences(context).getStringValue(AppPreferences.USER_ID));
 
                 return params;
@@ -458,7 +429,7 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
         queue.add(block);
     }
 
-    public void delete() {
+    public void delete(final String feedId) {
         ((BaseActivity) context).showProgessDialog();
         StringRequest delete = new StringRequest(Request.Method.POST, Config.DELETE_FEED,
                 new Response.Listener<String>() {
@@ -491,7 +462,7 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
                 Map<String, String> params = new HashMap<String, String>();
 
 
-                params.put("feed_id", feedItemVo.getmId());
+                params.put("feed_id", feedId);
                 params.put("user_id", AppPreferences.getAppPreferences(context).getStringValue(AppPreferences.USER_ID));
 
 
