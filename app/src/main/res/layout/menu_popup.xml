@@ -1,33 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="#ffffff">
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/txt_report"
+    <android.support.v7.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/margin_10"
-        android:text="Report A Problem" />
+        android:layout_margin="@dimen/margin_5"
+        app:cardBackgroundColor="@color/gray"
+        app:cardCornerRadius="@dimen/margin_5">
 
-    <TextView
-        android:id="@+id/txt_block"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/txt_report"
-        android:padding="@dimen/margin_10"
-        android:text="Block"
-        android:visibility="gone" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/txt_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txt_block"
-        android:padding="@dimen/margin_10"
-        android:text="Delete Feed"
-        android:visibility="gone" />
+            <TextView
+                android:id="@+id/txt_report"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/margin_10"
+                android:text="Report Inappropriate"
+                android:textColor="@color/textColorPrimary"
+                android:textSize="@dimen/font_15" />
 
+            <TextView
+                android:id="@+id/txt_block"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txt_report"
+                android:padding="@dimen/margin_10"
+                android:text="Block"
+                android:textColor="@color/textColorPrimary"
+                android:textSize="@dimen/font_15"
+                android:visibility="visible" />
 
-</RelativeLayout>
+            <TextView
+                android:id="@+id/txt_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_block"
+                android:padding="@dimen/margin_10"
+                android:text="Delete Feed"
+                android:textColor="@color/textColorPrimary"
+                android:textSize="@dimen/font_15"
+                android:visibility="visible" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</android.support.design.widget.CoordinatorLayout>

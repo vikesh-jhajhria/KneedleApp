@@ -121,9 +121,14 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
         holder.imgMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int popupWidth = 300;//ViewGroup.LayoutParams.WRAP_CONTENT;
+                int popupWidth = ViewGroup.LayoutParams.WRAP_CONTENT;
                 int popupHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
                 View popupView = LayoutInflater.from(context).inflate(R.layout.menu_popup, null);
+
+                Utils.setTypeface(context,(TextView) popupView.findViewById(R.id.txt_report), Config.CENTURY_GOTHIC_REGULAR);
+                Utils.setTypeface(context, (TextView) popupView.findViewById(R.id.txt_delete), Config.CENTURY_GOTHIC_REGULAR);
+                Utils.setTypeface(context, (TextView) popupView.findViewById(R.id.txt_block), Config.CENTURY_GOTHIC_REGULAR);
+
                 final PopupWindow attachmentPopup = new PopupWindow(context);
                 attachmentPopup.setFocusable(true);
                 attachmentPopup.setWidth(popupWidth);

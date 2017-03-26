@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">KneedleApp</string>
 
+    <string name="facebook_key">1673357266254895</string>
+    <string name="firebase_url">https://kneedleapp.firebaseio.com</string>
+
     <string name="username">USER NAME</string>
     <string name="password">PASSWORD</string>
     <string name="login">LOG IN</string>
@@ -72,6 +75,8 @@
     <string name="signup_with_facebook">Signup with Facebook</string>
     <string name="signup_with_twitter">Signup with Twitter</string>
     <string name="term_condition">I agree with Terms and Conditions</string>
+    <string name="twitter_consumer_key">IPXy5QI9bvsbg0E6X5RPyI8V3</string>
+    <string name="twitter_consumer_secret">KIheMUxPOpnnsCZkC6kxwKGVTiAOGoRhecPcnwee1eyPzOLjxF</string>
 
 
 </resources>

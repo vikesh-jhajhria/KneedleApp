@@ -45,38 +45,6 @@
             android:textColor="@color/textColorPrimary"
             android:textSize="@dimen/font_18" />
 
-        <Button
-            android:id="@+id/btn_facebook"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/round_corner_red"
-            android:layout_marginTop="@dimen/margin_10"
-            android:gravity="center"
-            android:text="@string/signup_with_facebook"
-            android:textAllCaps="true"
-            android:textColor="@color/textColorPrimary"
-            android:textSize="@dimen/font_18" />
-
-        <Button
-            android:id="@+id/btn_twitter"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/round_corner_red"
-            android:layout_marginTop="@dimen/margin_10"
-            android:gravity="center"
-            android:text="@string/signup_with_twitter"
-            android:textAllCaps="true"
-            android:textColor="@color/textColorPrimary"
-            android:textSize="@dimen/font_18" />
-
-        <com.twitter.sdk.android.core.identity.TwitterLoginButton
-            android:id="@+id/twitterLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical" />
-
-
-
     </LinearLayout>
 
 </RelativeLayout>

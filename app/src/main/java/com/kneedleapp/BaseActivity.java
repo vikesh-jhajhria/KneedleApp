@@ -48,10 +48,6 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     AppPreferences preferences;
     private Utils.MediaPermissionListener mediaPermissionListener;
 
-    public static enum BottomBarTab {
-        HOME, SEARCH, POST, NOTIFICATION, PROFILE;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -228,7 +224,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     public void hideKeyboard() {
         View v = getWindow().getCurrentFocus();
         if (v != null) {
-            InputMethodManager imm = (InputMethodManager) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+            InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
     }

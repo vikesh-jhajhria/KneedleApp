@@ -17,14 +17,19 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         startTimer();
-
-        if (preferences.getFirebaseId().isEmpty()) {
-            String firebase_id = FirebaseInstanceId.getInstance().getToken();
-            if (firebase_id != null && !firebase_id.isEmpty()) {
-                preferences.setFirebaseId(firebase_id);
+        try {
+            if (preferences.getFirebaseId().isEmpty()) {
+                FirebaseInstanceId instance = FirebaseInstanceId.getInstance();
+                String firebase_id = instance.getToken();
+                if (firebase_id != null && !firebase_id.isEmpty()) {
+                    preferences.setFirebaseId(firebase_id);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+
     private void startTimer() {
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {

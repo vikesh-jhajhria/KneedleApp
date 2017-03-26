@@ -143,7 +143,7 @@ public class PostEditFragment extends BaseFragment {
                                 Log.e("responce....::>>>", response);
                              /*   Fragment fragment = new HomeFragment();
                                 getFragmentManager().beginTransaction().replace(R.id.main_frame, fragment).commit();*/
-                                ((MainActivity) getActivity()).selectTab(BaseActivity.BottomBarTab.HOME);
+                                ((MainActivity) getActivity()).selectTab(MainActivity.BottomBarTab.HOME);
 
 
                             } else {

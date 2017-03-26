@@ -95,7 +95,6 @@
                     android:paddingTop="@dimen/margin_5"
                     android:text="Follow"
                     android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/btn_hide"
                     android:textAllCaps="true"
                     android:textColor="@color/textColorPrimary"
                     android:background="@drawable/round_corner_red"

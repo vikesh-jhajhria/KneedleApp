@@ -23,6 +23,9 @@ public class Config {
     public static final int ROTATEIMAGE = 128;
     public static final String IMAGE_DIRECTORY_NAME = "KNEEDLE";
 
+    public static final String TWITTER_KEY = "IPXy5QI9bvsbg0E6X5RPyI8V3";
+    public static final String TWITTER_SECRET = "KIheMUxPOpnnsCZkC6kxwKGVTiAOGoRhecPcnwee1eyPzOLjxF";
+
     public final static int SPLASH_TIME = 2000;
     public final static String BASE_URL = "http://kneedleapp.com/restAPIs/api/";
     public final static String USER_IMAGE_URL = "http://kneedleapp.com/restAPIs/uploads/user_images/";
@@ -51,5 +54,7 @@ public class Config {
     public final static String TERMS_CONDITION = BASE_URL + "terms_conditions";
     public final static String GET_CATEGORY = BASE_URL + "get_categories";
     public final static String GET_USER_FEEDS = BASE_URL + "get_user_feeds";
+    public final static String UPDATE_PROFILE_PIC = BASE_URL + "update_profile_pic";
+    public final static String UPDATE_USER_PROFILE = BASE_URL + "update_user_profile";
 
 }

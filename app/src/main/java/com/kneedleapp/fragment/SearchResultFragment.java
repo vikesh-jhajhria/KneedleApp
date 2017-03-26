@@ -48,7 +48,7 @@ public class SearchResultFragment extends BaseFragment {
     private ArrayList<SearchResultVO> mList;
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
-    private String mSearchText;
+    private String mSearchText, mCategory, mZip;
     private View mView;
 
 
@@ -63,7 +63,9 @@ public class SearchResultFragment extends BaseFragment {
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            mSearchText = bundle.getString("SEARCHTEXT");
+            mSearchText = bundle.getString("SEARCHTEXT", "");
+            mCategory = bundle.getString("CATEGORY", "");
+            mZip = bundle.getString("ZIP", "");
         }
 
     }
@@ -93,6 +95,7 @@ public class SearchResultFragment extends BaseFragment {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_SEARCH) {
+                    mSearchText = ((EditText) mView.findViewById(R.id.txt_title)).getText().toString().trim();
                     getSearchItem();
                     hideKeyboard();
                     return true;
@@ -203,13 +206,15 @@ public class SearchResultFragment extends BaseFragment {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                if (mSearchText != null && ((EditText) mView.findViewById(R.id.txt_title)).getText().toString().trim().isEmpty()) {
+                if (mSearchText != null && !mSearchText.isEmpty()) {
                     params.put("searchtext", mSearchText);
+                    params.put("category", mCategory);
+                    params.put("zipcode", mZip);
                 } else {
                     params.put("searchtext", ((EditText) mView.findViewById(R.id.txt_title)).getText().toString().trim());
                     Log.e("aman", "serach text");
                 }
-
+                Log.v("Kneedle", "Params: " + params);
                 return params;
             }
         };
