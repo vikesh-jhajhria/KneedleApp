@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.kneedleapp.RegistrationActivity">
 
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
@@ -18,9 +19,19 @@
             android:layout_centerVertical="true"
             android:scaleType="fitCenter"
             android:src="@drawable/logo_text" />
+
+
     </RelativeLayout>
 
+    <FrameLayout
+        android:id="@+id/frame_registration"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?actionBarSize"></FrameLayout>
+
+
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nested_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?actionBarSize">
@@ -199,6 +210,7 @@
                 android:layout_marginTop="@dimen/margin_10">
 
                 <ImageView
+                    android:id="@+id/img_arrow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -206,12 +218,16 @@
                     android:layout_marginBottom="@dimen/margin_2"
                     android:src="@drawable/ic_dropdown_white" />
 
-                <Spinner
-                    android:id="@+id/spinner_profile_type"
+                <TextView
+                    android:id="@+id/txt_profile_type"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:popupBackground="@color/spinner_background" />
+                    android:layout_toLeftOf="@+id/img_arrow"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Profile Type"
+                    android:textColor="#ffffff"
+                    android:textSize="@dimen/font_18" />
             </RelativeLayout>
 
 
@@ -254,4 +270,6 @@
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
+
+
 </RelativeLayout>

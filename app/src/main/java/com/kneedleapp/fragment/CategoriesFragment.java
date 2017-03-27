@@ -1,11 +1,14 @@
 package com.kneedleapp.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +24,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.kneedleapp.BaseActivity;
 import com.kneedleapp.R;
+import com.kneedleapp.RegistrationActivity;
 import com.kneedleapp.adapter.CategoryAdapter;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.vo.CategoryVo;
@@ -43,6 +47,8 @@ public class CategoriesFragment extends Fragment implements CategoryAdapter.Send
     private View view;
     private StringBuilder builder;
     private ArrayList<String> mSendData;
+    private String mType;
+
 
 
     @Override
@@ -50,7 +56,6 @@ public class CategoriesFragment extends Fragment implements CategoryAdapter.Send
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_categories, container, false);
         Config.LAST_PAGE = "";
-
         findViews();
         getCategory();
 
@@ -58,6 +63,13 @@ public class CategoriesFragment extends Fragment implements CategoryAdapter.Send
         return view;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mType = getArguments().getString("KEY");
+        }
+    }
 
     private void findViews() {
 
@@ -72,11 +84,19 @@ public class CategoriesFragment extends Fragment implements CategoryAdapter.Send
             @Override
             public void onClick(View view) {
 
-                Bundle bundle = new Bundle();
-                Fragment fragment = new SearchFragment();
-                bundle.putStringArrayList("ARRAY", mSendData);
-                fragment.setArguments(bundle);
-                getFragmentManager().beginTransaction().replace(R.id.main_frame, fragment).commit();
+                if (mType.equalsIgnoreCase("1")) {
+                    Intent intent = new Intent(getActivity(), RegistrationActivity.class);
+                    intent.putStringArrayListExtra("ARRAY", mSendData);
+                    startActivity(intent);
+                    getActivity().finish();
+
+                } else {
+                    Bundle bundle = new Bundle();
+                    Fragment fragment = new SearchFragment();
+                    bundle.putStringArrayList("ARRAY", mSendData);
+                    fragment.setArguments(bundle);
+                    getFragmentManager().beginTransaction().replace(R.id.main_frame, fragment).commit();
+                }
 
 
             }
@@ -98,7 +118,16 @@ public class CategoriesFragment extends Fragment implements CategoryAdapter.Send
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                                     CategoryVo categoryVo = new CategoryVo();
+                                    categoryVo.setmId(i);
                                     categoryVo.setmCategoryName(jsonObject.getString("category_name"));
+
+                                    for (CategoryVo obj : RegistrationActivity.mStoreList) {
+                                        if (obj.isChecked() && obj.getmCategoryName().trim().equalsIgnoreCase(categoryVo.getmCategoryName())) {
+                                            categoryVo.setChecked(true);
+                                        }
+                                    }
+
+
                                     mList.add(categoryVo);
                                 }
                                 mAdapter.notifyDataSetChanged();
@@ -139,6 +168,27 @@ public class CategoriesFragment extends Fragment implements CategoryAdapter.Send
     @Override
     public void sendData(ArrayList<String> data) {
         mSendData = data;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+
+                if (mType.equalsIgnoreCase("1")) {
+                    startActivity(new Intent(getActivity(), RegistrationActivity.class));
+                    getActivity().finish();
+                }else {
+                    getFragmentManager().popBackStack();
+                }
+
+                return false;
+            }
+        });
 
 
     }

@@ -44,9 +44,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.kneedleapp.adapter.CategoryAdapter;
+import com.kneedleapp.fragment.CategoriesFragment;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
+import com.kneedleapp.vo.CategoryVo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,7 +62,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class RegistrationActivity extends BaseActivity {
+public class RegistrationActivity extends BaseActivity implements CategoryAdapter.Sender {
     private Calendar myCalendar;
     private DatePickerDialog.OnDateSetListener date;
     private String gender = "male";
@@ -69,6 +72,9 @@ public class RegistrationActivity extends BaseActivity {
     private String mTxtTerms;
     private ProgressBar progressBar;
     private ArrayList<String> spinnerDataList;
+    private ArrayList<String> mListSearchData;
+    public static boolean mCheck = false;
+    public static ArrayList<CategoryVo> mStoreList = new ArrayList<CategoryVo>();
 
 
     @Override
@@ -80,7 +86,7 @@ public class RegistrationActivity extends BaseActivity {
 
         applyFonts();
         findViews();
-        setArrayAdapter();
+
 
         String terms = "I agree with Terms and Conditions";
 
@@ -109,8 +115,53 @@ public class RegistrationActivity extends BaseActivity {
         spannableString.setSpan(clickableSpan, 13, terms.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         ((TextView) findViewById(R.id.txt_terms_condition)).setText(spannableString);
         ((TextView) findViewById(R.id.txt_terms_condition)).setMovementMethod(LinkMovementMethod.getInstance());
+
+
+        if (getIntent().getExtras() != null) {
+
+            mListSearchData = getIntent().getExtras().getStringArrayList("ARRAY");
+
+        }
+
+
+        ((TextView) findViewById(R.id.txt_profile_type)).setText("Profile Type");
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+       /* if (mListSearchData != null) {
+            StringBuilder builder = new StringBuilder();
+            for (String details : mListSearchData) {
+                builder.append(details + ", ");
+            }
+            builder.setLength(builder.length() - 2);
+            ((TextView) findViewById(R.id.txt_profile_type)).setText(builder.toString());
+        }*/
+
+        if (mStoreList != null) {
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < mStoreList.size(); i++) {
+                CategoryVo categoryVo = mStoreList.get(i);
+                if (categoryVo.isChecked()) {
+                    if (i < mStoreList.size() - 1) {
+                        builder.append(categoryVo.getmCategoryName() + ", ");
+                    } else {
+                        builder.append(categoryVo.getmCategoryName());
+                    }
+                    ((TextView) findViewById(R.id.txt_profile_type)).setText(builder.toString());
+
+
+                }
+
+            }
+            //  builder.setLength(builder.length() - 2);
+
+        }
+
+
+    }
 
     @Override
     public void onClick(View view) {
@@ -146,6 +197,14 @@ public class RegistrationActivity extends BaseActivity {
                 gender = "female";
                 ((ImageView) findViewById(R.id.img_femme)).setImageResource(R.drawable.ic_femme_red);
                 ((ImageView) findViewById(R.id.img_homme)).setImageResource(R.drawable.ic_homme_white);
+                break;
+            case R.id.txt_profile_type:
+                findViewById(R.id.nested_scroll_view).setVisibility(View.GONE);
+                Bundle bundle = new Bundle();
+                bundle.putString("KEY", "1");
+                CategoriesFragment fragment = new CategoriesFragment();
+                fragment.setArguments(bundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_registration, fragment).commit();
                 break;
         }
     }
@@ -183,7 +242,7 @@ public class RegistrationActivity extends BaseActivity {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("fullname", ((EditText) findViewById(R.id.txt_name)).getText().toString().trim());
-                params.put("profiletype", ((Spinner) findViewById(R.id.spinner_profile_type)).getSelectedItem().toString());
+                params.put("profiletype", ((TextView) findViewById(R.id.txt_profile_type)).getText().toString().trim());
                 params.put("companyInfo", "");
                 params.put("city", "");
                 params.put("password", ((EditText) findViewById(R.id.txt_password)).getText().toString().trim());
@@ -212,25 +271,12 @@ public class RegistrationActivity extends BaseActivity {
     }
 
 
-    private void setArrayAdapter() {
-
-        spinnerDataList = new ArrayList<>();
-        spinnerDataList.add("PROFILE TYPE");
-        spinnerDataList.add("PROFILE 1");
-        spinnerDataList.add("PROFILE 2");
-
-        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(RegistrationActivity.this, R.layout.layout_spinner_item, spinnerDataList);
-        ((Spinner) findViewById(R.id.spinner_profile_type)).setAdapter(spinnerAdapter);
-    }
-
-
     private void findViews() {
         findViewById(R.id.btn_let_me_in).setOnClickListener(this);
-        ((Spinner) findViewById(R.id.spinner_profile_type)).getBackground().setColorFilter(getResources().getColor(R.color.textColorPrimary), PorterDuff.Mode.SRC_ATOP);
-        ((Spinner) findViewById(R.id.spinner_profile_type)).setPrompt("PROFILE TYPE");
         findViewById(R.id.ll_homme).setOnClickListener(this);
         findViewById(R.id.ll_femme).setOnClickListener(this);
         findViewById(R.id.txt_email).setOnClickListener(this);
+        findViewById(R.id.txt_profile_type).setOnClickListener(this);
     }
 
     private void applyFonts() {
@@ -245,31 +291,9 @@ public class RegistrationActivity extends BaseActivity {
         Utils.setTypeface(this, (TextView) findViewById(R.id.txt_terms_condition), Config.CENTURY_GOTHIC_REGULAR);
     }
 
+    @Override
+    public void sendData(ArrayList<String> data) {
 
-    public class SpinnerAdapter extends ArrayAdapter<String> {
-
-        public SpinnerAdapter(Context context, int textViewResourceId, ArrayList<String> objects) {
-            super(context, textViewResourceId, objects);
-        }
-
-        @Override
-        public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            return getCustomView(position, convertView, parent);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            return getCustomView(position, convertView, parent);
-        }
-
-        public View getCustomView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = getLayoutInflater();
-            View row = inflater.inflate(R.layout.layout_spinner_item, parent, false);
-            TextView label = (TextView) row.findViewById(R.id.txt_item);
-            Utils.setTypeface(RegistrationActivity.this, label, Config.CENTURY_GOTHIC_REGULAR);
-            label.setText(spinnerDataList.get(position));
-            return row;
-        }
     }
 
     public class WebClientClass extends WebViewClient {
@@ -294,10 +318,10 @@ public class RegistrationActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         if (builder != null) {
             builder.dismiss();
         }
+        this.finish();
     }
 
     public void termsCondition() {

@@ -30,6 +30,7 @@
                     android:src="@drawable/back" />
 
                 <TextView
+                    android:id="@+id/txt_options"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
@@ -47,6 +48,7 @@
 
 
             <TextView
+                android:id="@+id/txt_photos_you_have_liked"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_10"
@@ -168,7 +170,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/activity_horizontal_margin">
+                android:padding="@dimen/activity_horizontal_margin">
 
                 <TextView
                     android:id="@+id/txt_save_original_photo"

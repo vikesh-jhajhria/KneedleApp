@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kneedleapp.R;
+import com.kneedleapp.RegistrationActivity;
 import com.kneedleapp.fragment.CategoriesFragment;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.vo.CategoryVo;
@@ -71,6 +72,22 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
                 data = categoryVo.getmCategoryName().toString().trim();
                 Log.e("Data", data);
                 mListSelected.add(data);
+
+
+
+
+                for (int i = 0; i < RegistrationActivity.mStoreList.size(); i++) {
+                    CategoryVo obj = RegistrationActivity.mStoreList.get(i);
+
+
+                    if (obj.getmCategoryName().trim().equalsIgnoreCase(categoryVo.getmCategoryName())) {
+                        RegistrationActivity.mStoreList.remove(i);
+
+                    }
+                }
+                if (b)
+                    RegistrationActivity.mStoreList.add(categoryVo);
+
                 Log.e("TAG", "" + mListSelected.size());
                 sender.sendData(mListSelected);
             }

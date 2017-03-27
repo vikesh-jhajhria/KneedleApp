@@ -20,8 +20,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.kneedleapp.R;
+import com.kneedleapp.RegistrationActivity;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
+import com.kneedleapp.vo.CategoryVo;
 
 import java.util.ArrayList;
 
@@ -97,8 +99,8 @@ public class SearchFragment extends BaseFragment {
 
                     Bundle bundle = new Bundle();
                     bundle.putString("SEARCHTEXT", ((EditText) mView.findViewById(R.id.txt_search)).getText().toString().trim());
-                    bundle.putString("CATEGORY",((TextView) mView.findViewById(R.id.txt_category)).getText().toString().trim());
-                    if(((CheckBox)mView.findViewById(R.id.check_near_me)).isChecked()) {
+                    bundle.putString("CATEGORY", ((TextView) mView.findViewById(R.id.txt_category)).getText().toString().trim());
+                    if (((CheckBox) mView.findViewById(R.id.check_near_me)).isChecked()) {
                         bundle.putString("ZIP", ((EditText) mView.findViewById(R.id.txt_zip)).getText().toString().trim());
                         bundle.putString("RANGE", (String) ((Spinner) mView.findViewById(R.id.spinner_within)).getSelectedItem());
                     }
@@ -111,7 +113,7 @@ public class SearchFragment extends BaseFragment {
                     hideKeyboard();
 
                 }
-
+                ((TextView) mView.findViewById(R.id.txt_category)).setText("Profile Type");
 
                 return false;
             }
@@ -120,7 +122,10 @@ public class SearchFragment extends BaseFragment {
         ((RelativeLayout) mView.findViewById(R.id.rl_profile_type)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Bundle bundle = new Bundle();
                 Fragment fragment = new CategoriesFragment();
+                bundle.putString("KEY", "2");
+                fragment.setArguments(bundle);
                 getFragmentManager().beginTransaction().add(R.id.main_frame, fragment).addToBackStack(null).commit();
             }
         });
@@ -217,7 +222,7 @@ public class SearchFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.v("Kneedle","Search");
+        Log.v("Kneedle", "Search");
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -225,15 +230,25 @@ public class SearchFragment extends BaseFragment {
                 getView().requestFocus();
                 getView().setOnKeyListener(SearchFragment.this);
             }
-        },500);
-        
-        if (mListSearchData != null) {
+        }, 500);
+
+
+        if (RegistrationActivity.mStoreList != null) {
             StringBuilder builder = new StringBuilder();
-            for (String details : mListSearchData) {
-                builder.append(details + ", ");
+            for (int i = 0; i < RegistrationActivity.mStoreList.size(); i++) {
+                CategoryVo categoryVo = RegistrationActivity.mStoreList.get(i);
+                if (categoryVo.isChecked()) {
+                    if (i < RegistrationActivity.mStoreList.size() - 1) {
+                        builder.append(categoryVo.getmCategoryName() + ", ");
+                    } else {
+                        builder.append(categoryVo.getmCategoryName());
+                    }
+                    ((TextView) mView.findViewById(R.id.txt_category)).setText(builder.toString());
+                }
+
             }
-            builder.setLength(builder.length() - 2);
-            ((TextView) mView.findViewById(R.id.txt_category)).setText(builder.toString());
+
         }
+
     }
 }

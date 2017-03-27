@@ -8,6 +8,15 @@ public class CategoryVo {
 
     private String mCategoryName;
     private boolean isChecked;
+    private int mId;
+
+    public int getmId() {
+        return mId;
+    }
+
+    public void setmId(int mId) {
+        this.mId = mId;
+    }
 
     public String getmCategoryName() {
         return mCategoryName;

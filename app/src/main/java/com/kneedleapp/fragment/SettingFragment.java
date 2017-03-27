@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -24,6 +25,7 @@ import com.kneedleapp.R;
 import com.kneedleapp.WebViewActivity;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
+import com.kneedleapp.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,6 +47,19 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         mView.findViewById(R.id.txt_privacy_policy).setOnClickListener(this);
         mView.findViewById(R.id.txt_terms_of_service).setOnClickListener(this);
         Config.LAST_PAGE = "";
+
+        Utils.setTypeface(getContext(), (TextView) mView.findViewById(R.id.txt_options), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) mView.findViewById(R.id.txt_photos_you_have_liked), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) mView.findViewById(R.id.txt_support), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) mView.findViewById(R.id.txt_report_problem), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) mView.findViewById(R.id.txt_privacy_policy), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) mView.findViewById(R.id.txt_prefernces), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) mView.findViewById(R.id.txt_share_settings), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) mView.findViewById(R.id.txt_push_noti), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) mView.findViewById(R.id.txt_save_original_photo), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) mView.findViewById(R.id.txt_logout), Config.CENTURY_GOTHIC_REGULAR);
+
+
         return mView;
     }
 
