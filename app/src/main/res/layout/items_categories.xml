@@ -3,27 +3,30 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/txt_category_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:padding="@dimen/activity_horizontal_margin" />
 
     <CheckBox
         android:id="@+id/checkbox_category"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:drawableRight="?android:attr/listChoiceIndicatorMultiple"
+        android:drawableTint="@color/colorAccent"
+        android:button="@null"
+        android:textColor="@color/textColorPrimary"
+        android:textSize="@dimen/font_18"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:padding="@dimen/activity_horizontal_margin" />
+        android:textAllCaps="true"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/margin_10"
+        android:paddingBottom="@dimen/margin_10"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_1"
         android:layout_below="@+id/checkbox_category"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:background="#dad6d6"
+        android:background="#f9f8f3"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/margin_3" />
 

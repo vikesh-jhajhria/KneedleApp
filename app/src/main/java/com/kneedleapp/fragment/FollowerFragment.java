@@ -46,21 +46,28 @@ public class FollowerFragment extends BaseFragment {
     private ArrayList<SearchResultVO> List = new ArrayList<>();
     public static RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
-
+    private String mUserId;
     private java.util.List<FollowersVo> followersList = new ArrayList<>();
 
     public FollowerFragment() {
         // Required empty public constructor
     }
 
-    public static FollowerFragment newInstance() {
+    public static FollowerFragment newInstance(String userId) {
         FollowerFragment fragment = new FollowerFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("USER_ID", userId);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            mUserId = bundle.getString("USER_ID");
+        }
     }
 
     @Override
@@ -77,7 +84,8 @@ public class FollowerFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_follow, container, false);
+        View view = inflater.inflate(R.layout.fragment_follower, container, false);
+
         applyFonts(view);
         Config.LAST_PAGE = "";
         view.findViewById(R.id.img_back).setOnClickListener(this);
@@ -189,7 +197,7 @@ public class FollowerFragment extends BaseFragment {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("user_id", "4");
+                params.put("user_id", mUserId);
 
                 return params;
             }

@@ -79,10 +79,10 @@ public class ProfileFragment extends BaseFragment
         return mUserId;
     }
 
-    public void loadMyProfile(){
+    public void loadMyProfile() {
         mUserId = mPrefernce.getUserId();
         mUserName = mPrefernce.getUserName();
-        if(Utils.isNetworkConnected(getActivity(),true)) {
+        if (Utils.isNetworkConnected(getActivity(), true)) {
             getUserDetails();
         }
     }
@@ -106,7 +106,6 @@ public class ProfileFragment extends BaseFragment
 
         applyFonts(view);
 
-
         view.findViewById(R.id.ll_followers).setOnClickListener(this);
         view.findViewById(R.id.ll_following).setOnClickListener(this);
 
@@ -114,6 +113,10 @@ public class ProfileFragment extends BaseFragment
         mPrefernce = AppPreferences.getAppPreferences(context);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mList = new ArrayList<>();
+
+        if (mPrefernce.getUserId().equalsIgnoreCase(mUserId)) {
+            view.findViewById(R.id.txt_btn_edit).setVisibility(View.VISIBLE);
+        }
 
         listBtn = (ImageView) view.findViewById(R.id.img_list);
         gridBtn = (ImageView) view.findViewById(R.id.img_grid);
@@ -147,6 +150,8 @@ public class ProfileFragment extends BaseFragment
 
 
         view.findViewById(R.id.txt_btn_edit).setOnClickListener(this);
+        view.findViewById(R.id.txt_btn_follow).setOnClickListener(this);
+        view.findViewById(R.id.txt_btn_following).setOnClickListener(this);
         view.findViewById(R.id.img_back).setOnClickListener(this);
         view.findViewById(R.id.img_chat).setOnClickListener(this);
 
@@ -158,7 +163,7 @@ public class ProfileFragment extends BaseFragment
         userImgView = (CircleImageView) view.findViewById(R.id.user_img);
 
 
-        if(Utils.isNetworkConnected(getActivity(),true)) {
+        if (Utils.isNetworkConnected(getActivity(), true)) {
             getUserDetails();
         }
         ((SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -213,6 +218,12 @@ public class ProfileFragment extends BaseFragment
                 Fragment fragment = new EditProfileFragment();
                 fragmentManager.beginTransaction().add(R.id.main_frame, fragment, "EDITPROFILE").addToBackStack(null).commit();
                 break;
+            case R.id.txt_btn_follow:
+                followUnfollowUser(mUserId, Utils.getCurrentDate());
+                break;
+            case R.id.txt_btn_following:
+
+                break;
             case R.id.img_back:
                 break;
             case R.id.img_chat:
@@ -252,13 +263,13 @@ public class ProfileFragment extends BaseFragment
 
                 break;
             case R.id.ll_followers:
-                FollowerFragment followerFragment = new FollowerFragment();
+                FollowerFragment followerFragment = FollowerFragment.newInstance(getUserId());
                 fragmentManager.beginTransaction().add(R.id.main_frame, followerFragment)
                         .addToBackStack(null).commit();
 
                 break;
             case R.id.ll_following:
-                FollowingFragment followingFragment = new FollowingFragment();
+                FollowingFragment followingFragment = FollowingFragment.newInstance(getUserId());
                 fragmentManager.beginTransaction().add(R.id.main_frame, followingFragment)
                         .addToBackStack(null).commit();
                 break;
@@ -286,6 +297,13 @@ public class ProfileFragment extends BaseFragment
                                 num_of_followers.setText(userDataJsonObject.getString("followers"));
                                 if (!userDataJsonObject.getString("image").isEmpty()) {
                                     Picasso.with(context).load(Config.USER_IMAGE_URL + userDataJsonObject.getString("image")).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(userImgView);
+                                }
+                                if (userDataJsonObject.getString("follow_status").equalsIgnoreCase("0")) {
+                                    view.findViewById(R.id.txt_btn_follow).setVisibility(View.VISIBLE);
+                                    view.findViewById(R.id.txt_btn_following).setVisibility(View.GONE);
+                                } else {
+                                    view.findViewById(R.id.txt_btn_following).setVisibility(View.VISIBLE);
+                                    view.findViewById(R.id.txt_btn_follow).setVisibility(View.GONE);
                                 }
 
                                 address.setText(userDataJsonObject.getString("city") + "," + userDataJsonObject.getString("state"));
@@ -398,6 +416,55 @@ public class ProfileFragment extends BaseFragment
         feedqueue.add(requestFeed);
     }
 
+    public void followUnfollowUser(final String friendId, final String date) {
+        context.showProgessDialog();
+        StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.FOLLOW_UNFOLLOW_USER,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        ((BaseActivity) context).showProgessDialog();
+                        try {
+                            final JSONObject jObject = new JSONObject(response);
+                            if (jObject.getString("status_id").equals("1")) {
+                                Log.e("responce....::>>>", response);
+                                String num = num_of_followers.getText().toString().trim();
+                                if (!num.isEmpty())
+                                    num_of_followers.setText(Integer.parseInt(num) + 1);
+                            }
+                            Toast.makeText(context, jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(context, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d("error", volleyError.getMessage());
+                        ((BaseActivity) context).dismissProgressDialog();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("user_id", mPrefernce.getUserId());
+                params.put("friend_id", friendId);
+                params.put("follow_date", date);
+
+                return params;
+            }
+        };
+
+        requestFeed.setRetryPolicy(new DefaultRetryPolicy(
+                30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        RequestQueue feedqueue = Volley.newRequestQueue(context);
+        feedqueue.add(requestFeed);
+    }
 
     @Override
     public void getItem(int position, ProfileListAdapter.ViewHolder holder, boolean isLiked) {

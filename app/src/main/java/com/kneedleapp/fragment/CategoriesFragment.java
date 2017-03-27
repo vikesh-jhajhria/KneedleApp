@@ -27,6 +27,7 @@ import com.kneedleapp.R;
 import com.kneedleapp.RegistrationActivity;
 import com.kneedleapp.adapter.CategoryAdapter;
 import com.kneedleapp.utils.Config;
+import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.CategoryVo;
 
 import org.json.JSONArray;
@@ -45,7 +46,6 @@ public class CategoriesFragment extends Fragment implements CategoryAdapter.Send
     private CategoryAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private View view;
-    private StringBuilder builder;
     private ArrayList<String> mSendData;
     private String mType;
 
@@ -56,6 +56,7 @@ public class CategoriesFragment extends Fragment implements CategoryAdapter.Send
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_categories, container, false);
         Config.LAST_PAGE = "";
+        Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.btn_done), Config.CENTURY_GOTHIC_REGULAR);
         findViews();
         getCategory();
 
@@ -80,7 +81,7 @@ public class CategoriesFragment extends Fragment implements CategoryAdapter.Send
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new CategoryAdapter(getContext(), mList, this);
         mRecyclerView.setAdapter(mAdapter);
-        ((TextView) view.findViewById(R.id.txt_done)).setOnClickListener(new View.OnClickListener() {
+        ((TextView) view.findViewById(R.id.btn_done)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 

@@ -15,6 +15,7 @@ import com.kneedleapp.R;
 import com.kneedleapp.RegistrationActivity;
 import com.kneedleapp.fragment.CategoriesFragment;
 import com.kneedleapp.utils.Config;
+import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.CategoryVo;
 
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         final CategoryVo categoryVo = mList.get(position);
-        holder.tvCategoryName.setText(categoryVo.getmCategoryName());
+        holder.checkBox.setText(categoryVo.getmCategoryName());
         holder.checkBox.setOnCheckedChangeListener(null);
         holder.checkBox.setChecked(categoryVo.isChecked());
 
@@ -100,13 +101,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvCategoryName;
         private CheckBox checkBox;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            tvCategoryName = (TextView) itemView.findViewById(R.id.txt_category_name);
             checkBox = (CheckBox) itemView.findViewById(R.id.checkbox_category);
+            Utils.setTypeface(mContext,checkBox,Config.CENTURY_GOTHIC_REGULAR);
         }
     }
 }

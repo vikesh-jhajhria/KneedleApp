@@ -1,6 +1,5 @@
 package com.kneedleapp.adapter;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,18 +19,15 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.kneedleapp.BaseActivity;
 import com.kneedleapp.R;
-import com.kneedleapp.fragment.FollowingFragment;
+import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.FollowersVo;
-import com.kneedleapp.vo.SearchResultVO;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +40,6 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.CheckV
     List<FollowersVo> list;
     String currentDate;
     BaseActivity baseContext;
-
 
 
     public FollowerAdapter(List<FollowersVo> list, Context context) {
@@ -76,10 +71,10 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.CheckV
         holder.fullname.setText(checkVo.getFullname());
         holder.job.setText(checkVo.getProfiletype());
 
-        if(checkVo.getStatus().equalsIgnoreCase("1")){
+        if (checkVo.getStatus().equalsIgnoreCase("1")) {
             holder.follow.setVisibility(View.GONE);
             holder.unfollow.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             holder.follow.setVisibility(View.VISIBLE);
             holder.unfollow.setVisibility(View.GONE);
         }
@@ -94,7 +89,7 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.CheckV
         holder.unfollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                followUnfollowUser(checkVo.getFollowerUserId(),currentDate);
+                followUnfollowUser(checkVo.getFollowerUserId(), currentDate);
             }
         });
     }
@@ -132,24 +127,20 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.CheckV
     }
 
 
-
-    public void followUnfollowUser(final String friendId, final String date){
-        ((BaseActivity)context).showProgessDialog();
+    public void followUnfollowUser(final String friendId, final String date) {
+        ((BaseActivity) context).showProgessDialog();
         StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.FOLLOW_UNFOLLOW_USER,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        ((BaseActivity)context).showProgessDialog();
+                        ((BaseActivity) context).showProgessDialog();
                         try {
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
                                 Log.e("responce....::>>>", response);
-
-                                Toast.makeText(context,jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
-
-                            } else {
-                                Toast.makeText(context, "no data available", Toast.LENGTH_SHORT).show();
                             }
+                            Toast.makeText(context, jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -160,14 +151,14 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.CheckV
                     public void onErrorResponse(VolleyError volleyError) {
                         Toast.makeText(context, volleyError.getMessage(), Toast.LENGTH_LONG).show();
                         Log.d("error", volleyError.getMessage());
-                        ((BaseActivity)context).dismissProgressDialog();
+                        ((BaseActivity) context).dismissProgressDialog();
                     }
                 }) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("user_id", "4");
-                params.put("friend_id",friendId );
+                params.put("user_id", AppPreferences.getAppPreferences(context).getUserId());
+                params.put("friend_id", friendId);
                 params.put("follow_date", date);
 
                 return params;

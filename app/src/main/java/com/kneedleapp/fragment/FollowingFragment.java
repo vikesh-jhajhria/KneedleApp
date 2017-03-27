@@ -43,6 +43,7 @@ public class FollowingFragment extends BaseFragment {
     private FollowerAdapter followerAdapter;
     public static RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
+    private String mUserId;
 
     private java.util.List<FollowersVo> followersList = new ArrayList<>();
 
@@ -50,14 +51,21 @@ public class FollowingFragment extends BaseFragment {
         // Required empty public constructor
     }
 
-    public static FollowingFragment newInstance() {
+    public static FollowingFragment newInstance(String userId) {
         FollowingFragment fragment = new FollowingFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("USER_ID",userId);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        if(bundle != null){
+            mUserId = bundle.getString("USER_ID");
+        }
     }
 
     @Override
@@ -166,7 +174,7 @@ public class FollowingFragment extends BaseFragment {
                                 followerAdapter.notifyDataSetChanged();
 
                             } else {
-                                Toast.makeText(getContext(), "no data available", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -183,7 +191,7 @@ public class FollowingFragment extends BaseFragment {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("user_id", "4");
+                params.put("user_id", mUserId);
 
                 return params;
             }

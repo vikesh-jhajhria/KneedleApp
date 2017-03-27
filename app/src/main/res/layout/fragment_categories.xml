@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="@drawable/category_bg"
     tools:context="com.kneedleapp.fragment.CategoriesFragment">
 
 
@@ -10,18 +10,17 @@
         android:id="@+id/recyclerview_category"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/txt_done"></android.support.v7.widget.RecyclerView>
+        android:layout_above="@+id/btn_done"/>
 
 
-    <TextView
-        android:id="@+id/txt_done"
+    <Button
+        android:id="@+id/btn_done"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:background="@color/colourRed"
         android:gravity="center"
-        android:padding="@dimen/activity_horizontal_margin"
         android:text="Done"
         android:textColor="#ffffff"
         android:textSize="@dimen/font_18" />

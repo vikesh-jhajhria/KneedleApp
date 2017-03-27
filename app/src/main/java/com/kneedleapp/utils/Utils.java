@@ -272,12 +272,11 @@ public class Utils {
         });
     }
 
-    public static String getCurrentDate() throws UnsupportedEncodingException {
+    public static String getCurrentDate()  {
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
         Date date = calendar.getTime();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
 
-        //return URLEncoder.encode(simpleDateFormat.format(date),"utf-8").replace("+","%20");
         return simpleDateFormat.format(date);
     }
 

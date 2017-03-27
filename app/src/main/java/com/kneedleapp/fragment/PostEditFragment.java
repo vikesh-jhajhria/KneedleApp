@@ -32,7 +32,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -117,11 +116,7 @@ public class PostEditFragment extends BaseFragment {
         params.put("user_id", AppPreferences.getAppPreferences(getContext()).getStringValue(AppPreferences.USER_ID));
         params.put("caption", ((EditText) view.findViewById(R.id.txt_caption)).getText().toString().trim());
         params.put("privacy", "");
-        try {
-            params.put("cur_date", Utils.getCurrentDate());
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        params.put("cur_date", Utils.getCurrentDate());
 
 
         CustomMultipartRequest requestPost = new CustomMultipartRequest(Config.POST_COMMENT, params, imageFile, "file.jpg", "file",
