@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -47,6 +48,7 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
     private BaseActivity context;
     private View mView;
     private FeedItemAdapter.ViewHolder viewHolder;
+    private TextView emptyView;
 
 
     public static HomeFragment newInstance() {
@@ -63,8 +65,8 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
         mView = inflater.inflate(R.layout.fragment_home, container, false);
 
         context = (BaseActivity) getActivity();
-
-
+        emptyView = (TextView) mView.findViewById(R.id.empty_view);
+        Utils.setTypeface(getActivity(), emptyView, Config.CENTURY_GOTHIC_REGULAR);
         mList = new ArrayList<>();
         mRecyclerView = (RecyclerView) mView.findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
@@ -90,7 +92,7 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
     }
 
     public void FeedData() {
-
+        emptyView.setVisibility(View.GONE);
         context.showProgessDialog();
         StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.FEED_DATA,
                 new Response.Listener<String>() {
@@ -125,7 +127,13 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
                                 mAdapter.notifyDataSetChanged();
 
                             } else {
-                                Toast.makeText(getContext(), "no data available", Toast.LENGTH_SHORT).show();
+                                if (mList.size() == 0) {
+                                    emptyView.setText(jObject.getString("status_msg"));
+                                    emptyView.setVisibility(View.VISIBLE);
+                                } else {
+                                    emptyView.setVisibility(View.GONE);
+                                }
+                                //Toast.makeText(getContext(), jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

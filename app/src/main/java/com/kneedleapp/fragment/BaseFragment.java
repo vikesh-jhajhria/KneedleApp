@@ -13,7 +13,7 @@ import com.kneedleapp.MainActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.utils.Config;
 
-import static com.kneedleapp.MainActivity.BottomBarTab.HOME;
+import static com.kneedleapp.BaseActivity.BottomBarTab.HOME;
 import static com.kneedleapp.utils.Config.fragmentManager;
 
 

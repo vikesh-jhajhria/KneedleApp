@@ -59,7 +59,7 @@ public class ProfileFragment extends BaseFragment
     private View view;
     private String mUserId = "", mUserName = "";
 
-    private TextView num_of_posts, num_of_followers, num_of_following, address, designation;
+    private TextView num_of_posts, num_of_followers, num_of_following, address, designation, emptyView;
     private CircleImageView userImgView;
     private AppPreferences mPrefernce;
 
@@ -82,6 +82,7 @@ public class ProfileFragment extends BaseFragment
     public void loadMyProfile() {
         mUserId = mPrefernce.getUserId();
         mUserName = mPrefernce.getUserName();
+        view.findViewById(R.id.txt_btn_edit).setVisibility(View.VISIBLE);
         if (Utils.isNetworkConnected(getActivity(), true)) {
             getUserDetails();
         }
@@ -103,7 +104,7 @@ public class ProfileFragment extends BaseFragment
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_profile, container, false);
-
+        emptyView = (TextView) view.findViewById(R.id.empty_view);
         applyFonts(view);
 
         view.findViewById(R.id.ll_followers).setOnClickListener(this);
@@ -191,7 +192,7 @@ public class ProfileFragment extends BaseFragment
         Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_btn_following), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_designation), Config.CENTURY_GOTHIC_BOLD);
         Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_address), Config.CENTURY_GOTHIC_REGULAR);
-
+        Utils.setTypeface(getActivity(), emptyView, Config.CENTURY_GOTHIC_REGULAR);
     }
 
     @Override
@@ -298,12 +299,14 @@ public class ProfileFragment extends BaseFragment
                                 if (!userDataJsonObject.getString("image").isEmpty()) {
                                     Picasso.with(context).load(Config.USER_IMAGE_URL + userDataJsonObject.getString("image")).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(userImgView);
                                 }
-                                if (userDataJsonObject.getString("follow_status").equalsIgnoreCase("0")) {
-                                    view.findViewById(R.id.txt_btn_follow).setVisibility(View.VISIBLE);
-                                    view.findViewById(R.id.txt_btn_following).setVisibility(View.GONE);
-                                } else {
-                                    view.findViewById(R.id.txt_btn_following).setVisibility(View.VISIBLE);
-                                    view.findViewById(R.id.txt_btn_follow).setVisibility(View.GONE);
+                                if (!mPrefernce.getUserId().equalsIgnoreCase(mUserId)) {
+                                    if (userDataJsonObject.getString("follow_status").equalsIgnoreCase("0")) {
+                                        view.findViewById(R.id.txt_btn_follow).setVisibility(View.VISIBLE);
+                                        view.findViewById(R.id.txt_btn_following).setVisibility(View.GONE);
+                                    } else {
+                                        view.findViewById(R.id.txt_btn_following).setVisibility(View.VISIBLE);
+                                        view.findViewById(R.id.txt_btn_follow).setVisibility(View.GONE);
+                                    }
                                 }
 
                                 address.setText(userDataJsonObject.getString("city") + "," + userDataJsonObject.getString("state"));
@@ -346,7 +349,7 @@ public class ProfileFragment extends BaseFragment
     }
 
     public void FeedData(final String user_id) {
-
+        emptyView.setVisibility(View.GONE);
         context.showProgessDialog();
         StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.GET_USER_FEEDS,
                 new Response.Listener<String>() {
@@ -382,7 +385,12 @@ public class ProfileFragment extends BaseFragment
                                 profileListAdapter.notifyDataSetChanged();
 
                             } else {
-                                Toast.makeText(getContext(), "no data available", Toast.LENGTH_SHORT).show();
+                                if (mList.size() == 0) {
+                                    emptyView.setText(jObject.getString("status_msg"));
+                                    emptyView.setVisibility(View.VISIBLE);
+                                } else {
+                                    emptyView.setVisibility(View.GONE);
+                                }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

@@ -70,6 +70,13 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
 
     }
+    public enum BottomBarTab {
+        HOME, SEARCH, POST, NOTIFICATION, PROFILE;
+    }
+
+    public enum NotificationType{
+        LIKE, COMMENT, FOLLOW, TAGGED, HEADER;
+    }
 
     public void setMediaPermissionListener(Utils.MediaPermissionListener listener) {
         this.mediaPermissionListener = listener;

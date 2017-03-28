@@ -10,12 +10,11 @@
     tools:ignore="RtlHardcoded">
 
 
-
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_marginTop="?actionBarSize"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="?actionBarSize">
 
 
         <android.support.design.widget.AppBarLayout
@@ -173,8 +172,8 @@
                             android:paddingRight="@dimen/margin_40"
                             android:paddingTop="@dimen/margin_5"
                             android:text="@string/edit"
-                            android:visibility="gone"
-                            android:textColor="@color/colourRed" />
+                            android:textColor="@color/colourRed"
+                            android:visibility="gone" />
 
                         <TextView
                             android:id="@+id/txt_btn_follow"
@@ -215,8 +214,8 @@
                         android:id="@+id/txt_address"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/gray"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:textColor="@color/gray"
                         android:textSize="@dimen/font_14" />
 
 
@@ -271,17 +270,30 @@
                         android:src="@drawable/ic_list_red" />
                 </LinearLayout>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recycler_view"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/margin_5"
-                    android:paddingRight="@dimen/margin_5" />
+                    android:layout_height="match_parent">
 
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="@dimen/margin_5"
+                        android:paddingRight="@dimen/margin_5" />
+                    <TextView
+                        android:id="@+id/empty_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:visibility="gone"
+                        android:textSize="@dimen/font_16"
+                        android:text="NO POST AVAILABLE!" />
+                </RelativeLayout>
             </LinearLayout>
         </android.support.v4.widget.SwipeRefreshLayout>
 
     </android.support.design.widget.CoordinatorLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"

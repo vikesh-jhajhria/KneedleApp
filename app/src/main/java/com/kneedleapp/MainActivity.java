@@ -29,9 +29,7 @@ public class MainActivity extends BaseActivity {
         selectTab(BottomBarTab.HOME);
 
     }
-    public enum BottomBarTab {
-        HOME, SEARCH, POST, NOTIFICATION, PROFILE;
-    }
+
     @Override
     public void onClick(View view) {
         super.onClick(view);

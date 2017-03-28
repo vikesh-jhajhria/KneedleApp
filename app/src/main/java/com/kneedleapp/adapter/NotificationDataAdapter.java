@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kneedleapp.BaseActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
@@ -38,7 +39,7 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
     public long getHeaderId(int position) {
         NotificationItemVo obj = mList.get(position);
         Log.v("DAY",position+" : "+obj.getType());
-        if(obj.getType() ==  NotificationItemVo.DAY){
+        if(obj.getType() == BaseActivity.NotificationType.HEADER){
             return 1;
         }
         return 0;
@@ -53,7 +54,7 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public void onBindHeaderViewHolder(HeaderHolder holder, int position) {
         NotificationItemVo obj = mList.get(position);
-        ((HeaderHolder) holder).mTvHeader.setText(obj.getFullName());
+        ((HeaderHolder) holder).mTvHeader.setText(obj.getTime());
         /*if(obj.getmTvHeader() != null && obj.getmTvHeader().equalsIgnoreCase("today")){
             ((HeaderHolder) holder).bell.setVisibility(View.VISIBLE);
         } else {

@@ -19,12 +19,14 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.kneedleapp.BaseActivity;
 import com.kneedleapp.KneedleApp;
 import com.kneedleapp.MainActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.adapter.NotificationDataAdapter;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
+import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.NotificationItemVo;
 
 import org.json.JSONArray;
@@ -41,12 +43,13 @@ import ca.barrenechea.widget.recyclerview.decoration.StickyHeaderDecoration;
 import static android.content.ContentValues.TAG;
 
 
-public class NotificationFragment extends BaseFragment implements RecyclerView.OnItemTouchListener{
+public class NotificationFragment extends BaseFragment implements RecyclerView.OnItemTouchListener {
     private NotificationDataAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private ArrayList<NotificationItemVo> mList;
     private LinearLayoutManager mLayoutManager;
     private View mView;
+    private TextView emptyView;
 
     public static NotificationFragment newInstance() {
         NotificationFragment fragment = new NotificationFragment();
@@ -61,18 +64,19 @@ public class NotificationFragment extends BaseFragment implements RecyclerView.O
         View v = rv.findChildViewUnder(e.getX(), e.getY());
         return v == null;
     }
+
     @Override
     public void onResume() {
         super.onResume();
-        Log.v("Kneedle","Notification");
-         new Handler().postDelayed(new Runnable() {
+        Log.v("Kneedle", "Notification");
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 getView().setFocusableInTouchMode(true);
                 getView().requestFocus();
                 getView().setOnKeyListener(NotificationFragment.this);
             }
-        },500);
+        }, 500);
 
     }
 
@@ -117,6 +121,8 @@ public class NotificationFragment extends BaseFragment implements RecyclerView.O
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_notification, container, false);
+        emptyView = (TextView) mView.findViewById(R.id.empty_view);
+        Utils.setTypeface(getActivity(), emptyView, Config.CENTURY_GOTHIC_REGULAR);
         Config.LAST_PAGE = "HOME";
         final DividerDecoration divider = new DividerDecoration.Builder(this.getActivity())
                 .setHeight(R.dimen.default_divider_height)
@@ -130,15 +136,20 @@ public class NotificationFragment extends BaseFragment implements RecyclerView.O
         mAdapter = new NotificationDataAdapter(getContext(), mList);
         mRecyclerView.setAdapter(mAdapter);
 
+        setAdapterAndDecor(mRecyclerView);
+        if (Utils.isNetworkConnected(getActivity(), true)) {
+            getNotification();
+        }
         ((SwipeRefreshLayout) mView.findViewById(R.id.swipeRefreshLayout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getNotificatios();
+                if (Utils.isNetworkConnected(getActivity(), true)) {
+                    getNotification();
+                }
                 ((SwipeRefreshLayout) mView.findViewById(R.id.swipeRefreshLayout)).setRefreshing(false);
             }
         });
 
-        setAdapterAndDecor(mRecyclerView);
         return mView;
     }
 
@@ -186,8 +197,8 @@ public class NotificationFragment extends BaseFragment implements RecyclerView.O
         return list;
     }*/
 
-    public void getNotificatios() {
-
+    public void getNotification() {
+        emptyView.setVisibility(View.GONE);
         ((MainActivity) getActivity()).showProgessDialog();
         StringRequest requestLogin = new StringRequest(Request.Method.POST, Config.GET_NOTIFICATIONS,
                 new Response.Listener<String>() {
@@ -202,14 +213,58 @@ public class NotificationFragment extends BaseFragment implements RecyclerView.O
 
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject commentObj = (JSONObject) jsonArray.get(i);
+                                    NotificationItemVo headerObj = new NotificationItemVo();
+                                    headerObj.setTime(commentObj.getString("time"));
+                                    if (i == 0) {
+                                        mList.add(headerObj);
+                                    } else if (!mList.get(i - 1).getTime().equalsIgnoreCase(commentObj.getString("time"))) {
+                                        mList.add(headerObj);
+                                    }
+
+
                                     NotificationItemVo obj = new NotificationItemVo();
+                                    obj.setTime(commentObj.getString("time"));
+                                    obj.setFullName(commentObj.getString("fullname"));
+                                    obj.setUsername(commentObj.getString("username"));
+                                    obj.setImgUser(commentObj.getString("profile_pic"));
+                                    switch (commentObj.getString("notificationType")) {
+                                        case "Like":
+                                            obj.setId(commentObj.getString("id"));
+                                            obj.setFeedId(commentObj.getString("feed_id"));
+                                            obj.setUserId(commentObj.getString("user_id"));
+                                            obj.setType(BaseActivity.NotificationType.LIKE);
+                                            break;
+                                        case "Comment":
+                                            obj.setId(commentObj.getString("id"));
+                                            obj.setFeedId(commentObj.getString("feed_id"));
+                                            obj.setUserId(commentObj.getString("user_id"));
+                                            obj.setComment(commentObj.getString("comment"));
+                                            obj.setType(BaseActivity.NotificationType.COMMENT);
+                                            break;
+                                        case "Follow":
+                                            obj.setFollowingId(commentObj.getString("f_id"));
+                                            obj.setFollowerId(commentObj.getString("follower_id"));
+                                            obj.setUserId(commentObj.getString("user_id"));
+                                            obj.setType(BaseActivity.NotificationType.FOLLOW);
+                                            break;
+                                        case "Taged":
+                                            obj.setId(commentObj.getString("id"));
+                                            obj.setFeedId(commentObj.getString("feed_id"));
+                                            obj.setTaggedUserId(commentObj.getString("taged_user_id"));
+                                            obj.setType(BaseActivity.NotificationType.TAGGED);
+                                            break;
 
+                                    }
                                     mList.add(obj);
-
                                 }
                                 mAdapter.notifyDataSetChanged();
                             } else {
-                                Toast.makeText(getActivity(), jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
+                                if (mList.size() == 0) {
+                                    emptyView.setText(jObject.getString("status_msg"));
+                                    emptyView.setVisibility(View.VISIBLE);
+                                } else {
+                                    emptyView.setVisibility(View.GONE);
+                                }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

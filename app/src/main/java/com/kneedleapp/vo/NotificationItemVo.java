@@ -2,6 +2,8 @@ package com.kneedleapp.vo;
 
 import android.text.SpannableString;
 
+import com.kneedleapp.BaseActivity;
+
 /**
  * Created by aman.sharma on 2/22/2017.
  */
@@ -23,7 +25,7 @@ public class NotificationItemVo {
     private String mTaggedUserId;
     private String mImgUser;
     private String mImgContent;
-    private int mType;
+    private BaseActivity.NotificationType mType;
 
     /*"id":"119",
     "feed_id":"75",
@@ -143,11 +145,11 @@ public class NotificationItemVo {
     public void setTaggedUserId(String mTaggedUserId) {
         this.mTaggedUserId = mTaggedUserId;
     }
-    public int getType() {
+    public BaseActivity.NotificationType getType() {
         return mType;
     }
 
-    public void setType(int mType) {
+    public void setType(BaseActivity.NotificationType mType) {
         this.mType = mType;
     }
 
