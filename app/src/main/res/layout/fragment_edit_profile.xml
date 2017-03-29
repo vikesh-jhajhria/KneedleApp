@@ -188,6 +188,17 @@
                 android:textColorHint="@android:color/darker_gray"
                 android:textSize="@dimen/font_16"
                 android:theme="@style/TextLabel" />
+            <EditText
+                android:id="@+id/txt_website"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:hint="Website"
+                android:inputType="textUri"
+                android:textColor="#000"
+                android:textColorHint="@android:color/darker_gray"
+                android:textSize="@dimen/font_16"
+                android:theme="@style/TextLabel" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -289,6 +300,60 @@
                 </LinearLayout>
 
             </LinearLayout>
+
+            <Spinner
+                android:id="@+id/spinner_country"
+                style="@style/SpinnerTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_5"
+                android:layout_marginTop="@dimen/margin_25"
+                android:popupBackground="@color/spinner_background" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#C3C3C3"></View>
+
+
+            <Spinner
+                android:id="@+id/spinner_state"
+                style="@style/SpinnerTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_5"
+                android:layout_marginTop="@dimen/margin_25"
+                android:popupBackground="@color/spinner_background" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#C3C3C3"></View>
+
+            <Spinner
+                android:id="@+id/spinner_city"
+                style="@style/SpinnerTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_5"
+                android:layout_marginTop="@dimen/margin_25"
+                android:popupBackground="@color/spinner_background" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#C3C3C3"></View>
+
+
+            <EditText
+                android:id="@+id/txt_zip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10"
+                android:hint="@string/zip"
+                android:maxLines="1"
+                android:textColorHint="@color/colourBlack"
+                android:textSize="@dimen/font_14" />
 
 
             <Button

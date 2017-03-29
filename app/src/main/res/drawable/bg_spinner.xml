@@ -18,7 +18,7 @@
 
             <item android:right="5dp">
 
-                <bitmap android:gravity="center_vertical|right" android:src="@drawable/down_arrow" />
+                <bitmap android:gravity="center_vertical|right" android:src="@drawable/drop_down_red" />
 
             </item>
 

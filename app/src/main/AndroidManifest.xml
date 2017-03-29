@@ -65,10 +65,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Background"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity
-            android:name=".EditProfileActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+
         <activity
             android:name=".LandingActivity"
             android:screenOrientation="portrait"
