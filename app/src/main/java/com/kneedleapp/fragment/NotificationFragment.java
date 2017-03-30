@@ -153,49 +153,63 @@ public class NotificationFragment extends BaseFragment implements RecyclerView.O
         return mView;
     }
 
-    /*public ArrayList<NotificationItemVo> getData() {
-
-        String offer = "Aishwarya Kaushik commented on your photo";
-        SpannableString offerspannable = new SpannableString(offer);
-        offerspannable.setSpan(new ForegroundColorSpan(Color.RED), 0, 17, 0);
-
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_YEAR, -1);
-        Date tomorrow = calendar.getTime();
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-
-        String tomorrowAsString = dateFormat.format(tomorrow);
-        Log.e("yesterday", tomorrowAsString);
+    private void loadDataToList(JSONArray jsonArray) {
+        try {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject commentObj = (JSONObject) jsonArray.get(i);
+                NotificationItemVo headerObj = new NotificationItemVo();
+                headerObj.setType(BaseActivity.NotificationType.HEADER);
+                headerObj.setTime(commentObj.getString("time"));
+                if (i == 0) {
+                    mList.add(headerObj);
+                } else if (!mList.get(i - 1).getTime().equalsIgnoreCase(commentObj.getString("time"))) {
+                    mList.add(headerObj);
+                }
 
 
-        calendar = Calendar.getInstance();
-        Date today = calendar.getTime();
+                NotificationItemVo obj = new NotificationItemVo();
+                obj.setTime(commentObj.getString("time"));
+                obj.setFullName(commentObj.getString("fullname"));
+                obj.setUsername(commentObj.getString("username"));
 
-        String todayAsString = dateFormat.format(today);
-        Log.e("today", todayAsString);
+                switch (commentObj.getString("notificationType")) {
+                    case "Like":
+                        obj.setId(commentObj.getString("id"));
+                        obj.setFeedId(commentObj.getString("feed_id"));
+                        obj.setUserId(commentObj.getString("user_id"));
+                        obj.setImgUser(commentObj.getString("profile_pic"));
+                        obj.setType(BaseActivity.NotificationType.LIKE);
+                        break;
+                    case "Comment":
+                        obj.setId(commentObj.getString("id"));
+                        obj.setFeedId(commentObj.getString("feed_id"));
+                        obj.setUserId(commentObj.getString("user_id"));
+                        obj.setComment(commentObj.getString("comment"));
+                        obj.setImgUser(Config.USER_IMAGE_URL + commentObj.getString("profile_pic"));
+                        obj.setType(BaseActivity.NotificationType.COMMENT);
+                        break;
+                    case "Follow":
+                        obj.setFollowingId(commentObj.getString("f_id"));
+                        obj.setFollowerId(commentObj.getString("follower_id"));
+                        obj.setUserId(commentObj.getString("user_id"));
+                        obj.setImgUser(Config.USER_IMAGE_URL + commentObj.getString("profile_pic"));
+                        obj.setType(BaseActivity.NotificationType.FOLLOW);
+                        break;
+                    case "Taged":
+                        obj.setId(commentObj.getString("id"));
+                        obj.setFeedId(commentObj.getString("feed_id"));
+                        obj.setTaggedUserId(commentObj.getString("taged_user_id"));
+                        obj.setImgUser(Config.USER_IMAGE_URL + commentObj.getString("profile_pic"));
+                        obj.setType(BaseActivity.NotificationType.TAGGED);
+                        break;
 
-        ArrayList<NotificationItemVo> list = new ArrayList<>();
-
-        if (todayAsString.equals(todayAsString)) {
-
-            list.add(new NotificationItemVo("Today", null, NotificationItemVo.DAY));
-            list.add(new NotificationItemVo(null, offerspannable, NotificationItemVo.NOTIFICATION));
-            list.add(new NotificationItemVo(null, offerspannable, NotificationItemVo.NOTIFICATION));
-            list.add(new NotificationItemVo(null, offerspannable, NotificationItemVo.NOTIFICATION));
-            list.add(new NotificationItemVo(null, offerspannable, NotificationItemVo.NOTIFICATION));
-            list.add(new NotificationItemVo(null, offerspannable, NotificationItemVo.NOTIFICATION));
-            list.add(new NotificationItemVo(null, offerspannable, NotificationItemVo.NOTIFICATION));
+                }
+                mList.add(obj);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        if (!tomorrowAsString.equals(todayAsString)) {
-            list.add(new NotificationItemVo("Yesterday", null, NotificationItemVo.DAY));
-            list.add(new NotificationItemVo(null, offerspannable, NotificationItemVo.NOTIFICATION));
-            list.add(new NotificationItemVo(null, offerspannable, NotificationItemVo.NOTIFICATION));
-            list.add(new NotificationItemVo(null, offerspannable, NotificationItemVo.NOTIFICATION));
-
-        }
-        return list;
-    }*/
+    }
 
     public void getNotification() {
         emptyView.setVisibility(View.GONE);
@@ -209,54 +223,12 @@ public class NotificationFragment extends BaseFragment implements RecyclerView.O
                         try {
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
-                                JSONArray jsonArray = jObject.getJSONObject("result").getJSONArray("likes");
 
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject commentObj = (JSONObject) jsonArray.get(i);
-                                    NotificationItemVo headerObj = new NotificationItemVo();
-                                    headerObj.setTime(commentObj.getString("time"));
-                                    if (i == 0) {
-                                        mList.add(headerObj);
-                                    } else if (!mList.get(i - 1).getTime().equalsIgnoreCase(commentObj.getString("time"))) {
-                                        mList.add(headerObj);
-                                    }
+                                loadDataToList(jObject.getJSONObject("result").getJSONArray("likes"));
+                                loadDataToList(jObject.getJSONObject("result").getJSONArray("comments"));
+                                loadDataToList(jObject.getJSONObject("result").getJSONArray("followers"));
+                                loadDataToList(jObject.getJSONObject("result").getJSONArray("taged_users"));
 
-
-                                    NotificationItemVo obj = new NotificationItemVo();
-                                    obj.setTime(commentObj.getString("time"));
-                                    obj.setFullName(commentObj.getString("fullname"));
-                                    obj.setUsername(commentObj.getString("username"));
-                                    obj.setImgUser(commentObj.getString("profile_pic"));
-                                    switch (commentObj.getString("notificationType")) {
-                                        case "Like":
-                                            obj.setId(commentObj.getString("id"));
-                                            obj.setFeedId(commentObj.getString("feed_id"));
-                                            obj.setUserId(commentObj.getString("user_id"));
-                                            obj.setType(BaseActivity.NotificationType.LIKE);
-                                            break;
-                                        case "Comment":
-                                            obj.setId(commentObj.getString("id"));
-                                            obj.setFeedId(commentObj.getString("feed_id"));
-                                            obj.setUserId(commentObj.getString("user_id"));
-                                            obj.setComment(commentObj.getString("comment"));
-                                            obj.setType(BaseActivity.NotificationType.COMMENT);
-                                            break;
-                                        case "Follow":
-                                            obj.setFollowingId(commentObj.getString("f_id"));
-                                            obj.setFollowerId(commentObj.getString("follower_id"));
-                                            obj.setUserId(commentObj.getString("user_id"));
-                                            obj.setType(BaseActivity.NotificationType.FOLLOW);
-                                            break;
-                                        case "Taged":
-                                            obj.setId(commentObj.getString("id"));
-                                            obj.setFeedId(commentObj.getString("feed_id"));
-                                            obj.setTaggedUserId(commentObj.getString("taged_user_id"));
-                                            obj.setType(BaseActivity.NotificationType.TAGGED);
-                                            break;
-
-                                    }
-                                    mList.add(obj);
-                                }
                                 mAdapter.notifyDataSetChanged();
                             } else {
                                 if (mList.size() == 0) {

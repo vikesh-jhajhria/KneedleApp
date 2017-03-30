@@ -13,18 +13,18 @@ public class NotificationItemVo {
     public static final int DAY = 0;
     public static final int NOTIFICATION = 1;
 
-    private String mId;
-    private String mFeedId;
-    private String mTime;
-    private String mUserId;
-    private String mFullName;
-    private String mUsername;
-    private String mComment;
-    private String mFollowerId;
-    private String mFollowingId;
-    private String mTaggedUserId;
-    private String mImgUser;
-    private String mImgContent;
+    private String mId = "";
+    private String mFeedId = "";
+    private String mTime = "";
+    private String mUserId = "";
+    private String mFullName = "";
+    private String mUsername = "";
+    private String mComment = "";
+    private String mFollowerId = "";
+    private String mFollowingId = "";
+    private String mTaggedUserId = "";
+    private String mImgUser = "";
+    private String mImgContent = "";
     private BaseActivity.NotificationType mType;
 
     /*"id":"119",

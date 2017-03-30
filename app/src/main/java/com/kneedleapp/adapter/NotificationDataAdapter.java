@@ -14,6 +14,7 @@ import com.kneedleapp.R;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.NotificationItemVo;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -23,11 +24,12 @@ import ca.barrenechea.widget.recyclerview.decoration.StickyHeaderAdapter;
  * Created by aman.sharma on 2/22/2017.
  */
 
-public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements StickyHeaderAdapter<NotificationDataAdapter.HeaderHolder>{
+public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements StickyHeaderAdapter<NotificationDataAdapter.HeaderHolder> {
 
     private Context context;
     private ArrayList<NotificationItemVo> mList;
     private LayoutInflater mInflater;
+
     public NotificationDataAdapter(Context context, ArrayList<NotificationItemVo> mList) {
         this.context = context;
         this.mList = mList;
@@ -38,8 +40,8 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public long getHeaderId(int position) {
         NotificationItemVo obj = mList.get(position);
-        Log.v("DAY",position+" : "+obj.getType());
-        if(obj.getType() == BaseActivity.NotificationType.HEADER){
+        Log.v("DAY", position + " : " + obj.getType());
+        if (obj.getType() == BaseActivity.NotificationType.HEADER) {
             return 1;
         }
         return 0;
@@ -48,41 +50,24 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public HeaderHolder onCreateHeaderViewHolder(ViewGroup parent) {
         final View view = mInflater.inflate(R.layout.notificationheader, parent, false);
-        return new HeaderHolder(view);
+        HeaderHolder holder = new HeaderHolder(view);
+        Utils.setTypeface(context, holder.mTvHeader, Config.CENTURY_GOTHIC_BOLD);
+        return holder;
     }
 
     @Override
     public void onBindHeaderViewHolder(HeaderHolder holder, int position) {
         NotificationItemVo obj = mList.get(position);
-        ((HeaderHolder) holder).mTvHeader.setText(obj.getTime());
-        /*if(obj.getmTvHeader() != null && obj.getmTvHeader().equalsIgnoreCase("today")){
-            ((HeaderHolder) holder).bell.setVisibility(View.VISIBLE);
-        } else {
-            ((HeaderHolder) holder).bell.setVisibility(View.GONE);
-        }*/
-        Utils.setTypeface(context, ((HeaderHolder) holder).mTvHeader , Config.CENTURY_GOTHIC_BOLD);
+        holder.mTvHeader.setText(obj.getTime());
+
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view;
-
-        /*switch (viewType) {
-            case NotificationItemVo.DAY:
-
-                view = mInflater.inflate(R.layout.notificationheader, parent, false);
-                return new HeaderHolder(view);
-
-            case NotificationItemVo.NOTIFICATION:*/
-
-                view = mInflater.inflate(R.layout.notification_item, parent, false);
-                return new NotificationDataViewHolder(view);
-
-
-        //}
-
-
-        //return null;
+        View view = mInflater.inflate(R.layout.notification_item, parent, false);
+        NotificationDataViewHolder holder = new NotificationDataViewHolder(view);
+        Utils.setTypeface(context, holder.mTvNoti, Config.CENTURY_GOTHIC_REGULAR);
+        return holder;
     }
 
     @Override
@@ -90,27 +75,18 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         NotificationItemVo obj = mList.get(position);
         if (obj != null) {
-
-            /*switch (obj.getmType()) {
-                case NotificationItemVo.DAY:
-                    ((HeaderHolder) holder).mTvHeader.setText(obj.getmTvHeader());
-                    if(obj.getmTvHeader().equalsIgnoreCase("today")){
-                        ((HeaderHolder) holder).bell.setVisibility(View.VISIBLE);
-                    } else {
-                        ((HeaderHolder) holder).bell.setVisibility(View.GONE);
-                    }
-                    Utils.setTypeface(context, ((HeaderHolder) holder).mTvHeader , Config.CENTURY_GOTHIC_BOLD);
-                    break;
-
-                case NotificationItemVo.NOTIFICATION:*/
-                    ((NotificationDataViewHolder) holder).mTvNoti.setText(obj.getFullName());
-                    Utils.setTypeface(context, ((NotificationDataViewHolder) holder).mTvNoti , Config.CENTURY_GOTHIC_REGULAR);
-
-                   /* break;
-
-            }*/
-
-
+            if (obj.getType() == BaseActivity.NotificationType.LIKE) {
+                ((NotificationDataViewHolder) holder).mTvNoti.setText(obj.getUsername() + " liked your post.");
+            } else if (obj.getType() == BaseActivity.NotificationType.COMMENT) {
+                ((NotificationDataViewHolder) holder).mTvNoti.setText(obj.getUsername() + " commented : " + obj.getComment());
+            } else if (obj.getType() == BaseActivity.NotificationType.FOLLOW) {
+                ((NotificationDataViewHolder) holder).mTvNoti.setText(obj.getUsername() + " started following you");
+            } else if (obj.getType() == BaseActivity.NotificationType.TAGGED) {
+                ((NotificationDataViewHolder) holder).mTvNoti.setText(obj.getUsername() + " tagged you in a post.");
+            }
+            if(!obj.getImgUser().isEmpty()) {
+                Picasso.with(context).load(obj.getImgUser()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(((NotificationDataViewHolder) holder).imgUser);
+            }else Log.v("Img url","position:"+position);
         }
 
     }
@@ -125,14 +101,6 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public int getItemViewType(int position) {
-        /*if (mList != null) {
-
-            NotificationItemVo notificationItemVo = mList.get(position);
-            if (notificationItemVo != null) {
-
-                return notificationItemVo.getmType();
-            }
-        }*/
         return 0;
     }
 
@@ -150,11 +118,13 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     public static class NotificationDataViewHolder extends RecyclerView.ViewHolder {
         private TextView mTvNoti;
+        private ImageView imgUser;
 
         public NotificationDataViewHolder(View itemView) {
             super(itemView);
 
             mTvNoti = (TextView) itemView.findViewById(R.id.txt_notification);
+            imgUser = (ImageView) itemView.findViewById(R.id.img_notification);
 
         }
     }

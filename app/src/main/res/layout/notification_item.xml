@@ -10,7 +10,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/margin_15"
         android:layout_marginTop="@dimen/margin_20"
-        android:src="@drawable/profile_img" />
+        android:src="@drawable/default_feed" />
 
 
     <TextView
@@ -21,7 +21,8 @@
         android:layout_marginLeft="@dimen/margin_10"
         android:layout_toLeftOf="@+id/img_notification"
         android:layout_toRightOf="@+id/imgcircle_user"
-        android:text="hjhfjhjhfvjkxhkjgkhjghjgjjjgjjjjjjjj"
+        android:maxLines="2"
+        android:text=""
         android:textSize="@dimen/margin_15" />
 
     <ImageView
@@ -32,7 +33,8 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/margin_10"
         android:layout_marginRight="@dimen/margin_10"
-        android:src="@drawable/dummy_notification" />
+        android:visibility="gone"
+        android:src="@drawable/default_feed" />
 
     <View
         android:layout_width="match_parent"
