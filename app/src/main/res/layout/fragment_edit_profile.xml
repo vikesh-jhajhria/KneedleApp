@@ -45,6 +45,7 @@
                 android:layout_alignParentRight="true"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
+                android:visibility="gone"
                 android:src="@drawable/location" />
         </RelativeLayout>
 
@@ -188,6 +189,7 @@
                 android:textColorHint="@android:color/darker_gray"
                 android:textSize="@dimen/font_16"
                 android:theme="@style/TextLabel" />
+
             <EditText
                 android:id="@+id/txt_website"
                 android:layout_width="match_parent"
@@ -200,27 +202,16 @@
                 android:textSize="@dimen/font_16"
                 android:theme="@style/TextLabel" />
 
-            <RelativeLayout
+
+            <Spinner
+                android:id="@+id/spinner_profile_type"
+                style="@style/SpinnerTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="-10dp"
                 android:layout_marginBottom="@dimen/margin_5"
-                android:layout_marginTop="@dimen/margin_20">
+                android:layout_marginTop="@dimen/margin_15" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginBottom="@dimen/margin_2"
-                    android:src="@drawable/drop_down_red" />
-
-                <Spinner
-                    android:id="@+id/spinner_profile_type"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:popupBackground="@color/spinner_background" />
-            </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -305,10 +296,10 @@
                 android:id="@+id/spinner_country"
                 style="@style/SpinnerTheme"
                 android:layout_width="match_parent"
+                android:layout_marginLeft="-10dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_5"
-                android:layout_marginTop="@dimen/margin_25"
-                android:popupBackground="@color/spinner_background" />
+                android:layout_marginTop="@dimen/margin_15" />
 
             <View
                 android:layout_width="match_parent"
@@ -321,9 +312,9 @@
                 style="@style/SpinnerTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="-10dp"
                 android:layout_marginBottom="@dimen/margin_5"
-                android:layout_marginTop="@dimen/margin_25"
-                android:popupBackground="@color/spinner_background" />
+                android:layout_marginTop="@dimen/margin_15" />
 
             <View
                 android:layout_width="match_parent"
@@ -336,8 +327,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_5"
-                android:layout_marginTop="@dimen/margin_25"
-                android:popupBackground="@color/spinner_background" />
+                android:layout_marginLeft="-10dp"
+                android:layout_marginTop="@dimen/margin_15" />
 
             <View
                 android:layout_width="match_parent"
@@ -352,8 +343,9 @@
                 android:layout_marginTop="@dimen/margin_10"
                 android:hint="@string/zip"
                 android:maxLines="1"
-                android:textColorHint="@color/colourBlack"
-                android:textSize="@dimen/font_14" />
+                android:paddingLeft="@dimen/margin_5"
+                android:textColorHint="@android:color/darker_gray"
+                android:textSize="@dimen/font_16" />
 
 
             <Button

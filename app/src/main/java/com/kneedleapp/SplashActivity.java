@@ -8,6 +8,7 @@ import android.util.Log;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
+import com.kneedleapp.utils.Utils;
 
 public class SplashActivity extends BaseActivity {
 
@@ -16,6 +17,7 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        Utils.getCategories(this);
         startTimer();
         try {
             if (preferences.getFirebaseId().isEmpty()) {

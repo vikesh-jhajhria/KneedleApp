@@ -25,21 +25,38 @@ import android.support.v7.app.AlertDialog.Builder;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.kneedleapp.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -298,6 +315,87 @@ public class Utils {
         }
     }
 
+
+    public static class SpinnerAdapter extends ArrayAdapter<String> {
+
+        private ArrayList<String> list;
+        private Activity context;
+
+        public SpinnerAdapter(Activity context, int textViewResourceId, ArrayList<String> objects) {
+            super(context, textViewResourceId, objects);
+            list = objects;
+            this.context = context;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            return getCustomView(position, convertView, parent);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            return getCustomView(position, convertView, parent);
+        }
+
+        public View getCustomView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = context.getLayoutInflater();
+            View row = inflater.inflate(R.layout.layout_spinner_item, parent, false);
+            TextView label = (TextView) row.findViewById(R.id.txt_item);
+            Utils.setTypeface(context, label, Config.CENTURY_GOTHIC_REGULAR);
+            label.setText(list.get(position));
+            return row;
+        }
+    }
+
+
+    public static void getCategories(final Context context) {
+        StringRequest getCategory = new StringRequest(Request.Method.POST, Config.GET_CATEGORY,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            final JSONObject jObject = new JSONObject(response);
+                            if (jObject.getString("status_id").equals("1")) {
+                                Config.PROFILE_TYPE.clear();
+                                Config.PROFILE_TYPE.add("Profile Type");
+                                JSONArray jsonArray = jObject.getJSONArray("category_data");
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                    Config.PROFILE_TYPE.add(jsonObject.getString("category_name"));
+                                }
+                            } else {
+                                Toast.makeText(context, jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+
+                        Toast.makeText(context, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d("error", volleyError.getMessage());
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+
+
+                return params;
+            }
+        };
+
+        getCategory.setRetryPolicy(new DefaultRetryPolicy(
+                30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(getCategory);
+    }
     public interface AlertCallback {
         void callback();
     }

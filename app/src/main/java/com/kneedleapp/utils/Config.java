@@ -3,6 +3,8 @@ package com.kneedleapp.utils;
 import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 
+import java.util.ArrayList;
+
 /**
  * Created by Vikesh on 02/14/2017.
  */
@@ -22,6 +24,8 @@ public class Config {
     public static final int CROPIMAGE = 127;
     public static final int ROTATEIMAGE = 128;
     public static final String IMAGE_DIRECTORY_NAME = "KNEEDLE";
+
+    public static ArrayList<String> PROFILE_TYPE = new ArrayList<>();
 
     public static final String TWITTER_KEY = "IPXy5QI9bvsbg0E6X5RPyI8V3";
     public static final String TWITTER_SECRET = "KIheMUxPOpnnsCZkC6kxwKGVTiAOGoRhecPcnwee1eyPzOLjxF";
@@ -56,5 +60,6 @@ public class Config {
     public final static String GET_USER_FEEDS = BASE_URL + "get_user_feeds";
     public final static String UPDATE_PROFILE_PIC = BASE_URL + "update_profile_pic";
     public final static String UPDATE_USER_PROFILE = BASE_URL + "update_user_profile";
+    public final static String GET_DROPDOWN = BASE_URL + "get_dropdowns";
 
 }

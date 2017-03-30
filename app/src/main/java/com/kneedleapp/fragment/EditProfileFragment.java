@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -19,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -41,8 +41,10 @@ import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.CustomMultipartRequest;
 import com.kneedleapp.utils.ImageCompression;
 import com.kneedleapp.utils.Utils;
+import com.kneedleapp.vo.CountryVO;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -58,10 +60,20 @@ import static com.kneedleapp.utils.Config.fragmentManager;
 
 
 public class EditProfileFragment extends BaseFragment {
-    ArrayList<String> spinnerDataList;
+    ArrayList<CountryVO> countrySpinnerList;
+    ArrayList<CountryVO> stateSpinnerList;
+    ArrayList<CountryVO> citySpinnerList;
+
+    SpinnerAdapter countrySpinnerAdapter;
+    SpinnerAdapter stateSpinnerAdapter;
+    SpinnerAdapter citySpinnerAdapter;
+
+    Spinner citySpinner, stateSpinner, countrySpinner, profileSpinner;
+
     private View view;
     private Bitmap bitmap;
     String imagePath = "";
+    String gender = "male";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,28 +87,88 @@ public class EditProfileFragment extends BaseFragment {
         view.findViewById(R.id.img_femme).setOnClickListener(this);
         view.findViewById(R.id.btn_save_changes).setOnClickListener(this);
         view.findViewById(R.id.img_profile).setOnClickListener(this);
-        ((Spinner) view.findViewById(R.id.spinner_profile_type)).getBackground().setColorFilter(getResources().getColor(R.color.textColorPrimary), PorterDuff.Mode.SRC_ATOP);
 
-        spinnerDataList = new ArrayList<>();
-        spinnerDataList.add("PROFILE TYPE");
-        spinnerDataList.add("PROFILE 1");
-        spinnerDataList.add("PROFILE 2");
+        citySpinner = ((Spinner) view.findViewById(R.id.spinner_city));
+        stateSpinner = ((Spinner) view.findViewById(R.id.spinner_state));
+        countrySpinner = ((Spinner) view.findViewById(R.id.spinner_country));
+        profileSpinner = ((Spinner) view.findViewById(R.id.spinner_profile_type));
 
-        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(getActivity(), R.layout.layout_spinner_item, spinnerDataList);
-        ((Spinner) view.findViewById(R.id.spinner_profile_type)).setAdapter(spinnerAdapter);
+        countrySpinnerList = new ArrayList<>();
+        stateSpinnerList = new ArrayList<>();
+        citySpinnerList = new ArrayList<>();
+        countrySpinnerList.add(new CountryVO("COUNTRY"));
+        stateSpinnerList.add(new CountryVO("STATE"));
+        citySpinnerList.add(new CountryVO("CITY"));
+
+        Utils.SpinnerAdapter profileSpinnerAdapter = new Utils.SpinnerAdapter(getActivity(), R.layout.layout_spinner_item, Config.PROFILE_TYPE);
+        profileSpinner.setAdapter(profileSpinnerAdapter);
+
+        countrySpinnerAdapter = new SpinnerAdapter(getActivity(), R.layout.layout_spinner_item, countrySpinnerList);
+        ((Spinner) view.findViewById(R.id.spinner_country)).setAdapter(countrySpinnerAdapter);
+        ((Spinner) view.findViewById(R.id.spinner_country)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                stateSpinnerList.clear();
+                CountryVO state = new CountryVO("STATE");
+                stateSpinnerList.add(state);
+                if (stateSpinner != null)
+                    stateSpinner.setSelection(0);
+
+                citySpinnerList.clear();
+                CountryVO city = new CountryVO("CITY");
+                citySpinnerList.add(city);
+                if (citySpinner != null)
+                    citySpinner.setSelection(0);
+
+
+                getDropdownValues(countrySpinnerList.get(position).getCountryID(), "STATE");
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        stateSpinnerAdapter = new SpinnerAdapter(getActivity(), R.layout.layout_spinner_item, stateSpinnerList);
+        ((Spinner) view.findViewById(R.id.spinner_state)).setAdapter(stateSpinnerAdapter);
+        ((Spinner) view.findViewById(R.id.spinner_state)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                citySpinnerList.clear();
+                CountryVO city = new CountryVO("CITY");
+                citySpinnerList.add(city);
+                if (citySpinner != null)
+                    citySpinner.setSelection(0);
+
+                getDropdownValues(stateSpinnerList.get(position).getStateID(), "CITY");
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        citySpinnerAdapter = new SpinnerAdapter(getActivity(), R.layout.layout_spinner_item, citySpinnerList);
+        ((Spinner) view.findViewById(R.id.spinner_city)).setAdapter(citySpinnerAdapter);
+
 
         ((ImageView) view.findViewById(R.id.img_femme)).setImageResource(R.drawable.female);
         ((ImageView) view.findViewById(R.id.img_homme)).setImageResource(R.drawable.male);
         editProfile();
-
+        getDropdownValues("1", "COUNTRY");
 
         return view;
     }
 
-    public class SpinnerAdapter extends ArrayAdapter<String> {
+    public class SpinnerAdapter extends ArrayAdapter<CountryVO> {
 
-        public SpinnerAdapter(Context context, int textViewResourceId, ArrayList<String> objects) {
+        private ArrayList<CountryVO> list;
+
+        public SpinnerAdapter(Context context, int textViewResourceId, ArrayList<CountryVO> objects) {
             super(context, textViewResourceId, objects);
+            list = objects;
         }
 
         @Override
@@ -114,7 +186,7 @@ public class EditProfileFragment extends BaseFragment {
             View row = inflater.inflate(R.layout.layout_spinner_item, parent, false);
             TextView label = (TextView) row.findViewById(R.id.txt_item);
             Utils.setTypeface(getActivity(), label, Config.CENTURY_GOTHIC_REGULAR);
-            label.setText(spinnerDataList.get(position));
+            label.setText(list.get(position).getName());
             return row;
         }
     }
@@ -128,10 +200,12 @@ public class EditProfileFragment extends BaseFragment {
                 fragmentManager.beginTransaction().add(R.id.main_frame, fragment).addToBackStack(null).commit();
                 break;
             case R.id.img_femme:
+                gender = "female";
                 ((ImageView) view.findViewById(R.id.img_femme)).setImageResource(R.drawable.female_red);
                 ((ImageView) view.findViewById(R.id.img_homme)).setImageResource(R.drawable.male);
                 break;
             case R.id.img_homme:
+                gender = "male";
                 ((ImageView) view.findViewById(R.id.img_femme)).setImageResource(R.drawable.female);
                 ((ImageView) view.findViewById(R.id.img_homme)).setImageResource(R.drawable.male_red);
                 break;
@@ -159,6 +233,8 @@ public class EditProfileFragment extends BaseFragment {
         Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_homme), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_femme), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.btn_save_changes), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_zip), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_website), Config.CENTURY_GOTHIC_REGULAR);
     }
 
 
@@ -206,7 +282,7 @@ public class EditProfileFragment extends BaseFragment {
 
 
                             } else {
-                                Toast.makeText(getContext(), "no data available", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -241,6 +317,93 @@ public class EditProfileFragment extends BaseFragment {
         queue.add(editProfile);
     }
 
+
+    public void getDropdownValues(final String id, final String type) {
+        if (id != null && !id.isEmpty()) {
+            ((BaseActivity) getActivity()).showProgessDialog();
+            StringRequest editProfile = new StringRequest(Request.Method.POST, Config.GET_DROPDOWN,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            ((BaseActivity) getActivity()).dismissProgressDialog();
+                            try {
+                                final JSONObject jObject = new JSONObject(response);
+                                if (jObject.getString("status_id").equals("1")) {
+                                    Log.e("reponce...::>>", response);
+                                    JSONArray arr = jObject.getJSONArray("result_data");
+                                    for (int i = 0; i < arr.length(); i++) {
+                                        CountryVO countryVO;
+                                        switch (type) {
+                                            case "COUNTRY":
+                                                countryVO = new CountryVO(arr.getJSONObject(i).getString("countryName"));
+                                                countryVO.setWebCode(arr.getJSONObject(i).getString("webCode"));
+                                                countryVO.setCountryID(arr.getJSONObject(i).getString("countryID"));
+                                                countrySpinnerList.add(countryVO);
+                                                countrySpinnerAdapter.notifyDataSetChanged();
+                                                break;
+                                            case "STATE":
+                                                countryVO = new CountryVO(arr.getJSONObject(i).getString("stateName"));
+                                                countryVO.setStateID(arr.getJSONObject(i).getString("stateID"));
+                                                countryVO.setCountryID(arr.getJSONObject(i).getString("countryID"));
+                                                stateSpinnerList.add(countryVO);
+                                                stateSpinnerAdapter.notifyDataSetChanged();
+                                                break;
+                                            case "CITY":
+                                                countryVO = new CountryVO(arr.getJSONObject(i).getString("cityName"));
+                                                citySpinnerList.add(countryVO);
+                                                citySpinnerAdapter.notifyDataSetChanged();
+                                                break;
+                                        }
+
+
+                                    }
+
+
+                                } else {
+                                    Toast.makeText(getContext(), jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+
+                            Toast.makeText(getContext(), volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                            Log.d("error", volleyError.getMessage());
+                        }
+                    }) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+                    switch (type) {
+                        case "COUNTRY":
+                            params.put("country_id", id);
+                            break;
+                        case "STATE":
+                            params.put("state_country_id", id);
+                            break;
+                        case "CITY":
+                            params.put("city_state_id", id);
+                            break;
+                    }
+
+
+                    return params;
+                }
+            };
+
+            editProfile.setRetryPolicy(new DefaultRetryPolicy(
+                    30000,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+            RequestQueue queue = Volley.newRequestQueue(getContext());
+            queue.add(editProfile);
+        }
+    }
 
     private void selectImage() {
 
@@ -412,23 +575,21 @@ public class EditProfileFragment extends BaseFragment {
                 Map<String, String> params = new HashMap<String, String>();
                 //user_id,fullname,bio,password,profiletype,companyInfo,city,website,gender,country,state,username,email,privacy,zipcode
                 params.put("user_id", AppPreferences.getAppPreferences(getContext()).getStringValue(AppPreferences.USER_ID));
-                String username = ((EditText) view.findViewById(R.id.txt_username)).getText().toString().trim();
-                if (!username.isEmpty()) {
-                    params.put("username", username);
-                }
-                String fullname = ((EditText) view.findViewById(R.id.txt_name)).getText().toString().trim();
-                if (!fullname.isEmpty()) {
-                    params.put("username", fullname);
-                }
-                String bio = ((EditText) view.findViewById(R.id.txt_bio)).getText().toString().trim();
-                if (!bio.isEmpty()) {
-                    params.put("bio", bio);
-                }
-                String email = ((EditText) view.findViewById(R.id.txt_email)).getText().toString().trim();
-                if (!email.isEmpty()) {
-                    params.put("email", email);
-                }
-Log.v("kneedle","params:"+params);
+                params.put("username", ((EditText) view.findViewById(R.id.txt_username)).getText().toString().trim());
+                params.put("fullname", ((EditText) view.findViewById(R.id.txt_name)).getText().toString().trim());
+                params.put("bio", ((EditText) view.findViewById(R.id.txt_bio)).getText().toString().trim());
+                params.put("email", ((EditText) view.findViewById(R.id.txt_email)).getText().toString().trim());
+                params.put("password", ((EditText) view.findViewById(R.id.txt_password)).getText().toString().trim());
+                params.put("profiletype",((CountryVO)profileSpinner.getSelectedItem()).getName());
+                params.put("companyInfo","");
+                params.put("city",((CountryVO)citySpinner.getSelectedItem()).getName());
+                params.put("state",((CountryVO)stateSpinner.getSelectedItem()).getName());
+                params.put("country",((CountryVO)countrySpinner.getSelectedItem()).getName());
+                params.put("website",((EditText) view.findViewById(R.id.txt_website)).getText().toString().trim());
+                params.put("gender",gender);
+                params.put("privacy","");
+                params.put("zipcode",((EditText) view.findViewById(R.id.txt_zip)).getText().toString().trim());
+                Log.v("kneedle", "params:" + params);
 
                 return params;
             }
