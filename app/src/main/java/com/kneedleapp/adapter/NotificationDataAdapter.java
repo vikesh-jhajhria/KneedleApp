@@ -16,7 +16,10 @@ import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.NotificationItemVo;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import ca.barrenechea.widget.recyclerview.decoration.StickyHeaderAdapter;
 
@@ -24,7 +27,8 @@ import ca.barrenechea.widget.recyclerview.decoration.StickyHeaderAdapter;
  * Created by aman.sharma on 2/22/2017.
  */
 
-public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements StickyHeaderAdapter<NotificationDataAdapter.HeaderHolder> {
+public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+        implements StickyHeaderAdapter<NotificationDataAdapter.HeaderHolder> {
 
     private Context context;
     private ArrayList<NotificationItemVo> mList;
@@ -39,12 +43,14 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public long getHeaderId(int position) {
-        NotificationItemVo obj = mList.get(position);
-        Log.v("DAY", position + " : " + obj.getType());
-        if (obj.getType() == BaseActivity.NotificationType.HEADER) {
-            return 1;
-        }
-        return 0;
+        Date date = null;
+        try {
+            SimpleDateFormat curFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+            date = curFormater.parse(mList.get(position).getTime());
+        } catch (Exception e) {}
+        long headerId = Long.parseLong(date.getDate()+""+date.getMonth()+date.getYear());
+        //Log.e("HEADER = ",headerId+"");
+        return headerId;
     }
 
     @Override
@@ -58,7 +64,19 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public void onBindHeaderViewHolder(HeaderHolder holder, int position) {
         NotificationItemVo obj = mList.get(position);
-        holder.mTvHeader.setText(obj.getTime());
+        Log.e("KNEEDLE", "position=" + position + " date=" + obj.getTime());
+
+
+        SimpleDateFormat curFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+        SimpleDateFormat simpleDate = new SimpleDateFormat("dd-MM-yyyy");
+        Date date = null;
+        try {
+            date = curFormater.parse(mList.get(position).getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        holder.mTvHeader.setText(simpleDate.format(date));
 
     }
 
@@ -84,9 +102,10 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
             } else if (obj.getType() == BaseActivity.NotificationType.TAGGED) {
                 ((NotificationDataViewHolder) holder).mTvNoti.setText(obj.getUsername() + " tagged you in a post.");
             }
-            if(!obj.getImgUser().isEmpty()) {
+            Log.v("Img url", "position:" + position+" url="+obj.getImgUser());
+            if (!obj.getImgUser().isEmpty()) {
                 Picasso.with(context).load(obj.getImgUser()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(((NotificationDataViewHolder) holder).imgUser);
-            }else Log.v("Img url","position:"+position);
+            } else Log.v("Img url", "position:" + position);
         }
 
     }
@@ -124,7 +143,7 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
             super(itemView);
 
             mTvNoti = (TextView) itemView.findViewById(R.id.txt_notification);
-            imgUser = (ImageView) itemView.findViewById(R.id.img_notification);
+            imgUser = (ImageView) itemView.findViewById(R.id.imgcircle_user);
 
         }
     }
