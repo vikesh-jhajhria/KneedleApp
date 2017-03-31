@@ -33,7 +33,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -153,20 +157,10 @@ public class NotificationFragment extends BaseFragment implements RecyclerView.O
         return mView;
     }
 
-    private void loadDataToList(JSONArray jsonArray) {
+    private void loadDataToList(JSONArray jsonArray, ArrayList<NotificationItemVo> list) {
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject commentObj = (JSONObject) jsonArray.get(i);
-                NotificationItemVo headerObj = new NotificationItemVo();
-                headerObj.setType(BaseActivity.NotificationType.HEADER);
-                headerObj.setTime(commentObj.getString("time"));
-                if (i == 0) {
-                    mList.add(headerObj);
-                } else if (!mList.get(i - 1).getTime().equalsIgnoreCase(commentObj.getString("time"))) {
-                    mList.add(headerObj);
-                }
-
-
                 NotificationItemVo obj = new NotificationItemVo();
                 obj.setTime(commentObj.getString("time"));
                 obj.setFullName(commentObj.getString("fullname"));
@@ -204,11 +198,59 @@ public class NotificationFragment extends BaseFragment implements RecyclerView.O
                         break;
 
                 }
-                mList.add(obj);
+                list.add(obj);
             }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private void sortList(ArrayList<NotificationItemVo> list) {
+        final SimpleDateFormat simpleDate = new SimpleDateFormat("dd-MM-yyyy");
+
+        Collections.sort(list, new Comparator<NotificationItemVo>() {
+            @Override
+            public int compare(NotificationItemVo n1, NotificationItemVo n2) {
+                try {
+                    SimpleDateFormat curFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+                    Date date1 = curFormater.parse(n1.getTime());
+                    Date date2 = curFormater.parse(n2.getTime());
+
+                    if (date1.after(date2))
+                        return 1;
+                    else
+                        return 0;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+        printLog("List sorted");
+        mList.clear();
+        for (int i = 0; i < list.size(); i++) {
+            NotificationItemVo headerObj = new NotificationItemVo();
+            headerObj.setType(BaseActivity.NotificationType.HEADER);
+            headerObj.setTime(list.get(i).getTime());
+            if (i == 0) {
+                mList.add(headerObj);
+            } else {
+                try {
+                    SimpleDateFormat curFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+                    Date date1 = curFormater.parse(list.get(i - 1).getTime());
+                    Date date2 = curFormater.parse(list.get(i).getTime());
+                    if (!simpleDate.format(date1).equalsIgnoreCase(simpleDate.format(date2))) {
+                        mList.add(headerObj);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            mList.add(list.get(i));
+
+        }
+        mAdapter.notifyDataSetChanged();
     }
 
     public void getNotification() {
@@ -224,12 +266,14 @@ public class NotificationFragment extends BaseFragment implements RecyclerView.O
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
 
-                                loadDataToList(jObject.getJSONObject("result").getJSONArray("likes"));
-                                loadDataToList(jObject.getJSONObject("result").getJSONArray("comments"));
-                                loadDataToList(jObject.getJSONObject("result").getJSONArray("followers"));
-                                loadDataToList(jObject.getJSONObject("result").getJSONArray("taged_users"));
+                                ArrayList<NotificationItemVo> tempList = new ArrayList<>();
+                                loadDataToList(jObject.getJSONObject("result").getJSONArray("likes"), tempList);
+                                loadDataToList(jObject.getJSONObject("result").getJSONArray("comments"), tempList);
+                                loadDataToList(jObject.getJSONObject("result").getJSONArray("followers"), tempList);
+                                loadDataToList(jObject.getJSONObject("result").getJSONArray("taged_users"), tempList);
 
-                                mAdapter.notifyDataSetChanged();
+                                sortList(tempList);
+
                             } else {
                                 if (mList.size() == 0) {
                                     emptyView.setText(jObject.getString("status_msg"));

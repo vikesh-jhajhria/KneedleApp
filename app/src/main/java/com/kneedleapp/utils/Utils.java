@@ -297,23 +297,7 @@ public class Utils {
         return simpleDateFormat.format(date);
     }
 
-    public static class Comparator implements Comparable<Comparator> {
 
-        private Date dateTime;
-
-        public Date getDateTime() {
-            return dateTime;
-        }
-
-        public void setDateTime(Date datetime) {
-            this.dateTime = datetime;
-        }
-
-        @Override
-        public int compareTo(Comparator o) {
-            return getDateTime().compareTo(o.getDateTime());
-        }
-    }
 
 
     public static class SpinnerAdapter extends ArrayAdapter<String> {

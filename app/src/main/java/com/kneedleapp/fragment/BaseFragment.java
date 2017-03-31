@@ -3,6 +3,7 @@ package com.kneedleapp.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +51,10 @@ public class BaseFragment extends Fragment implements View.OnClickListener, View
             return true;
         }
         return false;
+    }
+
+    public void printLog(String message){
+        Log.v("KNEEDLE",message);
     }
     private void goBack(){
         switch (Config.LAST_PAGE){
