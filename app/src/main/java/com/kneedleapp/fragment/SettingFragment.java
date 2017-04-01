@@ -3,7 +3,7 @@ package com.kneedleapp.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -22,7 +22,6 @@ import com.android.volley.toolbox.Volley;
 import com.kneedleapp.BaseActivity;
 import com.kneedleapp.LoginActivity;
 import com.kneedleapp.R;
-import com.kneedleapp.WebViewActivity;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
@@ -33,8 +32,28 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SettingFragment extends Fragment implements View.OnClickListener {
+import static com.kneedleapp.utils.Config.fragmentManager;
+
+public class SettingFragment extends BaseFragment {
     private View mView;
+    private String userId;
+
+    public static SettingFragment newInstance(String userId) {
+        SettingFragment fragment = new SettingFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("USER_ID", userId);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            userId = bundle.getString("USER_ID");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,6 +62,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 
         mView.findViewById(R.id.txt_logout).setOnClickListener(this);
         mView.findViewById(R.id.img_back).setOnClickListener(this);
+        mView.findViewById(R.id.txt_blocked_user).setOnClickListener(this);
         mView.findViewById(R.id.txt_report_problem).setOnClickListener(this);
         mView.findViewById(R.id.txt_privacy_policy).setOnClickListener(this);
         mView.findViewById(R.id.txt_terms_of_service).setOnClickListener(this);
@@ -67,7 +87,15 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.txt_logout:
-                logout();
+                Utils.showDecisionDialog(getActivity(), "Logout", getString(R.string.logout_message), new Utils.AlertCallback() {
+
+                    public void callback() {
+                        if (Utils.isNetworkConnected(getActivity(), true)) {
+                            logout();
+                        }
+                    }
+                });
+
                 break;
             case R.id.img_back:
                 getFragmentManager().popBackStack();
@@ -84,10 +112,19 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                 startActivity(emailIntent);
                 break;
             case R.id.txt_privacy_policy:
-                startActivity(new Intent(getActivity(), WebViewActivity.class));
+                InfoFragment policyFragment = InfoFragment.newInstance("POLICY");
+                fragmentManager.beginTransaction().add(R.id.main_frame, policyFragment)
+                        .addToBackStack(null).commit();
                 break;
             case R.id.txt_terms_of_service:
-                startActivity(new Intent(getActivity(), WebViewActivity.class));
+                InfoFragment termsFragment = InfoFragment.newInstance("TERMS");
+                fragmentManager.beginTransaction().add(R.id.main_frame, termsFragment)
+                        .addToBackStack(null).commit();
+                break;
+            case R.id.txt_blocked_user:
+                BlockedUsersFragment followerFragment = BlockedUsersFragment.newInstance(userId);
+                fragmentManager.beginTransaction().add(R.id.main_frame, followerFragment)
+                        .addToBackStack(null).commit();
                 break;
         }
     }

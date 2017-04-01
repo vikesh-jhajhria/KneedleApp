@@ -258,7 +258,7 @@ public class ProfileFragment extends BaseFragment
                 });
                 alertDialog.show();*/
 
-                Fragment fragment1 = new SettingFragment();
+                Fragment fragment1 = SettingFragment.newInstance(getUserId());
                 getFragmentManager().beginTransaction().add(R.id.main_frame, fragment1).addToBackStack(null).commit();
 
 

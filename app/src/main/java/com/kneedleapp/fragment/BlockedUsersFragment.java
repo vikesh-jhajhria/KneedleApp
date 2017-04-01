@@ -36,7 +36,7 @@ import java.util.Map;
 
 import static com.kneedleapp.utils.Config.fragmentManager;
 
-public class FollowingFragment extends BaseFragment {
+public class BlockedUsersFragment extends BaseFragment {
     private static BaseActivity context;
 
     private FollowerFragment.OnFragmentInteractionListener mListener;
@@ -46,14 +46,14 @@ public class FollowingFragment extends BaseFragment {
     private String mUserId;
     private TextView emptyView;
 
-    private java.util.List<UserDetailsVo> followingsList = new ArrayList<>();
+    private ArrayList<UserDetailsVo> blockedUserList = new ArrayList<>();
 
-    public FollowingFragment() {
+    public BlockedUsersFragment() {
         // Required empty public constructor
     }
 
-    public static FollowingFragment newInstance(String userId) {
-        FollowingFragment fragment = new FollowingFragment();
+    public static BlockedUsersFragment newInstance(String userId) {
+        BlockedUsersFragment fragment = new BlockedUsersFragment();
         Bundle bundle = new Bundle();
         bundle.putString("USER_ID", userId);
         fragment.setArguments(bundle);
@@ -88,17 +88,18 @@ public class FollowingFragment extends BaseFragment {
         applyFonts(view);
         Config.LAST_PAGE = "";
         view.findViewById(R.id.img_back).setOnClickListener(this);
-        ((TextView) view.findViewById(R.id.txt_title)).setText("Followings");
+        ((TextView) view.findViewById(R.id.txt_title)).setText("Blocked Users");
+
         context = (BaseActivity) getActivity();
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
 
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        userListAdapter = new UserListAdapter(getActivity(), followingsList, "FOLLOWING");
+        userListAdapter = new UserListAdapter(getActivity(), blockedUserList, "BLOCKED_USER");
         recyclerView.setAdapter(userListAdapter);
 
-        getFollowing();
+        getBlockedUsers();
 
         return view;
     }
@@ -127,16 +128,16 @@ public class FollowingFragment extends BaseFragment {
             public void run() {
                 getView().setFocusableInTouchMode(true);
                 getView().requestFocus();
-                getView().setOnKeyListener(FollowingFragment.this);
+                getView().setOnKeyListener(BlockedUsersFragment.this);
             }
         }, 500);
 
     }
 
-    private void getFollowing() {
+    private void getBlockedUsers() {
         emptyView.setVisibility(View.GONE);
         context.showProgessDialog();
-        StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.FOLLOWING,
+        StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.GET_BLOCKED_USERS,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -146,7 +147,7 @@ public class FollowingFragment extends BaseFragment {
                             if (jObject.getString("status_id").equals("1")) {
                                 Log.e("responce....::>>>", response);
 
-                                JSONArray jsonArray = jObject.getJSONArray("following_data");
+                                JSONArray jsonArray = jObject.getJSONArray("blocked_data");
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                                     UserDetailsVo userObject = new UserDetailsVo();
@@ -160,19 +161,17 @@ public class FollowingFragment extends BaseFragment {
                                     userObject.setCountry(jsonObject.getString("state"));
                                     userObject.setCountry(jsonObject.getString("country"));
                                     userObject.setBio(jsonObject.getString("bio"));
-                                    userObject.setDob(jsonObject.getString("dob"));
                                     userObject.setEmail(jsonObject.getString("email"));
                                     userObject.setWebsite(jsonObject.getString("website"));
                                     userObject.setPrivacy(jsonObject.getString("privacy"));
                                     userObject.setZipcode(jsonObject.getString("zipcode"));
-                                    userObject.setStatus(jsonObject.getString("status"));
 
-                                    followingsList.add(userObject);
+                                    blockedUserList.add(userObject);
                                 }
                                 userListAdapter.notifyDataSetChanged();
 
                             }
-                            if (followingsList.size() == 0) {
+                            if (blockedUserList.size() == 0) {
                                 emptyView.setText(jObject.getString("status_msg"));
                                 emptyView.setVisibility(View.VISIBLE);
                             } else {

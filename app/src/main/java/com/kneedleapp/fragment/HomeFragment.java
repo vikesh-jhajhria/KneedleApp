@@ -126,14 +126,12 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
                                 }
                                 mAdapter.notifyDataSetChanged();
 
+                            }
+                            if (mList.size() == 0) {
+                                emptyView.setText(jObject.getString("status_msg"));
+                                emptyView.setVisibility(View.VISIBLE);
                             } else {
-                                if (mList.size() == 0) {
-                                    emptyView.setText(jObject.getString("status_msg"));
-                                    emptyView.setVisibility(View.VISIBLE);
-                                } else {
-                                    emptyView.setVisibility(View.GONE);
-                                }
-                                //Toast.makeText(getContext(), jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
+                                emptyView.setVisibility(View.GONE);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

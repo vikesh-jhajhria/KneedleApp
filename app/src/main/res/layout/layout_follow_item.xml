@@ -52,6 +52,7 @@
                     android:textAllCaps="true"
                     android:textColor="@color/gray"
                     android:textSize="@dimen/font_12" />
+
                 <TextView
                     android:id="@+id/txt_designation"
                     android:layout_width="wrap_content"
@@ -70,35 +71,55 @@
                 <TextView
                     android:id="@+id/btn_unfollow"
                     android:layout_width="wrap_content"
-                    android:gravity="center"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/margin_10"
+                    android:background="@drawable/round_corner_white"
+                    android:gravity="center"
                     android:paddingBottom="@dimen/margin_5"
+                    android:visibility="invisible"
                     android:paddingLeft="@dimen/margin_10"
                     android:paddingRight="@dimen/margin_10"
                     android:paddingTop="@dimen/margin_5"
                     android:text="Unfollow"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginLeft="@dimen/margin_10"
                     android:textAllCaps="true"
                     android:textColor="@color/colourRed"
-                    android:background="@drawable/round_corner_white"
-                    android:textSize="@dimen/font_12"/>
+                    android:textSize="@dimen/font_12" />
 
                 <TextView
                     android:id="@+id/btn_follow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/round_corner_red"
                     android:paddingBottom="@dimen/margin_5"
                     android:paddingLeft="@dimen/margin_10"
                     android:paddingRight="@dimen/margin_10"
                     android:paddingTop="@dimen/margin_5"
                     android:text="Follow"
+                    android:textAllCaps="true"
+                    android:visibility="gone"
+                    android:textColor="@color/textColorPrimary"
+                    android:textSize="@dimen/font_12" />
+
+                <TextView
+                    android:id="@+id/btn_unblock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:background="@drawable/round_corner_red"
+                    android:paddingBottom="@dimen/margin_5"
+                    android:paddingLeft="@dimen/margin_10"
+                    android:paddingRight="@dimen/margin_10"
+                    android:paddingTop="@dimen/margin_5"
+                    android:text="UNBLOCK"
                     android:textAllCaps="true"
                     android:textColor="@color/textColorPrimary"
-                    android:background="@drawable/round_corner_red"
-                    android:textSize="@dimen/font_12"/>
+                    android:textSize="@dimen/font_12"
+                    android:visibility="gone" />
             </RelativeLayout>
 
         </LinearLayout>

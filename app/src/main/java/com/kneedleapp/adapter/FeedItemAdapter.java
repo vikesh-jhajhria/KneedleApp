@@ -125,7 +125,7 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
                 int popupHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
                 View popupView = LayoutInflater.from(context).inflate(R.layout.menu_popup, null);
 
-                Utils.setTypeface(context,(TextView) popupView.findViewById(R.id.txt_report), Config.CENTURY_GOTHIC_REGULAR);
+                Utils.setTypeface(context, (TextView) popupView.findViewById(R.id.txt_report), Config.CENTURY_GOTHIC_REGULAR);
                 Utils.setTypeface(context, (TextView) popupView.findViewById(R.id.txt_delete), Config.CENTURY_GOTHIC_REGULAR);
                 Utils.setTypeface(context, (TextView) popupView.findViewById(R.id.txt_block), Config.CENTURY_GOTHIC_REGULAR);
 
@@ -388,9 +388,9 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
                             if (jObject.getString("status_id").equals("1")) {
                                 Log.e("reponce...::>>", response);
 
-                            } else {
-                                Toast.makeText(context, "no data available", Toast.LENGTH_SHORT).show();
                             }
+                            Toast.makeText(context, jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -435,9 +435,8 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
                             if (jObject.getString("status_id").equals("1")) {
                                 Log.e("reponce...::>>", response);
 
-                            } else {
-                                Toast.makeText(context, "no data available", Toast.LENGTH_SHORT).show();
                             }
+                            Toast.makeText(context, jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

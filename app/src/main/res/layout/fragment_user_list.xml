@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         app:cardBackgroundColor="@color/colourRed"
-        app:cardCornerRadius="1dp"
+        app:cardCornerRadius="0dp"
         app:cardElevation="5dp">
 
         <RelativeLayout
@@ -22,11 +22,9 @@
                 android:id="@+id/txt_title"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_centerVertical="true"
                 android:layout_centerInParent="true"
                 android:gravity="center"
                 android:textAllCaps="true"
-                android:textStyle="bold"
                 android:text="Following"
                 android:textColor="@color/textColorPrimary"
                 android:textSize="@dimen/font_18" />
@@ -43,14 +41,24 @@
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
     </android.support.v7.widget.RecyclerView>
-
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textSize="@dimen/font_16"
+        android:text="NO DATA" />
+</RelativeLayout>
 </LinearLayout>
 
 

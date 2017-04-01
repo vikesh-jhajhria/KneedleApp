@@ -6,23 +6,69 @@ package com.kneedleapp.vo;
 
 public class UserDetailsVo {
     private String userId;
-    private String fullname;
-    private String username;
-    private String profiletype;
-    private String company_info;
-    private String gender;
-    private String image;
-    private String bio;
-    private String email;
     private String blocked;
     private String no_of_feeds_uploaded;
     private String posts;
     private String followers;
     private String following;
     private String follow_status;
+    private String fullname;
+    private String username;
+    private String profiletype;
+    private String gender;
     private String city;
     private String state;
     private String country;
+    private String company_info;
+    private String image;
+    private String bio;
+    private String dob;
+    private String email;
+
+    public String getDob() {
+        return dob;
+    }
+
+    public void setDob(String dob) {
+        this.dob = dob;
+    }
+
+    public String getPrivacy() {
+        return privacy;
+    }
+
+    public void setPrivacy(String privacy) {
+        this.privacy = privacy;
+    }
+
+    public String getZipcode() {
+        return zipcode;
+    }
+
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    private String privacy;
+    private String zipcode;
+    private String website;
+    private String status;
 
     public String getCity() {
         return city;

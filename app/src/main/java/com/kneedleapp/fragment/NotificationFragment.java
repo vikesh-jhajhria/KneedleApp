@@ -163,13 +163,12 @@ public class NotificationFragment extends BaseFragment implements RecyclerView.O
                 obj.setTime(commentObj.getString("time"));
                 obj.setFullName(commentObj.getString("fullname"));
                 obj.setUsername(commentObj.getString("username"));
-
+                obj.setImgUser(Config.USER_IMAGE_URL + commentObj.getString("profile_pic"));
                 switch (commentObj.getString("notificationType")) {
                     case "Like":
                         obj.setId(commentObj.getString("id"));
                         obj.setFeedId(commentObj.getString("feed_id"));
                         obj.setUserId(commentObj.getString("user_id"));
-                        obj.setImgUser(commentObj.getString("profile_pic"));
                         obj.setType(BaseActivity.NotificationType.LIKE);
                         break;
                     case "Comment":
@@ -177,21 +176,18 @@ public class NotificationFragment extends BaseFragment implements RecyclerView.O
                         obj.setFeedId(commentObj.getString("feed_id"));
                         obj.setUserId(commentObj.getString("user_id"));
                         obj.setComment(commentObj.getString("comment"));
-                        obj.setImgUser(Config.USER_IMAGE_URL + commentObj.getString("profile_pic"));
                         obj.setType(BaseActivity.NotificationType.COMMENT);
                         break;
                     case "Follow":
                         obj.setFollowingId(commentObj.getString("f_id"));
                         obj.setFollowerId(commentObj.getString("follower_id"));
                         obj.setUserId(commentObj.getString("user_id"));
-                        obj.setImgUser(Config.USER_IMAGE_URL + commentObj.getString("profile_pic"));
                         obj.setType(BaseActivity.NotificationType.FOLLOW);
                         break;
                     case "Taged":
                         obj.setId(commentObj.getString("id"));
                         obj.setFeedId(commentObj.getString("feed_id"));
                         obj.setTaggedUserId(commentObj.getString("taged_user_id"));
-                        obj.setImgUser(Config.USER_IMAGE_URL + commentObj.getString("profile_pic"));
                         obj.setType(BaseActivity.NotificationType.TAGGED);
                         break;
 

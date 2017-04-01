@@ -19,10 +19,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.kneedleapp.BaseActivity;
 import com.kneedleapp.R;
+import com.kneedleapp.fragment.ProfileFragment;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
-import com.kneedleapp.vo.FollowersVo;
+import com.kneedleapp.vo.UserDetailsVo;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,17 +36,19 @@ import java.util.List;
 import java.util.Map;
 
 
-public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.CheckViewHolder> {
+public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.CheckViewHolder> {
 
     Context context;
-    List<FollowersVo> list;
+    List<UserDetailsVo> list;
     String currentDate;
     BaseActivity baseContext;
+    String listType;
 
 
-    public FollowerAdapter(List<FollowersVo> list, Context context) {
+    public UserListAdapter(Context context, List<UserDetailsVo> list, String listType) {
         this.context = context;
         this.list = list;
+        this.listType = listType;
 
         Calendar c = Calendar.getInstance();
         System.out.println("Current time => " + c.getTime());
@@ -66,30 +70,64 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.CheckV
 
     @Override
     public void onBindViewHolder(final CheckViewHolder holder, final int position) {
-        final FollowersVo checkVo = list.get(position);
-        holder.txt_name.setText(checkVo.getFullname().split(" ")[0]);
-        holder.fullname.setText(checkVo.getFullname());
-        holder.job.setText(checkVo.getProfiletype());
+        final UserDetailsVo userDetail = list.get(position);
+        holder.txt_name.setText(userDetail.getUsername());
+        holder.fullname.setText(userDetail.getFullname());
+        holder.job.setText(userDetail.getProfiletype());
+        if (!userDetail.getImage().isEmpty()) {
+            Picasso.with(context).load(userDetail.getImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(holder.img);
+        }
 
-        if (checkVo.getStatus().equalsIgnoreCase("1")) {
-            holder.follow.setVisibility(View.GONE);
-            holder.unfollow.setVisibility(View.VISIBLE);
+        if (!listType.equalsIgnoreCase("BLOCKED_USER")) {
+            if (userDetail.getStatus().equalsIgnoreCase("1")) {
+                holder.follow.setVisibility(View.GONE);
+                holder.unfollow.setVisibility(View.VISIBLE);
+            } else {
+                holder.follow.setVisibility(View.VISIBLE);
+                holder.unfollow.setVisibility(View.GONE);
+            }
         } else {
-            holder.follow.setVisibility(View.VISIBLE);
-            holder.unfollow.setVisibility(View.GONE);
+            holder.unblock.setVisibility(View.VISIBLE);
         }
 
         holder.follow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                followUnfollowUser(userDetail.getUserId(), currentDate, position);
             }
         });
 
         holder.unfollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                followUnfollowUser(checkVo.getFollowerUserId(), currentDate);
+                followUnfollowUser(userDetail.getUserId(), currentDate, position);
+            }
+        });
+
+        holder.unblock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                unblock(userDetail.getUserId(),position);
+            }
+        });
+
+        holder.img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((BaseActivity) context).addFragment(R.id.main_frame,
+                        ProfileFragment.newInstance(userDetail.getUserId(),
+                                userDetail.getUsername()), "PROFILE_FRAGMENT", true);
+
+            }
+        });
+
+
+        holder.txt_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((BaseActivity) context).addFragment(R.id.main_frame,
+                        ProfileFragment.newInstance(userDetail.getUserId(),
+                                userDetail.getUsername()), "PROFILE_FRAGMENT", true);
             }
         });
     }
@@ -102,7 +140,7 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.CheckV
     public class CheckViewHolder extends RecyclerView.ViewHolder {
 
         TextView txt_name, fullname, job;
-        TextView follow, unfollow;
+        TextView follow, unfollow, unblock;
         ImageView img;
 
 
@@ -113,6 +151,7 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.CheckV
             job = (TextView) itemView.findViewById(R.id.txt_designation);
             follow = (TextView) itemView.findViewById(R.id.btn_follow);
             unfollow = (TextView) itemView.findViewById(R.id.btn_unfollow);
+            unblock = (TextView) itemView.findViewById(R.id.btn_unblock);
             img = (ImageView) itemView.findViewById(R.id.img_profile);
 
 
@@ -121,13 +160,14 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.CheckV
             Utils.setTypeface(context, job, Config.CENTURY_GOTHIC_BOLD);
             Utils.setTypeface(context, follow, Config.CENTURY_GOTHIC_BOLD);
             Utils.setTypeface(context, unfollow, Config.CENTURY_GOTHIC_BOLD);
+            Utils.setTypeface(context, unblock, Config.CENTURY_GOTHIC_BOLD);
 
         }
 
     }
 
 
-    public void followUnfollowUser(final String friendId, final String date) {
+    public void followUnfollowUser(final String friendId, final String date, final int position) {
         ((BaseActivity) context).showProgessDialog();
         StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.FOLLOW_UNFOLLOW_USER,
                 new Response.Listener<String>() {
@@ -138,6 +178,12 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.CheckV
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
                                 Log.e("responce....::>>>", response);
+                                if(list.get(position).getStatus().equalsIgnoreCase("1")){
+                                    list.get(position).setStatus("0");
+                                } else {
+                                    list.get(position).setStatus("1");
+                                }
+                                notifyDataSetChanged();
                             }
                             Toast.makeText(context, jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
 
@@ -174,4 +220,51 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.CheckV
         feedqueue.add(requestFeed);
     }
 
+    public void unblock(final String userId, final int position) {
+        ((BaseActivity) context).showProgessDialog();
+        StringRequest block = new StringRequest(Request.Method.POST, Config.BLOCK,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        ((BaseActivity) context).dismissProgressDialog();
+                        try {
+                            final JSONObject jObject = new JSONObject(response);
+                            if (jObject.getString("status_id").equals("1")) {
+                                Log.e("reponce...::>>", response);
+                                list.remove(position);
+                                notifyDataSetChanged();
+                            }
+                            Toast.makeText(context, jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+
+                        Toast.makeText(context, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d("error", volleyError.getMessage());
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("friend_user_id", userId);
+                params.put("user_id", AppPreferences.getAppPreferences(context).getStringValue(AppPreferences.USER_ID));
+
+                return params;
+            }
+        };
+
+        block.setRetryPolicy(new DefaultRetryPolicy(
+                30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(block);
+    }
 }
