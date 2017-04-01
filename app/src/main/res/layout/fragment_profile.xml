@@ -327,7 +327,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:paddingLeft="@dimen/margin_5"
-            android:src="@drawable/chat" />
+            android:src="@drawable/settings" />
 
         <View
             android:layout_width="match_parent"

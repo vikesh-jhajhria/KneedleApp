@@ -49,12 +49,12 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         Config.LAST_PAGE = "";
 
         Utils.setTypeface(getContext(), (TextView) mView.findViewById(R.id.txt_options), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getContext(), (TextView) mView.findViewById(R.id.txt_photos_you_have_liked), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getContext(), (TextView) mView.findViewById(R.id.txt_support), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) mView.findViewById(R.id.txt_support), Config.CENTURY_GOTHIC_BOLD);
         Utils.setTypeface(getContext(), (TextView) mView.findViewById(R.id.txt_report_problem), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) mView.findViewById(R.id.txt_terms_of_service), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(getContext(), (TextView) mView.findViewById(R.id.txt_privacy_policy), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getContext(), (TextView) mView.findViewById(R.id.txt_prefernces), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getContext(), (TextView) mView.findViewById(R.id.txt_share_settings), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) mView.findViewById(R.id.txt_prefernces), Config.CENTURY_GOTHIC_BOLD);
+        Utils.setTypeface(getContext(), (TextView) mView.findViewById(R.id.txt_blocked_user), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(getContext(), (TextView) mView.findViewById(R.id.txt_push_noti), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(getContext(), (TextView) mView.findViewById(R.id.txt_save_original_photo), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(getContext(), (TextView) mView.findViewById(R.id.txt_logout), Config.CENTURY_GOTHIC_REGULAR);

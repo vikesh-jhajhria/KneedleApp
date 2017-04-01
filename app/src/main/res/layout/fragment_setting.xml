@@ -1,11 +1,39 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
+    android:orientation="vertical"
     tools:context="com.kneedleapp.fragment.SettingFragment">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/activity_horizontal_margin">
 
+        <ImageView
+            android:id="@+id/img_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/margin_5"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:id="@+id/txt_options"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/options"
+            android:textColor="@color/colourBlack"
+            android:textSize="@dimen/font_18" />
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_1"
+        android:background="#7c7a7a" />
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -14,55 +42,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="@dimen/activity_horizontal_margin">
-
-                <ImageView
-                    android:id="@+id/img_back"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/margin_5"
-                    android:paddingRight="@dimen/activity_horizontal_margin"
-                    android:src="@drawable/back" />
-
-                <TextView
-                    android:id="@+id/txt_options"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:text="@string/options"
-                    android:textColor="@color/colourBlack"
-                    android:textSize="@dimen/font_18" />
-
-            </LinearLayout>
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_1"
-                android:background="#7c7a7a" />
-
-
-            <TextView
-                android:id="@+id/txt_photos_you_have_liked"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_10"
-                android:padding="@dimen/margin_16"
-                android:text="@string/photos_liked"
-                android:textColor="@color/colourBlack"
-                android:textSize="@dimen/font_12" />
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_1"
-                android:background="@color/colourSettingView" />
-
 
             <TextView
                 android:id="@+id/txt_support"
@@ -74,7 +53,7 @@
                 android:paddingTop="@dimen/activity_horizontal_margin"
                 android:text="@string/support"
                 android:textColor="@color/colourRed"
-                android:textSize="@dimen/font_12" />
+                android:textSize="@dimen/font_14" />
 
 
             <View
@@ -86,9 +65,12 @@
                 android:id="@+id/txt_report_problem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/activity_horizontal_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/margin_12"
+                android:paddingBottom="@dimen/margin_12"
                 android:text="@string/report_problem"
-                android:textSize="@dimen/font_12" />
+                android:textSize="@dimen/font_14" />
 
             <View
                 android:layout_width="match_parent"
@@ -99,9 +81,12 @@
                 android:id="@+id/txt_privacy_policy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/activity_horizontal_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/margin_12"
+                android:paddingBottom="@dimen/margin_12"
                 android:text="@string/privacy_policy"
-                android:textSize="@dimen/font_12" />
+                android:textSize="@dimen/font_14" />
 
             <View
                 android:layout_width="match_parent"
@@ -112,9 +97,12 @@
                 android:id="@+id/txt_terms_of_service"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/activity_horizontal_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/margin_12"
+                android:paddingBottom="@dimen/margin_12"
                 android:text="@string/terms_of_service"
-                android:textSize="@dimen/font_12" />
+                android:textSize="@dimen/font_14" />
 
             <View
                 android:layout_width="match_parent"
@@ -131,7 +119,7 @@
                 android:paddingTop="@dimen/activity_horizontal_margin"
                 android:text="@string/prefernces"
                 android:textColor="@color/colourRed"
-                android:textSize="@dimen/font_12" />
+                android:textSize="@dimen/font_14" />
 
 
             <View
@@ -139,49 +127,29 @@
                 android:layout_height="@dimen/margin_1"
                 android:background="@color/colourSettingView" />
 
-            <TextView
-                android:id="@+id/txt_share_settings"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/activity_horizontal_margin"
-                android:text="@string/share_settings"
-                android:textSize="@dimen/font_12" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_1"
-                android:background="@color/colourSettingView" />
 
 
-            <TextView
-                android:id="@+id/txt_push_noti"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/activity_horizontal_margin"
-                android:text="@string/push_noti"
-                android:textSize="@dimen/font_12" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/margin_1"
-                android:background="@color/colourSettingView" />
 
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/activity_horizontal_margin">
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/margin_10"
+                android:paddingBottom="@dimen/margin_10">
 
                 <TextView
-                    android:id="@+id/txt_save_original_photo"
+                    android:id="@+id/txt_push_noti"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/push_noti"
+                    android:textSize="@dimen/font_14"
                     android:layout_centerVertical="true"
-                    android:text="@string/save_ori"
-                    android:textSize="@dimen/font_12" />
+                    android:layout_alignParentStart="true" />
 
                 <android.support.v7.widget.SwitchCompat
-                    android:id="@+id/switch_button"
+                    android:id="@+id/switch_notification"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -195,14 +163,61 @@
                 android:background="@color/colourSettingView" />
 
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/margin_10"
+                android:paddingBottom="@dimen/margin_10">
+
+                <TextView
+                    android:id="@+id/txt_save_original_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/save_ori"
+                    android:textSize="@dimen/font_14"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentStart="true" />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/switch_photos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_1"
+                android:background="@color/colourSettingView" />
+
             <TextView
+                android:id="@+id/txt_blocked_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAllCaps="true"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/margin_12"
+                android:paddingBottom="@dimen/margin_12"
+                android:text="@string/block_users"
+                android:textSize="@dimen/font_14" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_1"
+                android:background="@color/colourSettingView" />
+
+
+            <Button
                 android:id="@+id/txt_logout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/activity_horizontal_margin"
                 android:background="@color/colourRed"
-                android:gravity="center"
-                android:padding="@dimen/activity_horizontal_margin"
                 android:text="@string/logout"
                 android:textColor="#ffffff"
                 android:textSize="@dimen/font_18" />
@@ -210,4 +225,4 @@
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
-</RelativeLayout>
+</LinearLayout>

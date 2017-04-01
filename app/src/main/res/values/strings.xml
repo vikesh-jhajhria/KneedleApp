@@ -77,6 +77,7 @@
     <string name="term_condition">I agree with Terms and Conditions</string>
     <string name="twitter_consumer_key">IPXy5QI9bvsbg0E6X5RPyI8V3</string>
     <string name="twitter_consumer_secret">KIheMUxPOpnnsCZkC6kxwKGVTiAOGoRhecPcnwee1eyPzOLjxF</string>
+    <string name="block_users">Blocked Users</string>
 
 
 </resources>
