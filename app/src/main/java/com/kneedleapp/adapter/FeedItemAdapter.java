@@ -128,6 +128,8 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
                 Utils.setTypeface(context, (TextView) popupView.findViewById(R.id.txt_report), Config.CENTURY_GOTHIC_REGULAR);
                 Utils.setTypeface(context, (TextView) popupView.findViewById(R.id.txt_delete), Config.CENTURY_GOTHIC_REGULAR);
                 Utils.setTypeface(context, (TextView) popupView.findViewById(R.id.txt_block), Config.CENTURY_GOTHIC_REGULAR);
+                Utils.setTypeface(context, (TextView) popupView.findViewById(R.id.txt_share_fb), Config.CENTURY_GOTHIC_REGULAR);
+                Utils.setTypeface(context, (TextView) popupView.findViewById(R.id.txt_tweet), Config.CENTURY_GOTHIC_REGULAR);
 
                 final PopupWindow attachmentPopup = new PopupWindow(context);
                 attachmentPopup.setFocusable(true);
@@ -164,7 +166,19 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
                 ((TextView) popupView.findViewById(R.id.txt_delete)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        delete(feedItemVo.getmId());
+                        delete(feedItemVo.getmId(), position);
+                        attachmentPopup.dismiss();
+                    }
+                });
+                ((TextView) popupView.findViewById(R.id.txt_share_fb)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        attachmentPopup.dismiss();
+                    }
+                });
+                ((TextView) popupView.findViewById(R.id.txt_tweet)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
                         attachmentPopup.dismiss();
                     }
                 });
@@ -423,7 +437,7 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
         queue.add(block);
     }
 
-    public void delete(final String feedId) {
+    public void delete(final String feedId, final int position) {
         ((BaseActivity) context).showProgessDialog();
         StringRequest delete = new StringRequest(Request.Method.POST, Config.DELETE_FEED,
                 new Response.Listener<String>() {
@@ -434,7 +448,8 @@ public class FeedItemAdapter extends RecyclerView.Adapter<FeedItemAdapter.ViewHo
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
                                 Log.e("reponce...::>>", response);
-
+                                mList.remove(position);
+                                notifyDataSetChanged();
                             }
                             Toast.makeText(context, jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
                         } catch (JSONException e) {

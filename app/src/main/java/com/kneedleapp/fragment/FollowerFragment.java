@@ -101,7 +101,9 @@ public class FollowerFragment extends BaseFragment {
         followerAdapter = new UserListAdapter(getActivity(), followersList, "FOLLOWER");
         recyclerView.setAdapter(followerAdapter);
 
-        getFollowers();
+        if(Utils.isNetworkConnected(getActivity(),true)) {
+            getFollowers();
+        }
 
         return view;
     }

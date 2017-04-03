@@ -6,8 +6,7 @@
     android:layout_gravity="fill_vertical"
     android:background="#ffffff"
     android:clickable="true"
-    android:fitsSystemWindows="true"
-    tools:ignore="RtlHardcoded">
+    android:fitsSystemWindows="true">
 
 
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -27,6 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#ffffff"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:contentScrim="?attr/colorPrimary">
 
                 <LinearLayout

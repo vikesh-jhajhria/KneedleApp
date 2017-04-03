@@ -2,8 +2,6 @@ package com.kneedleapp.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -27,7 +25,7 @@ import com.kneedleapp.BaseActivity;
 import com.kneedleapp.KneedleApp;
 import com.kneedleapp.R;
 import com.kneedleapp.fragment.AddCommentFragment;
-import com.kneedleapp.fragment.ProfileFragment;
+import com.kneedleapp.fragment.FeedDetailFragment;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
@@ -82,10 +80,18 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
         holder.imgContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.getItem(position, holder, feedItemVo.getLiked());
+                if (viewType.equalsIgnoreCase("LIST")) {
+                    mListener.getItem(position, holder, feedItemVo.getLiked());
+                } else {
+                    FeedDetailFragment fragment = FeedDetailFragment.newInstance(feedItemVo.getmId());
+                    fragmentManager.beginTransaction()
+                            .add(R.id.main_frame, fragment, "FEED_DETAIL_FRAGMENT")
+                            .addToBackStack(null)
+                            .commit();
+                }
             }
         });
-        Log.v("Image Loading", "URL: "+feedItemVo.getmContentImage());
+        Log.v("Image Loading", "URL: " + feedItemVo.getmContentImage());
 
         Picasso.with(context).load(feedItemVo.getmContentImage())
                 .placeholder(R.drawable.default_feed).error(R.drawable.default_feed)
@@ -158,6 +164,14 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
                     int popupWidth = ViewGroup.LayoutParams.WRAP_CONTENT;
                     int popupHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
                     View popupView = LayoutInflater.from(context).inflate(R.layout.menu_popup, null);
+
+                    Utils.setTypeface(context, (TextView) popupView.findViewById(R.id.txt_report), Config.CENTURY_GOTHIC_REGULAR);
+                    Utils.setTypeface(context, (TextView) popupView.findViewById(R.id.txt_delete), Config.CENTURY_GOTHIC_REGULAR);
+                    Utils.setTypeface(context, (TextView) popupView.findViewById(R.id.txt_block), Config.CENTURY_GOTHIC_REGULAR);
+                    Utils.setTypeface(context, (TextView) popupView.findViewById(R.id.txt_share_fb), Config.CENTURY_GOTHIC_REGULAR);
+                    Utils.setTypeface(context, (TextView) popupView.findViewById(R.id.txt_tweet), Config.CENTURY_GOTHIC_REGULAR);
+
+
                     final PopupWindow attachmentPopup = new PopupWindow(context);
                     attachmentPopup.setFocusable(true);
                     attachmentPopup.setWidth(popupWidth);
@@ -191,7 +205,19 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
                     ((TextView) popupView.findViewById(R.id.txt_delete)).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            delete(feedItemVo.getmId());
+                            delete(feedItemVo.getmId(), position);
+                            attachmentPopup.dismiss();
+                        }
+                    });
+                    ((TextView) popupView.findViewById(R.id.txt_share_fb)).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            attachmentPopup.dismiss();
+                        }
+                    });
+                    ((TextView) popupView.findViewById(R.id.txt_tweet)).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
                             attachmentPopup.dismiss();
                         }
                     });
@@ -212,7 +238,6 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
             });
 
             Picasso.with(context).load(feedItemVo.getmUserImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(holder.imgUser);
-
 
 
         }
@@ -429,7 +454,7 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
         queue.add(block);
     }
 
-    public void delete(final String feedId) {
+    public void delete(final String feedId, final int position) {
         ((BaseActivity) context).showProgessDialog();
         StringRequest delete = new StringRequest(Request.Method.POST, Config.DELETE_FEED,
                 new Response.Listener<String>() {
@@ -440,7 +465,8 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
                                 Log.e("reponce...::>>", response);
-
+                                mList.remove(position);
+                                notifyDataSetChanged();
                             } else {
                                 Toast.makeText(context, "no data available", Toast.LENGTH_SHORT).show();
                             }

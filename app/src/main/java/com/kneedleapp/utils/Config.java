@@ -62,5 +62,6 @@ public class Config {
     public final static String UPDATE_USER_PROFILE = BASE_URL + "update_user_profile";
     public final static String GET_DROPDOWN = BASE_URL + "get_dropdowns";
     public final static String GET_BLOCKED_USERS = BASE_URL + "blocked_users";
+    public final static String GET_FEED_INFO = BASE_URL + "get_feed_info";
 
 }

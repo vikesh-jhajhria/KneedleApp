@@ -79,12 +79,14 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.CheckV
         }
 
         if (!listType.equalsIgnoreCase("BLOCKED_USER")) {
-            if (userDetail.getStatus().equalsIgnoreCase("1")) {
-                holder.follow.setVisibility(View.GONE);
-                holder.unfollow.setVisibility(View.VISIBLE);
-            } else {
-                holder.follow.setVisibility(View.VISIBLE);
-                holder.unfollow.setVisibility(View.GONE);
+            if(!userDetail.getUserId().equalsIgnoreCase(AppPreferences.getAppPreferences(context).getUserId())) {
+                if (userDetail.getStatus().equalsIgnoreCase("1")) {
+                    holder.follow.setVisibility(View.GONE);
+                    holder.unfollow.setVisibility(View.VISIBLE);
+                } else {
+                    holder.follow.setVisibility(View.VISIBLE);
+                    holder.unfollow.setVisibility(View.GONE);
+                }
             }
         } else {
             holder.unblock.setVisibility(View.VISIBLE);
@@ -173,7 +175,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.CheckV
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        ((BaseActivity) context).showProgessDialog();
+                        ((BaseActivity) context).dismissProgressDialog();
                         try {
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {

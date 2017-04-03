@@ -97,8 +97,9 @@ public class FollowingFragment extends BaseFragment {
         recyclerView.setLayoutManager(layoutManager);
         userListAdapter = new UserListAdapter(getActivity(), followingsList, "FOLLOWING");
         recyclerView.setAdapter(userListAdapter);
-
-        getFollowing();
+        if(Utils.isNetworkConnected(getActivity(),true)) {
+            getFollowing();
+        }
 
         return view;
     }
