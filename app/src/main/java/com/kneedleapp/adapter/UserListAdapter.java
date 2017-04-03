@@ -204,7 +204,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.CheckV
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("user_id", AppPreferences.getAppPreferences(context).getUserId());
-                params.put("friend_id", friendId);
+                params.put("friend_user_id", friendId);
                 params.put("follow_date", date);
 
                 return params;

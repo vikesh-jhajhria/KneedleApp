@@ -458,7 +458,7 @@ public class ProfileFragment extends BaseFragment
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("user_id", mPrefernce.getUserId());
-                params.put("friend_id", friendId);
+                params.put("friend_user_id", friendId);
                 params.put("follow_date", date);
 
                 return params;
