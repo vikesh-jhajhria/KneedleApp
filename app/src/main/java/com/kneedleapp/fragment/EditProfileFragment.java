@@ -580,7 +580,7 @@ public class EditProfileFragment extends BaseFragment {
                 params.put("bio", ((EditText) view.findViewById(R.id.txt_bio)).getText().toString().trim());
                 params.put("email", ((EditText) view.findViewById(R.id.txt_email)).getText().toString().trim());
                 params.put("password", ((EditText) view.findViewById(R.id.txt_password)).getText().toString().trim());
-                params.put("profiletype",((CountryVO)profileSpinner.getSelectedItem()).getName());
+                params.put("profiletype",profileSpinner.getSelectedItem().toString());
                 params.put("companyInfo","");
                 params.put("city",((CountryVO)citySpinner.getSelectedItem()).getName());
                 params.put("state",((CountryVO)stateSpinner.getSelectedItem()).getName());
