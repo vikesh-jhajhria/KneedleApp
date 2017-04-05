@@ -272,9 +272,13 @@ public class EditProfileFragment extends BaseFragment {
                                 ((TextView) view.findViewById(R.id.txt_password)).setText(jsonObject.getString("password"));
                                 ((TextView) view.findViewById(R.id.txt_bio)).setText(jsonObject.getString("bio"));
                                 ((TextView) view.findViewById(R.id.txt_email)).setText(jsonObject.getString("email"));
+                                ((TextView) view.findViewById(R.id.txt_website)).setText(jsonObject.getString("website"));
+                                ((TextView) view.findViewById(R.id.txt_zip)).setText(jsonObject.getString("zipcode"));
                                 if (jsonObject.getString("gender").equalsIgnoreCase("male")) {
+                                    gender = "male";
                                     ((ImageView) view.findViewById(R.id.img_homme)).setImageResource(R.drawable.male_red);
                                 } else {
+                                    gender = "female";
                                     ((ImageView) view.findViewById(R.id.img_femme)).setImageResource(R.drawable.female_red);
                                 }
 
