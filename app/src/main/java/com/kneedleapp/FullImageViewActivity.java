@@ -7,9 +7,9 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
-import com.squareup.picasso.Picasso;
 
 
 public class FullImageViewActivity extends BaseActivity {
@@ -44,8 +44,8 @@ public class FullImageViewActivity extends BaseActivity {
             ((TextView) findViewById(R.id.txt_likes)).setText(mLikes);
             Utils.setTypeface(this, ((TextView) findViewById(R.id.txt_user_name)), Config.CENTURY_GOTHIC_BOLD);
             Utils.setTypeface(this, ((TextView) findViewById(R.id.txt_likes)), Config.CENTURY_GOTHIC_REGULAR);
-            Picasso.with(this).load(mImgBitmapContent).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into((ImageView) findViewById(R.id.img_full_image));
-            Picasso.with(this).load(mImgBitmapUser).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into((ImageView) findViewById(R.id.img_user));
+            Glide.with(this).load(mImgBitmapContent).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into((ImageView) findViewById(R.id.img_full_image));
+            Glide.with(this).load(mImgBitmapUser).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into((ImageView) findViewById(R.id.img_user));
             if (mImageLike) {
                 ((ImageView) findViewById(R.id.img_heart)).setImageResource(R.drawable.heart);
             } else {

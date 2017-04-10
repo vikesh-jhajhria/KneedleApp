@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.kneedleapp.R;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.SearchResultVO;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -45,7 +45,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         holder.fullname.setText(checkVo.getmFullName());
         holder.job.setText(checkVo.getmProfileType());
         holder.place.setText(checkVo.getmCityName());
-        Picasso.with(context).load(Config.USER_IMAGE_URL + checkVo.getmImgUrl()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(holder.img);
+        Glide.with(context).load(Config.USER_IMAGE_URL + checkVo.getmImgUrl()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(holder.img);
 
 
     }

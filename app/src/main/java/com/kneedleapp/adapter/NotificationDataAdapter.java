@@ -9,12 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.kneedleapp.BaseActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.NotificationItemVo;
-import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -104,7 +104,7 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
             }
             Log.v("Img url", "position:" + position+" url="+obj.getImgUser());
             if (!obj.getImgUser().isEmpty()) {
-                Picasso.with(context).load(obj.getImgUser()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(((NotificationDataViewHolder) holder).imgUser);
+                Glide.with(context).load(obj.getImgUser()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(((NotificationDataViewHolder) holder).imgUser);
             } else Log.v("Img url", "position:" + position);
         }
 

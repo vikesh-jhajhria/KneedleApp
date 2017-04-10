@@ -33,6 +33,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.kneedleapp.BaseActivity;
 import com.kneedleapp.MainActivity;
 import com.kneedleapp.R;
@@ -42,7 +43,6 @@ import com.kneedleapp.utils.CustomMultipartRequest;
 import com.kneedleapp.utils.ImageCompression;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.CountryVO;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -282,7 +282,7 @@ public class EditProfileFragment extends BaseFragment {
                                     ((ImageView) view.findViewById(R.id.img_femme)).setImageResource(R.drawable.female_red);
                                 }
 
-                                Picasso.with(getContext()).load(Config.USER_IMAGE_URL + jsonObject.getString("image")).placeholder(R.drawable.profile_img).error(R.drawable.profile_img).into(((ImageView) view.findViewById(R.id.img_profile)));
+                                Glide.with(getContext()).load(Config.USER_IMAGE_URL + jsonObject.getString("image")).placeholder(R.drawable.profile_img).error(R.drawable.profile_img).into(((ImageView) view.findViewById(R.id.img_profile)));
 
 
                             } else {

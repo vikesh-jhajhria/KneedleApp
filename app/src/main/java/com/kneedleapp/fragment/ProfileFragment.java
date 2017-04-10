@@ -24,6 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.kneedleapp.BaseActivity;
 import com.kneedleapp.FullImageViewActivity;
 import com.kneedleapp.R;
@@ -32,7 +33,6 @@ import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.FeedItemVo;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -297,7 +297,7 @@ public class ProfileFragment extends BaseFragment
                                 num_of_following.setText(userDataJsonObject.getString("following"));
                                 num_of_followers.setText(userDataJsonObject.getString("followers"));
                                 if (!userDataJsonObject.getString("image").isEmpty()) {
-                                    Picasso.with(context).load(Config.USER_IMAGE_URL + userDataJsonObject.getString("image")).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(userImgView);
+                                    Glide.with(context).load(Config.USER_IMAGE_URL + userDataJsonObject.getString("image")).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(userImgView);
                                 }
                                 if (!mPrefernce.getUserId().equalsIgnoreCase(mUserId)) {
                                     if (userDataJsonObject.getString("follow_status").equalsIgnoreCase("0")) {

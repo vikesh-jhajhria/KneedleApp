@@ -21,6 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.kneedleapp.BaseActivity;
 import com.kneedleapp.KneedleApp;
 import com.kneedleapp.R;
@@ -30,7 +31,6 @@ import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.FeedItemVo;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -93,7 +93,7 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
         });
         Log.v("Image Loading", "URL: " + feedItemVo.getmContentImage());
 
-        Picasso.with(context).load(feedItemVo.getmContentImage())
+        Glide.with(context).load(feedItemVo.getmContentImage())
                 .placeholder(R.drawable.default_feed).error(R.drawable.default_feed)
                 .into(holder.imgContent);
         /*new AsyncTask<Void, Void, Bitmap>(){
@@ -237,7 +237,7 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
                 }
             });
 
-            Picasso.with(context).load(feedItemVo.getmUserImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(holder.imgUser);
+            Glide.with(context).load(feedItemVo.getmUserImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(holder.imgUser);
 
 
         }

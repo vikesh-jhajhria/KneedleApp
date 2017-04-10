@@ -17,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.kneedleapp.BaseActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.fragment.ProfileFragment;
@@ -24,7 +25,6 @@ import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.UserDetailsVo;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -75,7 +75,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.CheckV
         holder.fullname.setText(userDetail.getFullname());
         holder.job.setText(userDetail.getProfiletype());
         if (!userDetail.getImage().isEmpty()) {
-            Picasso.with(context).load(userDetail.getImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(holder.img);
+            Glide.with(context).load(userDetail.getImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(holder.img);
         }
 
         if (!listType.equalsIgnoreCase("BLOCKED_USER")) {

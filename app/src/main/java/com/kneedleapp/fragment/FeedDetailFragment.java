@@ -24,6 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.kneedleapp.BaseActivity;
 import com.kneedleapp.FullImageViewActivity;
 import com.kneedleapp.KneedleApp;
@@ -33,7 +34,6 @@ import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.FeedItemVo;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -281,8 +281,8 @@ public class FeedDetailFragment extends BaseFragment {
             }
         });
 
-        Picasso.with(getActivity()).load(feedItemVo.getmUserImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(imgUser);
-        Picasso.with(getActivity()).load(feedItemVo.getmContentImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(imgContent);
+        Glide.with(getActivity()).load(feedItemVo.getmUserImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(imgUser);
+        Glide.with(getActivity()).load(feedItemVo.getmContentImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(imgContent);
 
 
         imgUser.setOnClickListener(new View.OnClickListener() {
