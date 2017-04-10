@@ -118,7 +118,7 @@ public class PostFragment extends BaseFragment {
         }
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             try {
                 if (requestCode == Config.CAMERAIMAGE) {

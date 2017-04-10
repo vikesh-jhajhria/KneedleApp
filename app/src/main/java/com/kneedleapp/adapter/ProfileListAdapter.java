@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -236,7 +237,16 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
                             .commit();
                 }
             });
-
+            holder.ll_comment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AddCommentFragment fragment = AddCommentFragment.newInstance(feedItemVo.getmId());
+                    fragmentManager.beginTransaction()
+                            .add(R.id.main_frame, fragment, "ADDCOMMENT_FRAGMENT")
+                            .addToBackStack(null)
+                            .commit();
+                }
+            });
             Glide.with(context).load(feedItemVo.getmUserImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(holder.imgUser);
 
 
@@ -257,6 +267,7 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
         public ViewGroup transitionsContainer;
         public ImageView imgContent;
         public CardView card1, card2;
+        private LinearLayout ll_comment;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -278,6 +289,7 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
                 transitionsContainer = (ViewGroup) itemView.findViewById(R.id.ll_container);
                 card1 = (CardView) itemView.findViewById(R.id.card_comment_1);
                 card2 = (CardView) itemView.findViewById(R.id.card_comment_2);
+                ll_comment = (LinearLayout) itemView.findViewById(R.id.ll_all_comment);
 
                 Utils.setTypeface(context, tvTitle, Config.CENTURY_GOTHIC_BOLD);
                 Utils.setTypeface(context, tvSubTitle, Config.CENTURY_GOTHIC_REGULAR);

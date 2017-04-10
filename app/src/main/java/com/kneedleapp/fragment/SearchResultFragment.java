@@ -177,6 +177,7 @@ public class SearchResultFragment extends BaseFragment {
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                                     SearchResultVO searchResultVO = new SearchResultVO();
+                                    searchResultVO.setmUserId(jsonObject.getString("user_id"));
                                     searchResultVO.setmUserName(jsonObject.getString("username"));
                                     searchResultVO.setmFullName(jsonObject.getString("fullname"));
                                     searchResultVO.setmProfileType(jsonObject.getString("profiletype"));

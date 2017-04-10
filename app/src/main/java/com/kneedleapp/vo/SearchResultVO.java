@@ -1,7 +1,21 @@
 package com.kneedleapp.vo;
 
 public class SearchResultVO {
-    private String mUserName, mFullName, mImgUrl, mProfileType, mCityName;
+    private String mUserName;
+    private String mFullName;
+    private String mImgUrl;
+    private String mProfileType;
+    private String mCityName;
+
+    public String getmUserId() {
+        return mUserId;
+    }
+
+    public void setmUserId(String mUserId) {
+        this.mUserId = mUserId;
+    }
+
+    private String mUserId;
 
     public String getmUserName() {
         return mUserName;

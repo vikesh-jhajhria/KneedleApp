@@ -26,7 +26,7 @@ public class MainActivity extends BaseActivity {
         if (Config.fragmentManager == null || getSupportFragmentManager().getFragments() == null) {
             Config.fragmentManager = getSupportFragmentManager();
         }
-        selectTab(BottomBarTab.PROFILE);
+        selectTab(BottomBarTab.HOME);
 
     }
 

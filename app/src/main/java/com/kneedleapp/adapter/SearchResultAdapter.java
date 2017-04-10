@@ -9,7 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.kneedleapp.BaseActivity;
 import com.kneedleapp.R;
+import com.kneedleapp.fragment.ProfileFragment;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.SearchResultVO;
@@ -40,12 +42,29 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
 
     @Override
     public void onBindViewHolder(final CheckViewHolder holder, final int position) {
-        SearchResultVO checkVo = list.get(position);
-        holder.txt_name.setText(checkVo.getmUserName());
-        holder.fullname.setText(checkVo.getmFullName());
-        holder.job.setText(checkVo.getmProfileType());
-        holder.place.setText(checkVo.getmCityName());
-        Glide.with(context).load(Config.USER_IMAGE_URL + checkVo.getmImgUrl()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(holder.img);
+        final SearchResultVO searchResultVo = list.get(position);
+        holder.txt_name.setText(searchResultVo.getmUserName());
+        holder.fullname.setText(searchResultVo.getmFullName());
+        holder.job.setText(searchResultVo.getmProfileType());
+        holder.place.setText(searchResultVo.getmCityName());
+        Glide.with(context).load(Config.USER_IMAGE_URL + searchResultVo.getmImgUrl()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(holder.img);
+
+        holder.txt_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((BaseActivity) context).addFragment(R.id.main_frame,
+                        ProfileFragment.newInstance(searchResultVo.getmUserId(),
+                                searchResultVo.getmUserName()), "PROFILE_FRAGMENT", true);
+            }
+        });
+        holder.img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((BaseActivity) context).addFragment(R.id.main_frame,
+                        ProfileFragment.newInstance(searchResultVo.getmUserId(),
+                                searchResultVo.getmUserName()), "PROFILE_FRAGMENT", true);
+            }
+        });
 
 
     }
