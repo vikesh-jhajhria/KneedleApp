@@ -44,7 +44,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void applyFonts() {
-        Utils.setTypeface(this, (TextView) findViewById(R.id.txt_name), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(this, (TextView) findViewById(R.id.txt_company_name), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(this, (TextView) findViewById(R.id.txt_password), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(this, (TextView) findViewById(R.id.txt_forgot_password), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(this, (TextView) findViewById(R.id.btn_login), Config.CENTURY_GOTHIC_REGULAR);
@@ -58,9 +58,9 @@ public class LoginActivity extends BaseActivity {
                 startActivity(new Intent(this, ForgotPasswordActivity.class));
                 break;
             case R.id.btn_login:
-                username = ((EditText) findViewById(R.id.txt_name)).getText().toString().trim();
+                username = ((EditText) findViewById(R.id.txt_company_name)).getText().toString().trim();
                 if (username.isEmpty()) {
-                    ((EditText) findViewById(R.id.txt_name)).setError(getString(R.string.error_username_empty));
+                    ((EditText) findViewById(R.id.txt_company_name)).setError(getString(R.string.error_username_empty));
                     break;
                 }
                 password = ((EditText) findViewById(R.id.txt_password)).getText().toString().trim();

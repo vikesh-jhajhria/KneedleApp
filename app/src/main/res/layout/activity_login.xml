@@ -31,7 +31,7 @@
                 android:src="@drawable/logo_name" />
 
             <EditText
-                android:id="@+id/txt_name"
+                android:id="@+id/txt_company_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"

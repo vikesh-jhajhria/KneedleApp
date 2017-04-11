@@ -79,6 +79,7 @@
     <string name="twitter_consumer_secret">KIheMUxPOpnnsCZkC6kxwKGVTiAOGoRhecPcnwee1eyPzOLjxF</string>
     <string name="block_users">Blocked Users</string>
     <string name="logout_message">Do you really want to logout?</string>
+    <string name="company_name">Company Name</string>
 
 
 </resources>

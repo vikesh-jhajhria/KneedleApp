@@ -211,12 +211,14 @@ public class NotificationFragment extends BaseFragment implements RecyclerView.O
                     SimpleDateFormat curFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
                     date1 = curFormater.parse(n1.getTime());
                     date2 = curFormater.parse(n2.getTime());
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                return date1.compareTo(date2);
+                if(date1 != null && date2 != null) {
+                    return date1.compareTo(date2);
+                } else{
+                    return 0;
+                }
             }
         });
         mAdapter = new NotificationDataAdapter(getContext(), mList);

@@ -150,7 +150,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.CheckV
             super(itemView);
             txt_name = (TextView) itemView.findViewById(R.id.txt_username);
             fullname = (TextView) itemView.findViewById(R.id.txt_fullname);
-            job = (TextView) itemView.findViewById(R.id.txt_designation);
+            job = (TextView) itemView.findViewById(R.id.txt_profile_type);
             follow = (TextView) itemView.findViewById(R.id.btn_follow);
             unfollow = (TextView) itemView.findViewById(R.id.btn_unfollow);
             unblock = (TextView) itemView.findViewById(R.id.btn_unblock);

@@ -45,8 +45,8 @@
                 android:layout_alignParentRight="true"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:visibility="gone"
-                android:src="@drawable/location" />
+                android:src="@drawable/location"
+                android:visibility="gone" />
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>
@@ -97,7 +97,7 @@
                     android:orientation="vertical">
 
                     <EditText
-                        android:id="@+id/txt_name"
+                        android:id="@+id/txt_company_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawableLeft="@drawable/name"
@@ -202,14 +202,26 @@
                 android:textSize="@dimen/font_16"
                 android:theme="@style/TextLabel" />
 
+            <EditText
+                android:id="@+id/txt_company"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:hint="Company info"
+                android:inputType="textUri"
+                android:textColor="#000"
+                android:textColorHint="@android:color/darker_gray"
+                android:textSize="@dimen/font_16"
+                android:theme="@style/TextLabel" />
+
 
             <Spinner
                 android:id="@+id/spinner_profile_type"
                 style="@style/SpinnerTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="-10dp"
                 android:layout_marginBottom="@dimen/margin_5"
+                android:layout_marginLeft="-10dp"
                 android:layout_marginTop="@dimen/margin_15" />
 
 
@@ -296,9 +308,9 @@
                 android:id="@+id/spinner_country"
                 style="@style/SpinnerTheme"
                 android:layout_width="match_parent"
-                android:layout_marginLeft="-10dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_5"
+                android:layout_marginLeft="-10dp"
                 android:layout_marginTop="@dimen/margin_15" />
 
             <View
@@ -312,8 +324,8 @@
                 style="@style/SpinnerTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="-10dp"
                 android:layout_marginBottom="@dimen/margin_5"
+                android:layout_marginLeft="-10dp"
                 android:layout_marginTop="@dimen/margin_15" />
 
             <View

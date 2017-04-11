@@ -59,13 +59,13 @@
                 android:visibility="gone" />
 
             <EditText
-                android:id="@+id/txt_name"
+                android:id="@+id/txt_company_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:drawableLeft="@drawable/ic_name_white"
                 android:drawablePadding="@dimen/margin_15"
-                android:hint="@string/name"
+                android:hint="@string/company_name"
                 android:inputType="textCapWords|textPersonName"
                 android:maxLines="1"
                 android:paddingBottom="@dimen/margin_10"

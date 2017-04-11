@@ -59,7 +59,7 @@ public class ProfileFragment extends BaseFragment
     private View view;
     private String mUserId = "", mUserName = "";
 
-    private TextView num_of_posts, num_of_followers, num_of_following, address, designation, emptyView;
+    private TextView num_of_posts, num_of_followers, num_of_following, address, profile_type, emptyView, companyName, bio, website, location;
     private CircleImageView userImgView;
     private AppPreferences mPrefernce;
 
@@ -160,7 +160,11 @@ public class ProfileFragment extends BaseFragment
         num_of_followers = (TextView) view.findViewById(R.id.txt_follower_count);
         num_of_following = (TextView) view.findViewById(R.id.txt_following_count);
         address = (TextView) view.findViewById(R.id.txt_address);
-        designation = (TextView) view.findViewById(R.id.txt_designation);
+        profile_type = (TextView) view.findViewById(R.id.txt_profile_type);
+        companyName = (TextView) view.findViewById(R.id.txt_company);
+        bio = (TextView) view.findViewById(R.id.txt_bio);
+        website = (TextView) view.findViewById(R.id.txt_website);
+        location= (TextView) view.findViewById(R.id.txt_location);
         userImgView = (CircleImageView) view.findViewById(R.id.user_img);
 
 
@@ -190,7 +194,11 @@ public class ProfileFragment extends BaseFragment
         Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_btn_edit), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_btn_follow), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_btn_following), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_designation), Config.CENTURY_GOTHIC_BOLD);
+        Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_profile_type), Config.CENTURY_GOTHIC_BOLD);
+        Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_company), Config.CENTURY_GOTHIC_BOLD);
+        Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_bio), Config.CENTURY_GOTHIC_BOLD);
+        Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_website), Config.CENTURY_GOTHIC_BOLD);
+        Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_location), Config.CENTURY_GOTHIC_BOLD);
         Utils.setTypeface(getActivity(), (TextView) view.findViewById(R.id.txt_address), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(getActivity(), emptyView, Config.CENTURY_GOTHIC_REGULAR);
     }
@@ -310,11 +318,28 @@ public class ProfileFragment extends BaseFragment
                                 }
 
                                 address.setText(userDataJsonObject.getString("city") + "," + userDataJsonObject.getString("state"));
-                                designation.setText(userDataJsonObject.getString("profiletype"));
+                                profile_type.setText(userDataJsonObject.getString("profiletype"));
+                                if(!userDataJsonObject.getString("company_info").isEmpty()) {
+                                    companyName.setText(userDataJsonObject.getString("company_info"));
+                                    companyName.setVisibility(View.VISIBLE);
+                                }
+                                if(!userDataJsonObject.getString("bio").isEmpty()) {
+                                    bio.setText(userDataJsonObject.getString("bio"));
+                                    bio.setVisibility(View.VISIBLE);
+                                }
+                                if(!userDataJsonObject.getString("website").isEmpty()) {
+                                    website.setText(userDataJsonObject.getString("website"));
+                                    website.setVisibility(View.VISIBLE);
+                                }
+                                if(!userDataJsonObject.getString("state").isEmpty()) {
+                                    location.setText(userDataJsonObject.getString("country")+", "+userDataJsonObject.getString("state"));
+                                    location.setVisibility(View.VISIBLE);
+                                }
+
                                 ((TextView) view.findViewById(R.id.txt_username))
                                         .setText(userDataJsonObject.getString("fullname"));
                             } else {
-                                Toast.makeText(getContext(), "no data available", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

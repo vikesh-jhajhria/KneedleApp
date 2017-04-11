@@ -222,7 +222,7 @@ public class EditProfileFragment extends BaseFragment {
 
     private void applyFonts(View view) {
         Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_edit_profile), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_name), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_company_name), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_username), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_password), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(getContext(), (TextView) view.findViewById(R.id.txt_edit), Config.CENTURY_GOTHIC_REGULAR);
@@ -267,12 +267,13 @@ public class EditProfileFragment extends BaseFragment {
                             if (jObject.getString("status_id").equals("1")) {
                                 Log.e("reponce...::>>", response);
                                 JSONObject jsonObject = jObject.getJSONObject("user_data");
-                                ((TextView) view.findViewById(R.id.txt_name)).setText(jsonObject.getString("fullname"));
+                                ((TextView) view.findViewById(R.id.txt_company_name)).setText(jsonObject.getString("fullname"));
                                 ((TextView) view.findViewById(R.id.txt_username)).setText(jsonObject.getString("username"));
                                 ((TextView) view.findViewById(R.id.txt_password)).setText(jsonObject.getString("password"));
                                 ((TextView) view.findViewById(R.id.txt_bio)).setText(jsonObject.getString("bio"));
                                 ((TextView) view.findViewById(R.id.txt_email)).setText(jsonObject.getString("email"));
                                 ((TextView) view.findViewById(R.id.txt_website)).setText(jsonObject.getString("website"));
+                                ((TextView) view.findViewById(R.id.txt_company)).setText(jsonObject.getString("company_info"));
                                 ((TextView) view.findViewById(R.id.txt_zip)).setText(jsonObject.getString("zipcode"));
                                 if (jsonObject.getString("gender").equalsIgnoreCase("male")) {
                                     gender = "male";
@@ -580,12 +581,12 @@ public class EditProfileFragment extends BaseFragment {
                 //user_id,fullname,bio,password,profiletype,companyInfo,city,website,gender,country,state,username,email,privacy,zipcode
                 params.put("user_id", AppPreferences.getAppPreferences(getContext()).getStringValue(AppPreferences.USER_ID));
                 params.put("username", ((EditText) view.findViewById(R.id.txt_username)).getText().toString().trim());
-                params.put("fullname", ((EditText) view.findViewById(R.id.txt_name)).getText().toString().trim());
+                params.put("fullname", ((EditText) view.findViewById(R.id.txt_company_name)).getText().toString().trim());
                 params.put("bio", ((EditText) view.findViewById(R.id.txt_bio)).getText().toString().trim());
                 params.put("email", ((EditText) view.findViewById(R.id.txt_email)).getText().toString().trim());
                 params.put("password", ((EditText) view.findViewById(R.id.txt_password)).getText().toString().trim());
                 params.put("profiletype",profileSpinner.getSelectedItem().toString());
-                params.put("companyInfo","");
+                params.put("companyInfo",((EditText) view.findViewById(R.id.txt_company)).getText().toString().trim());
                 params.put("city",((CountryVO)citySpinner.getSelectedItem()).getName());
                 params.put("state",((CountryVO)stateSpinner.getSelectedItem()).getName());
                 params.put("country",((CountryVO)countrySpinner.getSelectedItem()).getName());

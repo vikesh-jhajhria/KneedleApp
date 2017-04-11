@@ -1,14 +1,10 @@
 package com.kneedleapp;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -18,22 +14,14 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Base64;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,7 +34,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.kneedleapp.adapter.CategoryAdapter;
 import com.kneedleapp.fragment.CategoriesFragment;
-import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.CategoryVo;
@@ -55,25 +42,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class RegistrationActivity extends BaseActivity implements CategoryAdapter.Sender {
-    private Calendar myCalendar;
-    private DatePickerDialog.OnDateSetListener date;
     private String gender = "male";
-    private WebSettings wSettings;
     private ProgressDialog pd = null;
     private Dialog builder;
     private String mTxtTerms;
     private ProgressBar progressBar;
-    private ArrayList<String> spinnerDataList;
-    private ArrayList<String> mListSearchData;
-    public static boolean mCheck = false;
     public static ArrayList<CategoryVo> mStoreList = new ArrayList<CategoryVo>();
 
 
@@ -117,13 +96,6 @@ public class RegistrationActivity extends BaseActivity implements CategoryAdapte
         ((TextView) findViewById(R.id.txt_terms_condition)).setMovementMethod(LinkMovementMethod.getInstance());
 
 
-        if (getIntent().getExtras() != null) {
-
-            mListSearchData = getIntent().getExtras().getStringArrayList("ARRAY");
-
-        }
-
-
         ((TextView) findViewById(R.id.txt_profile_type)).setText("Profile Type");
     }
 
@@ -131,14 +103,6 @@ public class RegistrationActivity extends BaseActivity implements CategoryAdapte
     protected void onResume() {
         super.onResume();
 
-       /* if (mListSearchData != null) {
-            StringBuilder builder = new StringBuilder();
-            for (String details : mListSearchData) {
-                builder.append(details + ", ");
-            }
-            builder.setLength(builder.length() - 2);
-            ((TextView) findViewById(R.id.txt_profile_type)).setText(builder.toString());
-        }*/
 
         if (mStoreList != null) {
             StringBuilder builder = new StringBuilder();
@@ -168,7 +132,7 @@ public class RegistrationActivity extends BaseActivity implements CategoryAdapte
         super.onClick(view);
         switch (view.getId()) {
             case R.id.btn_let_me_in:
-                if (!((EditText) findViewById(R.id.txt_name)).getText().toString().isEmpty() && !((EditText) findViewById(R.id.txt_username)).getText().toString().isEmpty() && !((EditText) findViewById(R.id.txt_password)).getText().toString().isEmpty() && !((EditText) findViewById(R.id.txt_email)).getText().toString().isEmpty()) {
+                if (!((EditText) findViewById(R.id.txt_company_name)).getText().toString().isEmpty() && !((EditText) findViewById(R.id.txt_username)).getText().toString().isEmpty() && !((EditText) findViewById(R.id.txt_password)).getText().toString().isEmpty() && !((EditText) findViewById(R.id.txt_email)).getText().toString().isEmpty()) {
 
                     if (!((CheckBox) findViewById(R.id.checkbox)).isChecked()) {
                         Toast.makeText(RegistrationActivity.this, "Please sign term and conditions", Toast.LENGTH_LONG).show();
@@ -180,7 +144,7 @@ public class RegistrationActivity extends BaseActivity implements CategoryAdapte
                 } else {
                     ((TextView) findViewById(R.id.textview_error_show)).setVisibility(View.VISIBLE);
 
-                    ((EditText) findViewById(R.id.txt_name)).setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_name_red), null, null, null);
+                    ((EditText) findViewById(R.id.txt_company_name)).setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_name_red), null, null, null);
                     ((EditText) findViewById(R.id.txt_username)).setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_username_red), null, null, null);
                     ((EditText) findViewById(R.id.txt_password)).setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_password_red), null, null, null);
                     ((EditText) findViewById(R.id.txt_email)).setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.email_red), null, null, null);
@@ -241,9 +205,9 @@ public class RegistrationActivity extends BaseActivity implements CategoryAdapte
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("fullname", ((EditText) findViewById(R.id.txt_name)).getText().toString().trim());
+                params.put("fullname", "");
                 params.put("profiletype", ((TextView) findViewById(R.id.txt_profile_type)).getText().toString().trim());
-                params.put("companyInfo", "");
+                params.put("companyInfo", ((EditText) findViewById(R.id.txt_company_name)).getText().toString().trim());
                 params.put("city", "");
                 params.put("password", ((EditText) findViewById(R.id.txt_password)).getText().toString().trim());
                 params.put("gender", gender);
@@ -254,7 +218,7 @@ public class RegistrationActivity extends BaseActivity implements CategoryAdapte
                 params.put("langitude", preferences.getLongitude());
                 params.put("email", ((EditText) findViewById(R.id.txt_email)).getText().toString().trim());
                 params.put("devicekey", preferences.getFirebaseId());
-                params.put("category", "profile");
+                params.put("category", ((TextView) findViewById(R.id.txt_profile_type)).getText().toString().trim());
 
                 Log.v(TAG, "Params>> " + params.toString());
                 return params;
@@ -281,7 +245,7 @@ public class RegistrationActivity extends BaseActivity implements CategoryAdapte
 
     private void applyFonts() {
         Utils.setTypeface(this, (TextView) findViewById(R.id.textview_error_show), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(this, (EditText) findViewById(R.id.txt_name), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(this, (EditText) findViewById(R.id.txt_company_name), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(this, (EditText) findViewById(R.id.txt_username), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(this, (EditText) findViewById(R.id.txt_password), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(this, (TextView) findViewById(R.id.txt_homme), Config.CENTURY_GOTHIC_REGULAR);

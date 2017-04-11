@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.kneedleapp.BaseActivity;
 import com.kneedleapp.R;
+import com.kneedleapp.fragment.FeedDetailFragment;
+import com.kneedleapp.fragment.ProfileFragment;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.NotificationItemVo;
@@ -22,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import ca.barrenechea.widget.recyclerview.decoration.StickyHeaderAdapter;
+
+import static com.kneedleapp.utils.Config.fragmentManager;
 
 /**
  * Created by aman.sharma on 2/22/2017.
@@ -44,11 +48,13 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public long getHeaderId(int position) {
         Date date = null;
+        long headerId = 0;
         try {
             SimpleDateFormat curFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
             date = curFormater.parse(mList.get(position).getTime());
+            headerId = Long.parseLong(date.getDate()+""+date.getMonth()+date.getYear());
         } catch (Exception e) {}
-        long headerId = Long.parseLong(date.getDate()+""+date.getMonth()+date.getYear());
+
         //Log.e("HEADER = ",headerId+"");
         return headerId;
     }
@@ -89,9 +95,9 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
 
-        NotificationItemVo obj = mList.get(position);
+        final NotificationItemVo obj = mList.get(position);
         if (obj != null) {
             if (obj.getType() == BaseActivity.NotificationType.LIKE) {
                 ((NotificationDataViewHolder) holder).mTvNoti.setText(obj.getUsername() + " liked your post.");
@@ -107,6 +113,31 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
                 Glide.with(context).load(obj.getImgUser()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(((NotificationDataViewHolder) holder).imgUser);
             } else Log.v("Img url", "position:" + position);
         }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (obj.getType() == BaseActivity.NotificationType.LIKE  || obj.getType() == BaseActivity.NotificationType.COMMENT
+                        || obj.getType() == BaseActivity.NotificationType.TAGGED) {
+                    FeedDetailFragment fragment = FeedDetailFragment.newInstance(obj.getFeedId());
+                    fragmentManager.beginTransaction()
+                            .add(R.id.main_frame, fragment, "FEED_DETAIL_FRAGMENT")
+                            .addToBackStack(null)
+                            .commit();
+                } else if (obj.getType() == BaseActivity.NotificationType.FOLLOW) {
+                    ((BaseActivity) context).addFragment(R.id.main_frame,
+                            ProfileFragment.newInstance(obj.getUserId(),
+                                    obj.getUsername()), "PROFILE_FRAGMENT", true);
+                }
+            }
+        });
+        ((NotificationDataViewHolder) holder).imgUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((BaseActivity) context).addFragment(R.id.main_frame,
+                        ProfileFragment.newInstance(obj.getUserId(),
+                                obj.getUsername()), "PROFILE_FRAGMENT", true);
+            }
+        });
 
     }
 
@@ -137,7 +168,7 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     public static class NotificationDataViewHolder extends RecyclerView.ViewHolder {
         private TextView mTvNoti;
-        private ImageView imgUser;
+        public ImageView imgUser;
 
         public NotificationDataViewHolder(View itemView) {
             super(itemView);

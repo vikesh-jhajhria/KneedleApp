@@ -84,7 +84,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
             super(itemView);
             txt_name = (TextView) itemView.findViewById(R.id.txt_username);
             fullname = (TextView) itemView.findViewById(R.id.txt_fullname);
-            job = (TextView) itemView.findViewById(R.id.txt_designation);
+            job = (TextView) itemView.findViewById(R.id.txt_profile_type);
             place = (TextView) itemView.findViewById(R.id.txt_address);
             img = (ImageView) itemView.findViewById(R.id.img_profile);
 
