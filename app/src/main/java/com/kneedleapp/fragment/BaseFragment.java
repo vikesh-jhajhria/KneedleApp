@@ -62,7 +62,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener, View
                 ((MainActivity)getActivity()).selectTab(HOME);
                 break;
             default:
-                fragmentManager.popBackStack();
+                //fragmentManager.popBackStack();
         }
     }
 }

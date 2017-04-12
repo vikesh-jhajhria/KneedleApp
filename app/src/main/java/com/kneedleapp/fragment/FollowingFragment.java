@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -128,7 +129,16 @@ public class FollowingFragment extends BaseFragment {
             public void run() {
                 getView().setFocusableInTouchMode(true);
                 getView().requestFocus();
-                getView().setOnKeyListener(FollowingFragment.this);
+                getView().setOnKeyListener(new View.OnKeyListener() {
+                    @Override
+                    public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                        if (i == KeyEvent.KEYCODE_BACK) {
+                            fragmentManager.popBackStack();
+                            return true;
+                        }
+                        return false;
+                    }
+                });
             }
         }, 500);
 

@@ -40,6 +40,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.kneedleapp.utils.Config.fragmentManager;
+
 
 public class SearchResultFragment extends BaseFragment {
 
@@ -154,7 +156,16 @@ public class SearchResultFragment extends BaseFragment {
 
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();
-        getView().setOnKeyListener(this);
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if (i == KeyEvent.KEYCODE_BACK) {
+                    fragmentManager.popBackStack();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
 

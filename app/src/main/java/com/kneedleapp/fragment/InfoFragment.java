@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Base64;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,8 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.kneedleapp.utils.Config.fragmentManager;
 
 
 public class InfoFragment extends BaseFragment {
@@ -84,7 +87,16 @@ public class InfoFragment extends BaseFragment {
             public void run() {
                 getView().setFocusableInTouchMode(true);
                 getView().requestFocus();
-                getView().setOnKeyListener(InfoFragment.this);
+                getView().setOnKeyListener(new View.OnKeyListener() {
+                    @Override
+                    public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                        if (i == KeyEvent.KEYCODE_BACK) {
+                            fragmentManager.popBackStack();
+                            return true;
+                        }
+                        return false;
+                    }
+                });
             }
         }, 500);
 

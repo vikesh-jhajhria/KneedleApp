@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -205,14 +206,24 @@ public class ProfileFragment extends BaseFragment
     public void onResume() {
         super.onResume();
         Log.v("Kneedle", "Profile");
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getView().setFocusableInTouchMode(true);
-                getView().requestFocus();
-                getView().setOnKeyListener(ProfileFragment.this);
-            }
-        }, 500);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getView().setFocusableInTouchMode(true);
+                    getView().requestFocus();
+                    getView().setOnKeyListener(new View.OnKeyListener() {
+                        @Override
+                        public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                            if (i == KeyEvent.KEYCODE_BACK) {
+                                fragmentManager.popBackStack();
+                                return true;
+                            }
+                            return false;
+                        }
+                    });
+                }
+            }, 500);
+
     }
 
     @Override
