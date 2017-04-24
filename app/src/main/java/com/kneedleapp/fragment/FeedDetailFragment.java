@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,6 +58,7 @@ public class FeedDetailFragment extends BaseFragment {
     private String feedId;
     private static final String FEEDID = "FEEDID";
     private FeedItemVo feedItemVo;
+    private LinearLayout ll_comment;
 
     public static FeedDetailFragment newInstance(String feedId) {
         FeedDetailFragment fragment = new FeedDetailFragment();
@@ -88,6 +90,7 @@ public class FeedDetailFragment extends BaseFragment {
         imgContent = (ImageView) view.findViewById(R.id.imageview_content);
         imgHeart = (ImageView) view.findViewById(R.id.imageview_like);
         comment = (ImageView) view.findViewById(R.id.img_comment);
+        ll_comment = (LinearLayout) view.findViewById(R.id.ll_all_comment);
         share = (ImageView) view.findViewById(R.id.img_share);
         imgMenu = (ImageView) view.findViewById(R.id.imageview_menu);
         transitionsContainer = (ViewGroup) view.findViewById(R.id.ll_container);
@@ -290,7 +293,16 @@ public class FeedDetailFragment extends BaseFragment {
                         .commit();
             }
         });
-
+        ll_comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddCommentFragment fragment = AddCommentFragment.newInstance(feedItemVo.getmId());
+                fragmentManager.beginTransaction()
+                        .add(R.id.main_frame, fragment, "ADDCOMMENT_FRAGMENT")
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
         Glide.with(getActivity()).load(feedItemVo.getmUserImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(imgUser);
         Glide.with(getActivity()).load(feedItemVo.getmContentImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(imgContent);
 

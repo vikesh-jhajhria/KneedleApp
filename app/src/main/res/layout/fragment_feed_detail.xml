@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="#ffffff"
     android:clickable="true"
     android:orientation="vertical">
@@ -114,10 +115,11 @@
                     android:transitionName="image" />
             </LinearLayout>
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_10">
+                android:layout_marginTop="@dimen/margin_10"
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -145,7 +147,7 @@
                         android:layout_gravity="center_vertical"
                         android:gravity="center_vertical"
                         android:padding="@dimen/margin_5"
-                        android:text=""
+                        android:text="0"
                         android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/font_14"
                         android:transitionName="likes" />
@@ -174,9 +176,11 @@
                         android:paddingBottom="@dimen/margin_5"
                         android:paddingLeft="@dimen/margin_5"
                         android:paddingTop="@dimen/margin_5"
-                        android:src="@drawable/share" />
+                        android:src="@drawable/share"
+                        android:visibility="gone"
+                        tools:ignore="RtlSymmetry" />
                 </LinearLayout>
-            </RelativeLayout>
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"

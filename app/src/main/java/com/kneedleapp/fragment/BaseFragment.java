@@ -38,7 +38,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener, View
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.img_back:
-                goBack();
+                fragmentManager.popBackStack();
                 break;
         }
     }

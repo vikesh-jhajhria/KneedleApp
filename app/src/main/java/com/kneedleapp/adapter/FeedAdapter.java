@@ -28,6 +28,7 @@ import com.kneedleapp.KneedleApp;
 import com.kneedleapp.R;
 import com.kneedleapp.fragment.AddCommentFragment;
 import com.kneedleapp.fragment.FeedDetailFragment;
+import com.kneedleapp.fragment.ProfileFragment;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
@@ -43,16 +44,18 @@ import java.util.Map;
 import static com.kneedleapp.utils.Config.fragmentManager;
 
 
-public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.ViewHolder> {
+public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
     String viewType;
     private Context context;
     private ArrayList<FeedItemVo> mList;
     private ProfileItemListener mListener;
+    private boolean isProfileFeed;
 
-    public ProfileListAdapter(ArrayList<FeedItemVo> list, Context context, String viewType, ProfileItemListener mListener) {
+    public FeedAdapter(ArrayList<FeedItemVo> list, Context context, String viewType, ProfileItemListener mListener, boolean isProfileFeed) {
         this.context = context;
         this.mList = list;
+        this.isProfileFeed = isProfileFeed;
         this.viewType = viewType;
         this.mListener = mListener;
     }
@@ -181,11 +184,13 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
                     attachmentPopup.setBackgroundDrawable(new BitmapDrawable());
                     attachmentPopup.showAsDropDown(view, -5, 0);
                     if (AppPreferences.getAppPreferences(context).getStringValue(AppPreferences.USER_ID).equalsIgnoreCase(feedItemVo.getmUserId())) {
-                        ((TextView) popupView.findViewById(R.id.txt_delete)).setVisibility(View.VISIBLE);
-                    }
-
-                    if (AppPreferences.getAppPreferences(context).getStringValue(AppPreferences.USER_ID).equalsIgnoreCase(feedItemVo.getmUserId())) {
-                        ((TextView) popupView.findViewById(R.id.txt_block)).setVisibility(View.VISIBLE);
+                        popupView.findViewById(R.id.txt_delete).setVisibility(View.VISIBLE);
+                        popupView.findViewById(R.id.txt_block).setVisibility(View.GONE);
+                        popupView.findViewById(R.id.txt_report).setVisibility(View.GONE);
+                    } else {
+                        popupView.findViewById(R.id.txt_delete).setVisibility(View.GONE);
+                        popupView.findViewById(R.id.txt_block).setVisibility(View.VISIBLE);
+                        popupView.findViewById(R.id.txt_report).setVisibility(View.VISIBLE);
                     }
 
 
@@ -248,7 +253,29 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
                 }
             });
             Glide.with(context).load(feedItemVo.getmUserImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(holder.imgUser);
+            holder.imgUser.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(!isProfileFeed) {
+                        ((BaseActivity) context).addFragment(R.id.main_frame,
+                                ProfileFragment.newInstance(feedItemVo.getmUserId(),
+                                        feedItemVo.getmUserName()), "PROFILE_FRAGMENT", true);
+                    }
 
+                }
+            });
+
+
+            holder.tvTitle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(!isProfileFeed) {
+                        ((BaseActivity) context).addFragment(R.id.main_frame,
+                                ProfileFragment.newInstance(feedItemVo.getmUserId(),
+                                        feedItemVo.getmUserName()), "PROFILE_FRAGMENT", true);
+                    }
+                }
+            });
 
         }
 

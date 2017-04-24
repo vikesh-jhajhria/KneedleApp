@@ -29,7 +29,7 @@ public class FullImageViewActivity extends BaseActivity {
         mUsername = extras.getString("USERNAME");
         mImgBitmapContent = extras.getString("IMAGE");
         mImgBitmapUser = extras.getString("USERIMAGE");
-        mLikes = extras.getString("LIKES");
+        mLikes = ""+extras.getInt("LIKES");
         mImageLike = extras.getBoolean("LIKEDORNOT");
 
         transitionFlag = getIntent().getBooleanExtra("transition", false);

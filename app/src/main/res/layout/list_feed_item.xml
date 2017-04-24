@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_10"
             android:layout_toRightOf="@+id/imageview_user"
-            android:text="Name"
+            android:text=""
             android:textColor="#424242"
             android:textSize="@dimen/font_18"
             android:textStyle="bold"
@@ -150,7 +150,6 @@
         android:paddingLeft="@dimen/margin_16"
         android:paddingRight="@dimen/margin_16"
         android:paddingTop="@dimen/margin_5"
-        android:text="this is the star of bollywood.he is known as King Khan."
         android:textColor="#222323"
         android:textSize="@dimen/font_16" />
 

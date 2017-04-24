@@ -29,7 +29,7 @@ import com.bumptech.glide.Glide;
 import com.kneedleapp.BaseActivity;
 import com.kneedleapp.FullImageViewActivity;
 import com.kneedleapp.R;
-import com.kneedleapp.adapter.ProfileListAdapter;
+import com.kneedleapp.adapter.FeedAdapter;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
@@ -49,9 +49,9 @@ import static com.kneedleapp.utils.Config.fragmentManager;
 
 
 public class ProfileFragment extends BaseFragment
-        implements ProfileListAdapter.ProfileItemListener {
+        implements FeedAdapter.ProfileItemListener {
 
-    private ProfileListAdapter profileListAdapter;
+    private FeedAdapter feedAdapter;
     private ArrayList<FeedItemVo> mList = new ArrayList<>();
     public static RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
@@ -122,10 +122,10 @@ public class ProfileFragment extends BaseFragment
 
         listBtn = (ImageView) view.findViewById(R.id.img_list);
         gridBtn = (ImageView) view.findViewById(R.id.img_grid);
-        profileListAdapter = new ProfileListAdapter(mList, getActivity(), "Grid", this);
+        feedAdapter = new FeedAdapter(mList, getActivity(), "GRID", this,  true);
         StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(gridLayoutManager);
-        recyclerView.setAdapter(profileListAdapter);
+        recyclerView.setAdapter(feedAdapter);
 
         listBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,8 +134,8 @@ public class ProfileFragment extends BaseFragment
                 gridBtn.setVisibility(View.VISIBLE);
                 layoutManager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(layoutManager);
-                profileListAdapter = new ProfileListAdapter(mList, getContext(), "LIST", ProfileFragment.this);
-                recyclerView.setAdapter(profileListAdapter);
+                feedAdapter = new FeedAdapter(mList, getContext(), "LIST", ProfileFragment.this, true);
+                recyclerView.setAdapter(feedAdapter);
             }
         });
         gridBtn.setOnClickListener(new View.OnClickListener() {
@@ -145,8 +145,8 @@ public class ProfileFragment extends BaseFragment
                 listBtn.setVisibility(View.VISIBLE);
                 StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
                 recyclerView.setLayoutManager(gridLayoutManager);
-                profileListAdapter = new ProfileListAdapter(mList, getContext(), "GRID", ProfileFragment.this);
-                recyclerView.setAdapter(profileListAdapter);
+                feedAdapter = new FeedAdapter(mList, getContext(), "GRID", ProfileFragment.this, true);
+                recyclerView.setAdapter(feedAdapter);
             }
         });
 
@@ -415,7 +415,7 @@ public class ProfileFragment extends BaseFragment
 
                                     mList.add(feedItemVo);
                                 }
-                                profileListAdapter.notifyDataSetChanged();
+                                feedAdapter.notifyDataSetChanged();
 
                             } else {
                                 if (mList.size() == 0) {
@@ -463,14 +463,14 @@ public class ProfileFragment extends BaseFragment
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        ((BaseActivity) context).showProgessDialog();
+                        context.dismissProgressDialog();
                         try {
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
                                 Log.e("responce....::>>>", response);
                                 String num = num_of_followers.getText().toString().trim();
                                 if (!num.isEmpty())
-                                    num_of_followers.setText(Integer.parseInt(num) + 1);
+                                    num_of_followers.setText(""+(Integer.parseInt(num) + 1));
                             }
                             Toast.makeText(context, jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
 
@@ -508,7 +508,7 @@ public class ProfileFragment extends BaseFragment
     }
 
     @Override
-    public void getItem(int position, ProfileListAdapter.ViewHolder holder, boolean isLiked) {
+    public void getItem(int position, FeedAdapter.ViewHolder holder, boolean isLiked) {
         Intent intent = new Intent(getActivity(), FullImageViewActivity.class);
         intent.putExtra("USERNAME", mList.get(position).getmFullName());
         intent.putExtra("IMAGE", mList.get(position).getmContentImage());

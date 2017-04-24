@@ -102,6 +102,7 @@ public class AddCommentFragment extends BaseFragment {
 
     @Override
     public void onClick(View view) {
+        super.onClick(view);
         switch (view.getId()) {
 
             case R.id.txt_post:
@@ -126,7 +127,16 @@ public class AddCommentFragment extends BaseFragment {
 
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();
-        getView().setOnKeyListener(this);
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    fragmentManager.popBackStack();
+                    return true;
+                }
+                return false;
+            }
+        });
         view.findViewById(R.id.edt_comment).setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {

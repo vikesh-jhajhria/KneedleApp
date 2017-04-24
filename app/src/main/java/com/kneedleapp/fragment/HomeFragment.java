@@ -6,10 +6,12 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +25,7 @@ import com.android.volley.toolbox.Volley;
 import com.kneedleapp.BaseActivity;
 import com.kneedleapp.FullImageViewActivity;
 import com.kneedleapp.R;
-import com.kneedleapp.adapter.FeedItemAdapter;
+import com.kneedleapp.adapter.FeedAdapter;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
@@ -38,17 +40,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedItemListener {
+public class HomeFragment extends BaseFragment implements FeedAdapter.ProfileItemListener {
 
     private RecyclerView mRecyclerView;
-    private FeedItemAdapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private FeedAdapter mAdapter;
+    private LinearLayoutManager mLayoutManager;
+    private StaggeredGridLayoutManager gridLayoutManager;
     private ArrayList<FeedItemVo> mList;
     private String names[] = {"aman", "ravi", "manoj", "krishan"};
     private BaseActivity context;
     private View mView;
-    private FeedItemAdapter.ViewHolder viewHolder;
     private TextView emptyView;
+    private int page = 0;
+    private boolean loading, isLastPage;
+    private ImageView listBtn, gridBtn;
 
 
     public static HomeFragment newInstance() {
@@ -65,33 +70,98 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
         mView = inflater.inflate(R.layout.fragment_home, container, false);
 
         context = (BaseActivity) getActivity();
+        listBtn = (ImageView) mView.findViewById(R.id.img_list);
+        gridBtn = (ImageView) mView.findViewById(R.id.img_grid);
         emptyView = (TextView) mView.findViewById(R.id.empty_view);
         Utils.setTypeface(getActivity(), emptyView, Config.CENTURY_GOTHIC_REGULAR);
         mList = new ArrayList<>();
         mRecyclerView = (RecyclerView) mView.findViewById(R.id.recycler_view);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new FeedItemAdapter(getActivity(), mList, this);
+        gridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(gridLayoutManager);
+        mAdapter = new FeedAdapter( mList,getActivity(), "GRID", HomeFragment.this,false);
         mRecyclerView.setAdapter(mAdapter);
+        listBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listBtn.setVisibility(View.GONE);
+                gridBtn.setVisibility(View.VISIBLE);
+                mLayoutManager = new LinearLayoutManager(getContext());
+                mRecyclerView.setLayoutManager(mLayoutManager);
+                mAdapter = new FeedAdapter( mList,getActivity(), "LIST", HomeFragment.this,false);
+                mRecyclerView.setAdapter(mAdapter);
+            }
+        });
+        gridBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gridBtn.setVisibility(View.GONE);
+                listBtn.setVisibility(View.VISIBLE);
+                gridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+                mRecyclerView.setLayoutManager(gridLayoutManager);
+                mAdapter = new FeedAdapter( mList,getActivity(), "GRID", HomeFragment.this,false);
+                mRecyclerView.setAdapter(mAdapter);
+            }
+        });
         if (Utils.isNetworkConnected(getContext(), true)) {
-            FeedData();
+            getFeedData();
         }
 
         ((SwipeRefreshLayout) mView.findViewById(R.id.swipeRefreshLayout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 mList.clear();
-                FeedData();
+                getFeedData();
                 ((SwipeRefreshLayout) mView.findViewById(R.id.swipeRefreshLayout)).setRefreshing(false);
             }
         });
 
 
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                int lastvisibleitemposition;
+                if(gridBtn.getVisibility() != View.VISIBLE){
+                    int[] arr = gridLayoutManager.findLastVisibleItemPositions(null);
+                    lastvisibleitemposition = arr[0];
+                    if (lastvisibleitemposition >= mAdapter.getItemCount() - 3) {
+
+                        if (!loading && !isLastPage) {
+                            page = page + 1;
+                            loading = true;
+                            getFeedData();
+                        }
+                    }
+                }
+                else {
+                    lastvisibleitemposition = mLayoutManager.findLastVisibleItemPosition();
+                    if (lastvisibleitemposition == mAdapter.getItemCount() - 1) {
+
+                        if (!loading && !isLastPage) {
+                            page = page + 1;
+                            loading = true;
+                            getFeedData();
+                        }
+                    }
+                }
+            }
+        });
+
+
+
         return mView;
     }
-
-    public void FeedData() {
+    @Override
+    public void getItem(int position, FeedAdapter.ViewHolder holder, boolean isLiked) {
+        Intent intent = new Intent(getActivity(), FullImageViewActivity.class);
+        intent.putExtra("USERNAME", mList.get(position).getmFullName());
+        intent.putExtra("IMAGE", mList.get(position).getmContentImage());
+        intent.putExtra("USERIMAGE", mList.get(position).getmUserImage());
+        intent.putExtra("LIKES", mList.get(position).getmLikes());
+        intent.putExtra("LIKEDORNOT", isLiked);
+        startActivity(intent);
+    }
+    public void getFeedData() {
         emptyView.setVisibility(View.GONE);
         context.showProgessDialog();
         StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.FEED_DATA,
@@ -105,6 +175,7 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
                                 Log.e("responce....::>>>", response);
 
                                 JSONArray jsonArray = jObject.getJSONArray("feed_data");
+                                isLastPage = !(jsonArray.length() > 0);
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                                     FeedItemVo feedItemVo = new FeedItemVo();
@@ -124,8 +195,12 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
 
                                     mList.add(feedItemVo);
                                 }
+                                loading = false;
                                 mAdapter.notifyDataSetChanged();
 
+                            } else {
+                                loading = false;
+                                isLastPage = true;
                             }
                             if (mList.size() == 0) {
                                 emptyView.setText(jObject.getString("status_msg"));
@@ -151,8 +226,9 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("user_id", AppPreferences.getAppPreferences(getContext()).getStringValue(AppPreferences.USER_ID));
                 params.put("login_id", AppPreferences.getAppPreferences(getContext()).getStringValue(AppPreferences.USER_ID));
-                params.put("lmt", "30");
-                params.put("offset", "0");
+                params.put("lmt", "10");
+                params.put("offset", ""+page);
+                Log.v("KNEEDLE","params: "+params);
                 return params;
             }
         };
@@ -167,15 +243,5 @@ public class HomeFragment extends BaseFragment implements FeedItemAdapter.FeedIt
     }
 
 
-    @Override
-    public void getItem(int position, FeedItemAdapter.ViewHolder holder, boolean isLiked) {
-        Intent intent = new Intent(getActivity(), FullImageViewActivity.class);
-        intent.putExtra("USERNAME", mList.get(position).getmFullName());
-        intent.putExtra("IMAGE", mList.get(position).getmContentImage());
-        intent.putExtra("USERIMAGE", mList.get(position).getmUserImage());
-        intent.putExtra("LIKES", mList.get(position).getmLikes());
-        intent.putExtra("LIKEDORNOT", isLiked);
-        startActivity(intent);
-    }
 }
 
