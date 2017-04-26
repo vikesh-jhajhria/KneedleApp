@@ -55,10 +55,13 @@ public class ProfileFragment extends BaseFragment
     private ArrayList<FeedItemVo> mList = new ArrayList<>();
     public static RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
+    StaggeredGridLayoutManager gridLayoutManager;
     private ImageView listBtn, gridBtn;
     private static BaseActivity context;
     private View view;
     private String mUserId = "", mUserName = "";
+    private int page = 0;
+    private boolean loading, isLastPage;
 
     private TextView num_of_posts, num_of_followers, num_of_following, profile_type, emptyView, companyName, bio, website, location;
     private CircleImageView userImgView;
@@ -123,7 +126,7 @@ public class ProfileFragment extends BaseFragment
         listBtn = (ImageView) view.findViewById(R.id.img_list);
         gridBtn = (ImageView) view.findViewById(R.id.img_grid);
         feedAdapter = new FeedAdapter(mList, getActivity(), "GRID", this,  true);
-        StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+        gridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(feedAdapter);
 
@@ -143,7 +146,7 @@ public class ProfileFragment extends BaseFragment
             public void onClick(View view) {
                 gridBtn.setVisibility(View.GONE);
                 listBtn.setVisibility(View.VISIBLE);
-                StaggeredGridLayoutManager gridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+                gridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
                 recyclerView.setLayoutManager(gridLayoutManager);
                 feedAdapter = new FeedAdapter(mList, getContext(), "GRID", ProfileFragment.this, true);
                 recyclerView.setAdapter(feedAdapter);
@@ -178,7 +181,36 @@ public class ProfileFragment extends BaseFragment
                 ((SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout)).setRefreshing(false);
             }
         });
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                int lastvisibleitemposition;
+                if(gridBtn.getVisibility() != View.VISIBLE){
+                    int[] arr = gridLayoutManager.findLastVisibleItemPositions(null);
+                    lastvisibleitemposition = arr[0];
+                    if (lastvisibleitemposition >= feedAdapter.getItemCount() - 3) {
 
+                        if (!loading && !isLastPage) {
+                            page = page + 1;
+                            loading = true;
+                            FeedData(mUserId);
+                        }
+                    }
+                }
+                else {
+                    lastvisibleitemposition = layoutManager.findLastVisibleItemPosition();
+                    if (lastvisibleitemposition == feedAdapter.getItemCount() - 1) {
+
+                        if (!loading && !isLastPage) {
+                            page = page + 1;
+                            loading = true;
+                            FeedData(mUserId);
+                        }
+                    }
+                }
+            }
+        });
 
         return view;
     }
@@ -240,7 +272,7 @@ public class ProfileFragment extends BaseFragment
                 followUnfollowUser(mUserId, Utils.getCurrentDate());
                 break;
             case R.id.txt_btn_following:
-
+                followUnfollowUser(mUserId, Utils.getCurrentDate());
                 break;
             case R.id.img_back:
                 break;
@@ -306,6 +338,9 @@ public class ProfileFragment extends BaseFragment
                         try {
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
+                                mList.clear();
+                                page = 0;
+                                isLastPage = false;
                                 FeedData(mUserId);
                                 Log.e("responce....::>>>", response);
 
@@ -318,9 +353,11 @@ public class ProfileFragment extends BaseFragment
                                 }
                                 if (!mPrefernce.getUserId().equalsIgnoreCase(mUserId)) {
                                     if (userDataJsonObject.getString("follow_status").equalsIgnoreCase("0")) {
+                                        mFollowStatus = 0;
                                         view.findViewById(R.id.txt_btn_follow).setVisibility(View.VISIBLE);
                                         view.findViewById(R.id.txt_btn_following).setVisibility(View.GONE);
                                     } else {
+                                        mFollowStatus = 1;
                                         view.findViewById(R.id.txt_btn_following).setVisibility(View.VISIBLE);
                                         view.findViewById(R.id.txt_btn_follow).setVisibility(View.GONE);
                                     }
@@ -365,7 +402,7 @@ public class ProfileFragment extends BaseFragment
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
 
-                params.put("user_id", mUserId);
+                params.put("user_id", mPrefernce.getUserId());
                 params.put("username", mUserName);
 
                 return params;
@@ -394,7 +431,6 @@ public class ProfileFragment extends BaseFragment
                             if (jObject.getString("status_id").equals("1")) {
                                 Log.e("responce....::>>>", response);
 
-                                mList.clear();
                                 JSONArray jsonArray = jObject.getJSONArray("feed_data");
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -415,9 +451,12 @@ public class ProfileFragment extends BaseFragment
 
                                     mList.add(feedItemVo);
                                 }
+                                loading = false;
                                 feedAdapter.notifyDataSetChanged();
 
                             } else {
+                                loading = false;
+                                isLastPage = true;
                                 if (mList.size() == 0) {
                                     emptyView.setText(jObject.getString("status_msg"));
                                     emptyView.setVisibility(View.VISIBLE);
@@ -442,8 +481,9 @@ public class ProfileFragment extends BaseFragment
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("user_id", user_id);
-                params.put("lmt", "30");
-                params.put("offset", "0");
+                params.put("lmt", "10");
+                params.put("offset", ""+page);
+                Log.v("KNEEDLE","params: "+params);
                 return params;
             }
         };
@@ -456,7 +496,7 @@ public class ProfileFragment extends BaseFragment
         RequestQueue feedqueue = Volley.newRequestQueue(getActivity());
         feedqueue.add(requestFeed);
     }
-
+private int mFollowStatus;
     public void followUnfollowUser(final String friendId, final String date) {
         context.showProgessDialog();
         StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.FOLLOW_UNFOLLOW_USER,
@@ -468,9 +508,22 @@ public class ProfileFragment extends BaseFragment
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
                                 Log.e("responce....::>>>", response);
-                                String num = num_of_followers.getText().toString().trim();
-                                if (!num.isEmpty())
-                                    num_of_followers.setText(""+(Integer.parseInt(num) + 1));
+                                String num = num_of_following.getText().toString().trim();
+                                if(mFollowStatus == 0) {
+                                    if (!num.isEmpty())
+                                        num_of_following.setText("" + (Integer.parseInt(num) + 1));
+
+                                    view.findViewById(R.id.txt_btn_follow).setVisibility(View.GONE);
+                                    view.findViewById(R.id.txt_btn_following).setVisibility(View.VISIBLE);
+                                    mFollowStatus = 1;
+                                }else {
+                                    if (!num.isEmpty())
+                                        num_of_following.setText("" + (Integer.parseInt(num) - 1));
+
+                                    view.findViewById(R.id.txt_btn_follow).setVisibility(View.VISIBLE);
+                                    view.findViewById(R.id.txt_btn_following).setVisibility(View.GONE);
+                                    mFollowStatus = 0;
+                                }
                             }
                             Toast.makeText(context, jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
 

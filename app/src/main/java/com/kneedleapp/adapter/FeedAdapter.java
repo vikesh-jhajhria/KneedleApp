@@ -97,22 +97,15 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         });
         Log.v("Image Loading", "URL: " + feedItemVo.getmContentImage());
 
-        Glide.with(context).load(feedItemVo.getmContentImage())
+        Glide.with(context).load(feedItemVo.getmContentImage()).centerCrop()
                 .placeholder(R.drawable.default_feed).error(R.drawable.default_feed)
                 .into(holder.imgContent);
-        /*new AsyncTask<Void, Void, Bitmap>(){
-            @Override
-            protected Bitmap doInBackground(Void... voids) {
-
-
-                return null;
-                        }
-        }.execute();*/
 
         if (viewType.equalsIgnoreCase("GRID")) {
             ViewGroup.LayoutParams lp = holder.imgContent.getLayoutParams();
             lp.height = (int) Utils.getDeviceSize((BaseActivity) context).get("Width") / 3;
             holder.imgContent.setLayoutParams(lp);
+
         } else {
             holder.tvTitle.setText(feedItemVo.getmFullName());
             holder.tvSubTitle.setText(feedItemVo.getmUserName());

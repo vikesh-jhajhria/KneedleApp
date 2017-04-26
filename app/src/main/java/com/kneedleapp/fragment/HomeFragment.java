@@ -203,12 +203,13 @@ public class HomeFragment extends BaseFragment implements FeedAdapter.ProfileIte
                             } else {
                                 loading = false;
                                 isLastPage = true;
-                            }
-                            if (mList.size() == 0) {
-                                emptyView.setText(jObject.getString("status_msg"));
-                                emptyView.setVisibility(View.VISIBLE);
-                            } else {
-                                emptyView.setVisibility(View.GONE);
+
+                                if (mList.size() == 0) {
+                                    emptyView.setText(jObject.getString("status_msg"));
+                                    emptyView.setVisibility(View.VISIBLE);
+                                } else {
+                                    emptyView.setVisibility(View.GONE);
+                                }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
