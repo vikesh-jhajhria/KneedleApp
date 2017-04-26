@@ -78,12 +78,10 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
         Date date = null;
         try {
             date = curFormater.parse(mList.get(position).getTime());
+            holder.mTvHeader.setText(simpleDate.format(date));
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-        holder.mTvHeader.setText(simpleDate.format(date));
-
     }
 
     @Override

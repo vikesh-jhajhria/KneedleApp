@@ -7,13 +7,21 @@ package com.kneedleapp.vo;
 public class CommentVo {
 
 
-    private String mId;
+    private String mCommentId;
+    private String mUserId;
     private String mUserName;
     private String mComment;
     private String mUserImageUrl;
     private String mCommentFrom;
     private String mDate;
+    
+    public String getUserId() {
+        return mUserId;
+    }
 
+    public void setUserId(String userId) {
+        this.mUserId = userId;
+    }
     public String getmCommentFrom() {
         return mCommentFrom;
     }
@@ -31,19 +39,19 @@ public class CommentVo {
     }
 
 
-    public String getmId() {
-        return mId;
+    public String getmCommentId() {
+        return mCommentId;
     }
 
-    public void setmId(String mId) {
-        this.mId = mId;
+    public void setmCommentId(String mCommentId) {
+        this.mCommentId = mCommentId;
     }
 
-    public String getmUserName() {
+    public String getUserName() {
         return mUserName;
     }
 
-    public void setmUserName(String mUserName) {
+    public void setUserName(String mUserName) {
         this.mUserName = mUserName;
     }
 

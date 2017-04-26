@@ -1,6 +1,7 @@
 package com.kneedleapp.fragment;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -38,6 +39,7 @@ public class PostFragment extends BaseFragment {
     private View view_main;
     private Bitmap bitmap;
     String imagePath = "";
+    private Context mContext;
 
     public static PostFragment newInstance() {
 
@@ -55,10 +57,10 @@ public class PostFragment extends BaseFragment {
         ((ImageView) view_main.findViewById(R.id.img_next)).setOnClickListener(this);
         ((TextView) view_main.findViewById(R.id.txt_library)).setOnClickListener(this);
         ((TextView) view_main.findViewById(R.id.txt_photo)).setOnClickListener(this);
-        Utils.setTypeface(getActivity(), (TextView) view_main.findViewById(R.id.txt_new_post), Config.CENTURY_GOTHIC_BOLD);
-        Utils.setTypeface(getActivity(), (TextView) view_main.findViewById(R.id.txt_library), Config.CENTURY_GOTHIC_REGULAR);
-        Utils.setTypeface(getActivity(), (TextView) view_main.findViewById(R.id.txt_photo), Config.CENTURY_GOTHIC_REGULAR);
-        ((MainActivity) getActivity()).hasPermission(Config.MEDIA_PERMISSION);
+        Utils.setTypeface(mContext, (TextView) view_main.findViewById(R.id.txt_new_post), Config.CENTURY_GOTHIC_BOLD);
+        Utils.setTypeface(mContext, (TextView) view_main.findViewById(R.id.txt_library), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(mContext, (TextView) view_main.findViewById(R.id.txt_photo), Config.CENTURY_GOTHIC_REGULAR);
+        ((MainActivity) mContext).hasPermission(Config.MEDIA_PERMISSION);
         return view_main;
     }
 
@@ -82,58 +84,64 @@ public class PostFragment extends BaseFragment {
 
             case R.id.txt_library:
                 userChoosenTask = "Choose From Library";
-                if (((MainActivity) getActivity()).hasPermission(Config.MEDIA_PERMISSION)) {
+                if (((MainActivity) mContext).hasPermission(Config.MEDIA_PERMISSION)) {
                     Utils.openGallery(getActivity());
                 } else {
-                    ((MainActivity) getActivity()).setMediaPermissionListener(new Utils.MediaPermissionListener() {
+                    ((MainActivity) mContext).setMediaPermissionListener(new Utils.MediaPermissionListener() {
                         @Override
                         public void onMediaPermissionStatus(boolean status) {
                             Utils.openGallery(getActivity());
                         }
                     });
                 }
-                Utils.setTypeface(getActivity(), (TextView) view_main.findViewById(R.id.txt_library), Config.CENTURY_GOTHIC_BOLD);
-                Utils.setTypeface(getActivity(), (TextView) view_main.findViewById(R.id.txt_photo), Config.CENTURY_GOTHIC_REGULAR);
+                Utils.setTypeface(mContext, (TextView) view_main.findViewById(R.id.txt_library), Config.CENTURY_GOTHIC_BOLD);
+                Utils.setTypeface(mContext, (TextView) view_main.findViewById(R.id.txt_photo), Config.CENTURY_GOTHIC_REGULAR);
                 ((TextView) view_main.findViewById(R.id.txt_library)).setTextColor(getResources().getColor(R.color.colorAccent));
                 ((TextView) view_main.findViewById(R.id.txt_photo)).setTextColor(getResources().getColor(R.color.colourBlack));
                 break;
 
             case R.id.txt_photo:
                 userChoosenTask = "Take Photo";
-                if (((MainActivity) getActivity()).hasPermission(Config.MEDIA_PERMISSION)) {
+                if (((MainActivity) mContext).hasPermission(Config.MEDIA_PERMISSION)) {
                     Utils.launchCamera(getActivity());
                 } else {
-                    ((MainActivity) getActivity()).setMediaPermissionListener(new Utils.MediaPermissionListener() {
+                    ((MainActivity) mContext).setMediaPermissionListener(new Utils.MediaPermissionListener() {
                         @Override
                         public void onMediaPermissionStatus(boolean status) {
                             Utils.launchCamera(getActivity());
                         }
                     });
                 }
-                Utils.setTypeface(getActivity(), (TextView) view_main.findViewById(R.id.txt_library), Config.CENTURY_GOTHIC_REGULAR);
-                Utils.setTypeface(getActivity(), (TextView) view_main.findViewById(R.id.txt_photo), Config.CENTURY_GOTHIC_BOLD);
+                Utils.setTypeface(mContext, (TextView) view_main.findViewById(R.id.txt_library), Config.CENTURY_GOTHIC_REGULAR);
+                Utils.setTypeface(mContext, (TextView) view_main.findViewById(R.id.txt_photo), Config.CENTURY_GOTHIC_BOLD);
                 ((TextView) view_main.findViewById(R.id.txt_photo)).setTextColor(getResources().getColor(R.color.colorAccent));
                 ((TextView) view_main.findViewById(R.id.txt_library)).setTextColor(getResources().getColor(R.color.colourBlack));
                 break;
         }
     }
 
-     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             try {
                 if (requestCode == Config.CAMERAIMAGE) {
-                    imagePath = Utils.getRealPathFromURI(getActivity(), Config.CAMERAFILEURI);
+                    imagePath = Utils.getRealPathFromURI(mContext, Config.CAMERAFILEURI);
                 } else if (requestCode == Config.GALLERYIMAGE) {
                     Uri selectedImageUri = data.getData();
                     if (selectedImageUri != null) {
-                        imagePath = Utils.getRealPathFromURI(getActivity(), selectedImageUri);
+                        imagePath = Utils.getRealPathFromURI(mContext, selectedImageUri);
                     }
                 }
-                new ImageCompression(getActivity(), new ImageCompression.ImageCompressListener() {
+                new ImageCompression(mContext, new ImageCompression.ImageCompressListener() {
                     @Override
                     public void onImageCompressed(String destinationUrl) {
                         if(destinationUrl.isEmpty()){
-                            Toast.makeText(getActivity(), "Selected media is invalid, please try again or use another image.",        Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext, "Selected media is invalid, please try again or use another image.",        Toast.LENGTH_LONG).show();
                         }
                         bitmap = BitmapFactory.decodeFile(destinationUrl);
                         Drawable drawable = new BitmapDrawable(getResources(), bitmap);
@@ -143,7 +151,7 @@ public class PostFragment extends BaseFragment {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(getActivity(), "Something went wrong, please try again or use another image.", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "Something went wrong, please try again or use another image.", Toast.LENGTH_LONG).show();
             }
         }
     }

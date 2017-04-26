@@ -9,7 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.kneedleapp.BaseActivity;
 import com.kneedleapp.R;
+import com.kneedleapp.fragment.ProfileFragment;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.CommentVo;
@@ -42,10 +44,27 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        CommentVo obj = mList.get(position);
-        holder.userName.setText(obj.getmUserName());
+        final CommentVo obj = mList.get(position);
+        holder.userName.setText(obj.getUserName());
         holder.userComment.setText(obj.getmComment());
         Glide.with(mContext).load(Config.USER_IMAGE_URL + obj.getmUserImageUrl()).placeholder(R.drawable.profile_img).error(R.drawable.profile_img).into(holder.imgUser);
+
+        holder.imgUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((BaseActivity) mContext).addFragment(R.id.main_frame,
+                        ProfileFragment.newInstance(obj.getUserId(),
+                                obj.getUserName()), "PROFILE_FRAGMENT", true);
+            }
+        });
+        holder.userName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((BaseActivity) mContext).addFragment(R.id.main_frame,
+                        ProfileFragment.newInstance(obj.getUserId(),
+                                obj.getUserName()), "PROFILE_FRAGMENT", true);
+            }
+        });
     }
 
     @Override

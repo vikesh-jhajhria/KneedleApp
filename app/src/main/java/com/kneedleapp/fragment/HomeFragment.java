@@ -76,9 +76,9 @@ public class HomeFragment extends BaseFragment implements FeedAdapter.ProfileIte
         Utils.setTypeface(getActivity(), emptyView, Config.CENTURY_GOTHIC_REGULAR);
         mList = new ArrayList<>();
         mRecyclerView = (RecyclerView) mView.findViewById(R.id.recycler_view);
-        gridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(gridLayoutManager);
-        mAdapter = new FeedAdapter( mList,getActivity(), "GRID", HomeFragment.this,false);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mAdapter = new FeedAdapter( mList,getActivity(), "LIST", HomeFragment.this,false);
         mRecyclerView.setAdapter(mAdapter);
         listBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +110,8 @@ public class HomeFragment extends BaseFragment implements FeedAdapter.ProfileIte
             @Override
             public void onRefresh() {
                 mList.clear();
+                page = 0;
+                isLastPage = false;
                 getFeedData();
                 ((SwipeRefreshLayout) mView.findViewById(R.id.swipeRefreshLayout)).setRefreshing(false);
             }

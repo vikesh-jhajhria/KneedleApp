@@ -167,8 +167,9 @@ public class AddCommentFragment extends BaseFragment {
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject commentObj = (JSONObject) jsonArray.get(i);
                                     CommentVo obj = new CommentVo();
-                                    obj.setmId(commentObj.getString("id"));
-                                    obj.setmUserName(commentObj.getString("username"));
+                                    obj.setmCommentId(commentObj.getString("id"));
+                                    obj.setUserName(commentObj.getString("username"));
+                                    obj.setUserId(commentObj.getString("user_id"));
                                     obj.setmCommentFrom(commentObj.getString("comment_from"));
                                     obj.setmUserImageUrl(commentObj.getString("user_pic"));
                                     obj.setmComment(commentObj.getString("comment"));
@@ -243,8 +244,8 @@ public class AddCommentFragment extends BaseFragment {
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject commentObj = (JSONObject) jsonArray.get(i);
                                     CommentVo obj = new CommentVo();
-                                    obj.setmId(commentObj.getString("id"));
-                                    obj.setmUserName(commentObj.getString("username"));
+                                    obj.setmCommentId(commentObj.getString("id"));
+                                    obj.setUserName(commentObj.getString("username"));
                                     obj.setmCommentFrom(commentObj.getString("comment_from"));
                                     obj.setmUserImageUrl(commentObj.getString("user_pic"));
                                     obj.setmComment(commentObj.getString("comment"));
