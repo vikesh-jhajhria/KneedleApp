@@ -51,7 +51,7 @@ public class HomeFragment extends BaseFragment implements FeedAdapter.ProfileIte
     private BaseActivity context;
     private View mView;
     private TextView emptyView;
-    private int page = 0;
+    private int offset = 0, limit = 10;
     private boolean loading, isLastPage;
     private ImageView listBtn, gridBtn;
 
@@ -110,7 +110,7 @@ public class HomeFragment extends BaseFragment implements FeedAdapter.ProfileIte
             @Override
             public void onRefresh() {
                 mList.clear();
-                page = 0;
+                offset = 0;
                 isLastPage = false;
                 getFeedData();
                 ((SwipeRefreshLayout) mView.findViewById(R.id.swipeRefreshLayout)).setRefreshing(false);
@@ -129,7 +129,7 @@ public class HomeFragment extends BaseFragment implements FeedAdapter.ProfileIte
                     if (lastvisibleitemposition >= mAdapter.getItemCount() - 3) {
 
                         if (!loading && !isLastPage) {
-                            page = page + 1;
+                            offset = offset + limit;
                             loading = true;
                             getFeedData();
                         }
@@ -140,7 +140,7 @@ public class HomeFragment extends BaseFragment implements FeedAdapter.ProfileIte
                     if (lastvisibleitemposition == mAdapter.getItemCount() - 1) {
 
                         if (!loading && !isLastPage) {
-                            page = page + 1;
+                            offset = offset + limit;
                             loading = true;
                             getFeedData();
                         }
@@ -229,8 +229,8 @@ public class HomeFragment extends BaseFragment implements FeedAdapter.ProfileIte
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("user_id", AppPreferences.getAppPreferences(getContext()).getStringValue(AppPreferences.USER_ID));
                 params.put("login_id", AppPreferences.getAppPreferences(getContext()).getStringValue(AppPreferences.USER_ID));
-                params.put("lmt", "10");
-                params.put("offset", ""+page);
+                params.put("lmt", ""+limit);
+                params.put("offset", ""+offset);
                 Log.v("KNEEDLE","params: "+params);
                 return params;
             }

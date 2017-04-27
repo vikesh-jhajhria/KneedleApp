@@ -60,7 +60,7 @@ public class ProfileFragment extends BaseFragment
     private static BaseActivity context;
     private View view;
     private String mUserId = "", mUserName = "";
-    private int page = 0;
+    private int offset = 0, limit = 10;
     private boolean loading, isLastPage;
 
     private TextView num_of_posts, num_of_followers, num_of_following, profile_type, emptyView, companyName, bio, website, location;
@@ -192,7 +192,7 @@ public class ProfileFragment extends BaseFragment
                     if (lastvisibleitemposition >= feedAdapter.getItemCount() - 3) {
 
                         if (!loading && !isLastPage) {
-                            page = page + 1;
+                            offset = limit + offset;
                             loading = true;
                             FeedData(mUserId);
                         }
@@ -203,7 +203,7 @@ public class ProfileFragment extends BaseFragment
                     if (lastvisibleitemposition == feedAdapter.getItemCount() - 1) {
 
                         if (!loading && !isLastPage) {
-                            page = page + 1;
+                            offset = offset + limit;
                             loading = true;
                             FeedData(mUserId);
                         }
@@ -339,12 +339,14 @@ public class ProfileFragment extends BaseFragment
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
                                 mList.clear();
-                                page = 0;
+                                offset = 0;
                                 isLastPage = false;
-                                FeedData(mUserId);
+
                                 Log.e("responce....::>>>", response);
 
                                 JSONObject userDataJsonObject = jObject.getJSONObject("user_data");
+                                mUserId = userDataJsonObject.getString("user_id");
+                                FeedData(mUserId);
                                 num_of_posts.setText(userDataJsonObject.getString("posts"));
                                 num_of_following.setText(userDataJsonObject.getString("following"));
                                 num_of_followers.setText(userDataJsonObject.getString("followers"));
@@ -352,6 +354,7 @@ public class ProfileFragment extends BaseFragment
                                     Glide.with(context).load(Config.USER_IMAGE_URL + userDataJsonObject.getString("image")).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(userImgView);
                                 }
                                 if (!mPrefernce.getUserId().equalsIgnoreCase(mUserId)) {
+                                    view.findViewById(R.id.txt_btn_edit).setVisibility(View.GONE);
                                     if (userDataJsonObject.getString("follow_status").equalsIgnoreCase("0")) {
                                         mFollowStatus = 0;
                                         view.findViewById(R.id.txt_btn_follow).setVisibility(View.VISIBLE);
@@ -361,6 +364,10 @@ public class ProfileFragment extends BaseFragment
                                         view.findViewById(R.id.txt_btn_following).setVisibility(View.VISIBLE);
                                         view.findViewById(R.id.txt_btn_follow).setVisibility(View.GONE);
                                     }
+                                } else {
+                                    view.findViewById(R.id.txt_btn_follow).setVisibility(View.GONE);
+                                    view.findViewById(R.id.txt_btn_following).setVisibility(View.GONE);
+                                    view.findViewById(R.id.txt_btn_edit).setVisibility(View.VISIBLE);
                                 }
 
                                 profile_type.setText(userDataJsonObject.getString("profiletype"));
@@ -481,8 +488,8 @@ public class ProfileFragment extends BaseFragment
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("user_id", user_id);
-                params.put("lmt", "10");
-                params.put("offset", ""+page);
+                params.put("lmt", ""+limit);
+                params.put("offset", ""+offset);
                 Log.v("KNEEDLE","params: "+params);
                 return params;
             }

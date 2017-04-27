@@ -1,9 +1,15 @@
 package com.kneedleapp.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -122,7 +128,40 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                 holder.card1.setVisibility(View.GONE);
             } else {
                 holder.card1.setVisibility(View.VISIBLE);
-                holder.comment1.setText(feedItemVo.getmComment_1());
+                int start_index = feedItemVo.getmComment_1().indexOf("@");
+                int end_index;
+                if (start_index > -1) {
+                    String str = feedItemVo.getmComment_1().substring(start_index);
+                    end_index = str.indexOf(" ");
+                    if (end_index == -1) {
+                        end_index = start_index + str.length();
+                    }
+                    final String text_id = feedItemVo.getmComment_1().substring(start_index + 1, end_index);
+                    SpannableString ss = new SpannableString(feedItemVo.getmComment_1());
+                    ClickableSpan clickableSpan = new ClickableSpan() {
+                        @Override
+                        public void onClick(View textView) {
+                            //startActivity(new Intent(MyActivity.this, NextActivity.class));
+                            ((BaseActivity) context).addFragment(R.id.main_frame,
+                                    ProfileFragment.newInstance("",
+                                            text_id), "PROFILE_FRAGMENT", true);
+                        }
+
+                        @Override
+                        public void updateDrawState(TextPaint ds) {
+                            super.updateDrawState(ds);
+                            ds.setUnderlineText(false);
+                        }
+                    };
+                    ss.setSpan(clickableSpan, start_index, end_index, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    holder.comment1.setText(ss);
+
+                    holder.comment1.setMovementMethod(LinkMovementMethod.getInstance());
+                    holder.comment1.setHighlightColor(Color.TRANSPARENT);
+                } else {
+
+                    holder.comment1.setText(feedItemVo.getmComment_1());
+                }
             }
             if (feedItemVo.getmComment_2().isEmpty()) {
                 holder.card2.setVisibility(View.GONE);
@@ -249,7 +288,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             holder.imgUser.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(!isProfileFeed) {
+                    if (!isProfileFeed) {
                         ((BaseActivity) context).addFragment(R.id.main_frame,
                                 ProfileFragment.newInstance(feedItemVo.getmUserId(),
                                         feedItemVo.getmUserName()), "PROFILE_FRAGMENT", true);
@@ -262,7 +301,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             holder.tvTitle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(!isProfileFeed) {
+                    if (!isProfileFeed) {
                         ((BaseActivity) context).addFragment(R.id.main_frame,
                                 ProfileFragment.newInstance(feedItemVo.getmUserId(),
                                         feedItemVo.getmUserName()), "PROFILE_FRAGMENT", true);
