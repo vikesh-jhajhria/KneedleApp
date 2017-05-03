@@ -203,29 +203,33 @@ public class NotificationFragment extends BaseFragment implements RecyclerView.O
     }
 
     private void sortList() {
-        final SimpleDateFormat simpleDate = new SimpleDateFormat("dd-MM-yyyy");
+        try {
+            final SimpleDateFormat simpleDate = new SimpleDateFormat("dd-MM-yyyy");
 
-        Collections.sort(mList, new Comparator<NotificationItemVo>() {
-            @Override
-            public int compare(NotificationItemVo n1, NotificationItemVo n2) {
-                Date date1 = null, date2 = null;
-                try {
-                    SimpleDateFormat curFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
-                    date1 = curFormater.parse(n1.getTime());
-                    date2 = curFormater.parse(n2.getTime());
-                } catch (Exception e) {
-                    e.printStackTrace();
+            Collections.sort(mList, new Comparator<NotificationItemVo>() {
+                @Override
+                public int compare(NotificationItemVo n1, NotificationItemVo n2) {
+                    Date date1 = null, date2 = null;
+                    try {
+                        SimpleDateFormat curFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+                        date1 = curFormater.parse(n1.getTime());
+                        date2 = curFormater.parse(n2.getTime());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if (date1 != null && date2 != null) {
+                        return date1.compareTo(date2);
+                    } else {
+                        return 0;
+                    }
                 }
-                if(date1 != null && date2 != null) {
-                    return date1.compareTo(date2);
-                } else{
-                    return 0;
-                }
-            }
-        });
-        mAdapter = new NotificationDataAdapter(getContext(), mList);
-        mRecyclerView.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
+            });
+            mAdapter = new NotificationDataAdapter(getContext(), mList);
+            mRecyclerView.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public void getNotification() {

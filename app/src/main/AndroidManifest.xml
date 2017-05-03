@@ -61,11 +61,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/Background"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity android:name=".SignUpActivity"
+        <activity
+            android:name=".SignUpActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Background"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-
         <activity
             android:name=".LandingActivity"
             android:screenOrientation="portrait"
@@ -87,9 +87,14 @@
             </intent-filter>
         </service>
 
-
-        <activity android:name=".WebViewActivity"></activity>
+        <activity android:name=".WebViewActivity" />
         <activity android:name="com.twitter.sdk.android.core.identity.OAuthActivity" />
+
+        <receiver android:name=".utils.NotificationBroadcast">
+            <intent-filter>
+                <action android:name="com.kneedle.NotificationBroadcast" />
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -98,14 +103,15 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             tools:replace="android:theme" />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="a7534d0515b9eb564c000e1c55ce36053b6d99fc" />
-
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_key" />
 
+        <activity android:name=".SearchHashActivity"></activity>
     </application>
 
 </manifest>

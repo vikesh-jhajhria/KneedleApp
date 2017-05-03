@@ -16,54 +16,43 @@ import android.util.Log;
 import com.google.firebase.messaging.RemoteMessage;
 import com.kneedleapp.R;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
     private static final String TAG = "StartingAndroid";
-    private String message, tasteEncryptedID, activityType, reviewEncryptedID, postby;
-    private AppPreferences preferences;
+    private String message, title, user_id, feed_id;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        preferences = AppPreferences.getAppPreferences(this);
         //It is optional
         Log.e(TAG, "From: " + remoteMessage.getFrom());
         Log.e(TAG, "Data Message Body: " + remoteMessage.getData());
         //Log.e(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
 
         //String body = remoteMessage.getNotification().getBody();
-        String body = remoteMessage.getData().get("body");
-        try {
-            JSONObject obj = new JSONObject(body);
-            message = obj.getString("message");
-            tasteEncryptedID = obj.getString("TasteEncryptedID");
-            activityType = obj.getString("activitytype");
-            reviewEncryptedID = obj.getString("ReviewEncryptedID");
-            postby = obj.getString("postby");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        //Log.e(TAG, "Data  Body: " + body);
+        message = remoteMessage.getData().get("body");
+        title = remoteMessage.getData().get("title");
+        user_id = remoteMessage.getData().get("user_id");
+        feed_id = remoteMessage.getData().get("feed_id");
 
         //Calling method to generate notification
         //sendNotification(remoteMessage.getNotification().getTitle(), activityType, message);
-        sendNotification(remoteMessage.getData().get("title"), activityType, message);
+        sendNotification(title, message);
     }
 
     //This method is only generating push notification
-    private void sendNotification(String title, String activityType, String message) {
+    private void sendNotification(String title, String message) {
 
         Intent intent = null;
-       /* if (activityType.equalsIgnoreCase("liked") || activityType.equalsIgnoreCase("commented")) {
-            intent = new Intent(this, UserReviewsActivity.class).putExtra("userID", preferences.getUserEncryptedId());
-        } else if (activityType.equalsIgnoreCase("followed")) {
-            intent = new Intent(this, Profile_Activity.class).putExtra("userID", postby).putExtra("user_type", "other");
-        }*/
+        if (user_id != null && !user_id.isEmpty()) {
+            intent = new Intent(this, NotificationBroadcast.class).putExtra("userId", user_id);
+        } else if (feed_id != null && !feed_id.isEmpty()) {
+            intent = new Intent(this, NotificationBroadcast.class).putExtra("feedId", feed_id);
+        }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

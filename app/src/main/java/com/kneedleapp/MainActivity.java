@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.kneedleapp.fragment.EditProfileFragment;
+import com.kneedleapp.fragment.FeedDetailFragment;
 import com.kneedleapp.fragment.HomeFragment;
 import com.kneedleapp.fragment.NotificationFragment;
 import com.kneedleapp.fragment.PostFragment;
@@ -13,23 +14,42 @@ import com.kneedleapp.fragment.ProfileFragment;
 import com.kneedleapp.fragment.SearchFragment;
 import com.kneedleapp.utils.Config;
 
+import static com.kneedleapp.utils.Config.fragmentManager;
+
 
 public class MainActivity extends BaseActivity {
     Fragment fragment;
     public static boolean isPost = false;
+    private static MainActivity instance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (Config.fragmentManager == null || getSupportFragmentManager().getFragments() == null) {
-            Config.fragmentManager = getSupportFragmentManager();
+        if (fragmentManager == null || getSupportFragmentManager().getFragments() == null) {
+            fragmentManager = getSupportFragmentManager();
         }
-        selectTab(BottomBarTab.HOME);
-
+        if(getIntent().getExtras() != null && getIntent().getExtras().get("Notification") != null){
+            if(getIntent().getStringExtra("userId") != null) {
+                addFragment(R.id.main_frame,
+                        ProfileFragment.newInstance(getIntent().getStringExtra("userId"),
+                                ""), "PROFILE_FRAGMENT", true);
+            } else if(getIntent().getStringExtra("feedId") != null) {
+                FeedDetailFragment fragment = FeedDetailFragment.newInstance(getIntent().getStringExtra("feedId"));
+                fragmentManager.beginTransaction()
+                        .add(R.id.main_frame, fragment, "FEED_DETAIL_FRAGMENT")
+                        .addToBackStack(null)
+                        .commit();
+            }
+        } else {
+            selectTab(BottomBarTab.HOME);
+        }
     }
 
+    public static MainActivity getInstance(){
+        return instance;
+    }
     @Override
     public void onClick(View view) {
         super.onClick(view);
@@ -83,7 +103,7 @@ public class MainActivity extends BaseActivity {
                 break;
             case PROFILE:
                 findViewById(R.id.rl_profile_selected).setVisibility(View.VISIBLE);
-                ProfileFragment fragment = (ProfileFragment) Config.fragmentManager.findFragmentByTag("PROFILE_FRAGMENT");
+                ProfileFragment fragment = (ProfileFragment) fragmentManager.findFragmentByTag("PROFILE_FRAGMENT");
                 showFragment(R.id.main_frame, ProfileFragment.newInstance(preferences.getUserId(),
                         preferences.getUserName()), "PROFILE_FRAGMENT");
 
@@ -92,6 +112,24 @@ public class MainActivity extends BaseActivity {
                 }
                 break;
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        instance = this;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        instance = null;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        instance = null;
     }
 
     public Fragment getActiveFragment() {

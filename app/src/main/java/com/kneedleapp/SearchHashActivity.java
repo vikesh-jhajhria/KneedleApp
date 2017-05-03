@@ -1,5 +1,4 @@
-package com.kneedleapp.fragment;
-
+package com.kneedleapp;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,9 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,11 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.kneedleapp.BaseActivity;
-import com.kneedleapp.FullImageViewActivity;
-import com.kneedleapp.R;
 import com.kneedleapp.adapter.FeedAdapter;
-import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.FeedItemVo;
@@ -39,54 +32,40 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-
-public class HomeFragment extends BaseFragment implements FeedAdapter.ProfileItemListener {
+public class SearchHashActivity extends BaseActivity implements FeedAdapter.ProfileItemListener {
 
     private RecyclerView mRecyclerView;
     private FeedAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
     private StaggeredGridLayoutManager gridLayoutManager;
     private ArrayList<FeedItemVo> mList;
-    private BaseActivity context;
-    private View mView;
     private TextView emptyView;
     private int offset = 0, limit = 10;
     private boolean loading, isLastPage;
     private ImageView listBtn, gridBtn;
-
-
-    public static HomeFragment newInstance() {
-        HomeFragment fragment = new HomeFragment();
-        return fragment;
-    }
-
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_search_hash);
 
-
-        mView = inflater.inflate(R.layout.fragment_home, container, false);
-
-        context = (BaseActivity) getActivity();
-        listBtn = (ImageView) mView.findViewById(R.id.img_list);
-        gridBtn = (ImageView) mView.findViewById(R.id.img_grid);
-        emptyView = (TextView) mView.findViewById(R.id.empty_view);
-        Utils.setTypeface(getActivity(), emptyView, Config.CENTURY_GOTHIC_REGULAR);
+        listBtn = (ImageView) findViewById(R.id.img_list);
+        gridBtn = (ImageView) findViewById(R.id.img_grid);
+        emptyView = (TextView) findViewById(R.id.empty_view);
+        Utils.setTypeface(this, emptyView, Config.CENTURY_GOTHIC_REGULAR);
         mList = new ArrayList<>();
-        mRecyclerView = (RecyclerView) mView.findViewById(R.id.recycler_view);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new FeedAdapter( mList,getActivity(), "LIST", HomeFragment.this,false);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        gridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(gridLayoutManager);
+        mAdapter = new FeedAdapter( mList,SearchHashActivity.this, "GRID", SearchHashActivity.this,false);
         mRecyclerView.setAdapter(mAdapter);
         listBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 listBtn.setVisibility(View.GONE);
                 gridBtn.setVisibility(View.VISIBLE);
-                mLayoutManager = new LinearLayoutManager(getContext());
+                mLayoutManager = new LinearLayoutManager(SearchHashActivity.this);
                 mRecyclerView.setLayoutManager(mLayoutManager);
-                mAdapter = new FeedAdapter( mList,getActivity(), "LIST", HomeFragment.this,false);
+                mAdapter = new FeedAdapter( mList,SearchHashActivity.this, "LIST", SearchHashActivity.this,false);
                 mRecyclerView.setAdapter(mAdapter);
             }
         });
@@ -97,22 +76,22 @@ public class HomeFragment extends BaseFragment implements FeedAdapter.ProfileIte
                 listBtn.setVisibility(View.VISIBLE);
                 gridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
                 mRecyclerView.setLayoutManager(gridLayoutManager);
-                mAdapter = new FeedAdapter( mList,getActivity(), "GRID", HomeFragment.this,false);
+                mAdapter = new FeedAdapter( mList,SearchHashActivity.this, "GRID", SearchHashActivity.this,false);
                 mRecyclerView.setAdapter(mAdapter);
             }
         });
-        if (Utils.isNetworkConnected(getContext(), true)) {
+        if (Utils.isNetworkConnected(this, true)) {
             getFeedData();
         }
 
-        ((SwipeRefreshLayout) mView.findViewById(R.id.swipeRefreshLayout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        ((SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 mList.clear();
                 offset = 0;
                 isLastPage = false;
                 getFeedData();
-                ((SwipeRefreshLayout) mView.findViewById(R.id.swipeRefreshLayout)).setRefreshing(false);
+                ((SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout)).setRefreshing(false);
             }
         });
 
@@ -149,12 +128,14 @@ public class HomeFragment extends BaseFragment implements FeedAdapter.ProfileIte
         });
 
 
-
-        return mView;
     }
+
+
+
+
     @Override
     public void getItem(int position, FeedAdapter.ViewHolder holder, boolean isLiked) {
-        Intent intent = new Intent(getActivity(), FullImageViewActivity.class);
+        Intent intent = new Intent(this, FullImageViewActivity.class);
         intent.putExtra("USERNAME", mList.get(position).getmFullName());
         intent.putExtra("IMAGE", mList.get(position).getmContentImage());
         intent.putExtra("USERIMAGE", mList.get(position).getmUserImage());
@@ -164,18 +145,18 @@ public class HomeFragment extends BaseFragment implements FeedAdapter.ProfileIte
     }
     public void getFeedData() {
         emptyView.setVisibility(View.GONE);
-        context.showProgessDialog();
-        StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.FEED_DATA,
+        showProgessDialog();
+        StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.GET_SEARCH_ITEM,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        context.dismissProgressDialog();
+                        dismissProgressDialog();
                         try {
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
                                 Log.e("responce....::>>>", response);
 
-                                JSONArray jsonArray = jObject.getJSONArray("feed_data");
+                                JSONArray jsonArray = jObject.getJSONArray("search_data");
                                 isLastPage = !(jsonArray.length() > 0);
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -218,18 +199,16 @@ public class HomeFragment extends BaseFragment implements FeedAdapter.ProfileIte
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(getContext(), volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(SearchHashActivity.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
                         Log.d("error", volleyError.getMessage());
-                        context.dismissProgressDialog();
+                        dismissProgressDialog();
                     }
                 }) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("user_id", AppPreferences.getAppPreferences(getContext()).getStringValue(AppPreferences.USER_ID));
-                params.put("login_id", AppPreferences.getAppPreferences(getContext()).getStringValue(AppPreferences.USER_ID));
-                params.put("lmt", ""+limit);
-                params.put("offset", ""+offset);
+                params.put("hashkeyword", getIntent().getStringExtra("HASH"));
+
                 Log.v("KNEEDLE","params: "+params);
                 return params;
             }
@@ -240,10 +219,8 @@ public class HomeFragment extends BaseFragment implements FeedAdapter.ProfileIte
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-        RequestQueue feedqueue = Volley.newRequestQueue(getContext());
+        RequestQueue feedqueue = Volley.newRequestQueue(SearchHashActivity.this);
         feedqueue.add(requestFeed);
     }
 
-
 }
-

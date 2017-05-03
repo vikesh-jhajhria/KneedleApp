@@ -115,6 +115,7 @@ public class LoginActivity extends BaseActivity {
                 params.put("username", username);
                 params.put("password", password);
                 params.put("devicekey", preferences.getFirebaseId());
+                params.put("device_type", "android");
                 Log.v(TAG, "Params : " + params.toString());
                 return params;
             }

@@ -1,7 +1,9 @@
 package com.kneedleapp.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +48,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
         final CommentVo obj = mList.get(position);
         holder.userName.setText(obj.getUserName());
-        holder.userComment.setText(obj.getmComment());
+        holder.userComment.setText(Utils.makeSpannable(mContext, obj.getmComment()));
+        holder.userComment.setMovementMethod(LinkMovementMethod.getInstance());
+        holder.userComment.setHighlightColor(Color.TRANSPARENT);
         Glide.with(mContext).load(Config.USER_IMAGE_URL + obj.getmUserImageUrl()).placeholder(R.drawable.profile_img).error(R.drawable.profile_img).into(holder.imgUser);
 
         holder.imgUser.setOnClickListener(new View.OnClickListener() {

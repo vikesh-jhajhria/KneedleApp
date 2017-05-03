@@ -1,6 +1,5 @@
 package com.kneedleapp;
 
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -15,7 +14,6 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -43,7 +41,6 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -218,6 +215,7 @@ public class RegistrationActivity extends BaseActivity implements CategoryAdapte
                 params.put("langitude", preferences.getLongitude());
                 params.put("email", ((EditText) findViewById(R.id.txt_email)).getText().toString().trim());
                 params.put("devicekey", preferences.getFirebaseId());
+                params.put("device_type", "android");
                 params.put("category", ((TextView) findViewById(R.id.txt_profile_type)).getText().toString().trim());
 
                 Log.v(TAG, "Params>> " + params.toString());

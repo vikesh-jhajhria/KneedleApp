@@ -1,6 +1,7 @@
 package com.kneedleapp.fragment;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -9,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -369,12 +371,14 @@ public class ProfileFragment extends BaseFragment
                                     view.findViewById(R.id.txt_btn_following).setVisibility(View.GONE);
                                     view.findViewById(R.id.txt_btn_edit).setVisibility(View.VISIBLE);
                                 }
-
-                                profile_type.setText(userDataJsonObject.getString("profiletype"));
-                                if(!userDataJsonObject.getString("company_info").isEmpty()) {
+                                String str = userDataJsonObject.getString("profiletype")+" @"+userDataJsonObject.getString("company_info");
+                                profile_type.setText(Utils.makeSpannable(context, str));
+                                profile_type.setMovementMethod(LinkMovementMethod.getInstance());
+                                profile_type.setHighlightColor(Color.TRANSPARENT);
+                                /*if(!userDataJsonObject.getString("company_info").isEmpty()) {
                                     companyName.setText(userDataJsonObject.getString("company_info"));
                                     companyName.setVisibility(View.VISIBLE);
-                                }
+                                }*/
                                 if(!userDataJsonObject.getString("bio").isEmpty()) {
                                     bio.setText(userDataJsonObject.getString("bio"));
                                     bio.setVisibility(View.VISIBLE);

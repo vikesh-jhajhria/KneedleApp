@@ -22,6 +22,10 @@ import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AlertDialog.Builder;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.style.ClickableSpan;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -41,7 +45,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.kneedleapp.BaseActivity;
 import com.kneedleapp.R;
+import com.kneedleapp.SearchHashActivity;
+import com.kneedleapp.fragment.ProfileFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -114,6 +121,74 @@ public class Utils {
             uri = Uri.fromFile(file);
         }
         return uri;
+    }
+
+    public static SpannableString makeSpannable(final Context context, String mainString) {
+        SpannableString ss = new SpannableString(mainString);
+        char[] charArray = mainString.toCharArray();
+        ArrayList<Integer> atStartIndexArray = new ArrayList<>();
+        ArrayList<Integer> atEndIndexArray = new ArrayList<>();
+        ArrayList<Integer> hashStartIndexArray = new ArrayList<>();
+        ArrayList<Integer> hashEndIndexArray = new ArrayList<>();
+
+        for (int i = 0; i < charArray.length; i++) {
+            if (charArray[i] == '@') {
+                if (i < (charArray.length - 1) && charArray[i + 1] != ' ') {
+                    atStartIndexArray.add(i);
+                    int endIndex = mainString.indexOf(" ", i);
+                    atEndIndexArray.add(endIndex > -1 ? endIndex : charArray.length);
+                }
+            }
+            if (charArray[i] == '#') {
+                if (i < (charArray.length - 1) && charArray[i + 1] != ' ') {
+                    hashStartIndexArray.add(i);
+                    int endIndex = mainString.indexOf(" ", i);
+                    hashEndIndexArray.add(endIndex > -1 ? endIndex : charArray.length);
+                }
+            }
+        }
+
+        for (int j = 0; j < atStartIndexArray.size(); j++) {
+            final String text_id = mainString.substring(atStartIndexArray.get(j) + 1, atEndIndexArray.get(j));
+
+            ClickableSpan clickableSpan = new ClickableSpan() {
+                @Override
+                public void onClick(View textView) {
+                    ((BaseActivity) context).addFragment(R.id.main_frame,
+                            ProfileFragment.newInstance("",
+                                    text_id), "PROFILE_FRAGMENT", true);
+                }
+
+                @Override
+                public void updateDrawState(TextPaint ds) {
+                    super.updateDrawState(ds);
+                    ds.setUnderlineText(false);
+                }
+            };
+            ss.setSpan(clickableSpan, atStartIndexArray.get(j), atEndIndexArray.get(j), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        for (int k = 0; k < hashStartIndexArray.size(); k++) {
+            final String hash = mainString.substring(hashStartIndexArray.get(k) + 1, hashEndIndexArray.get(k));
+
+            ClickableSpan clickableSpan = new ClickableSpan() {
+                @Override
+                public void onClick(View textView) {
+                    context.startActivity(new Intent(context, SearchHashActivity.class).putExtra("HASH",hash)
+                    .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                }
+
+                @Override
+                public void updateDrawState(TextPaint ds) {
+                    super.updateDrawState(ds);
+                    ds.setUnderlineText(false);
+                }
+            };
+            ss.setSpan(clickableSpan, hashStartIndexArray.get(k), hashEndIndexArray.get(k), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+
+        return ss;
     }
 
     public static File getOutputMediaFile() {
@@ -289,15 +364,13 @@ public class Utils {
         });
     }
 
-    public static String getCurrentDate()  {
+    public static String getCurrentDate() {
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
         Date date = calendar.getTime();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
 
         return simpleDateFormat.format(date);
     }
-
-
 
 
     public static class SpinnerAdapter extends ArrayAdapter<String> {
@@ -380,6 +453,7 @@ public class Utils {
         RequestQueue queue = Volley.newRequestQueue(context);
         queue.add(getCategory);
     }
+
     public interface AlertCallback {
         void callback();
     }
