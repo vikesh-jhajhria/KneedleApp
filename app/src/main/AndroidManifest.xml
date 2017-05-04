@@ -111,7 +111,12 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_key" />
 
-        <activity android:name=".SearchHashActivity"></activity>
+        <activity android:name=".SearchHashActivity" />
+        <activity android:name=".HomeActivity" />
+        <activity android:name=".SearchActivity" />
+        <activity android:name=".PostActivity" />
+        <activity android:name=".NotificationActivity" />
+        <activity android:name=".ProfileActivity"></activity>
     </application>
 
 </manifest>

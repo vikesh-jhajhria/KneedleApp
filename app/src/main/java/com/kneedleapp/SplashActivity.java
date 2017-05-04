@@ -44,7 +44,7 @@ public class SplashActivity extends BaseActivity {
                     startActivity(new Intent(getApplicationContext(), LandingActivity.class));
                     finishAffinity();
                 } else {
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                     finishAffinity();
                 }
             }

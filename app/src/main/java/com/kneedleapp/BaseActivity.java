@@ -144,6 +144,28 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.img_back:
                 onBackPressed();
                 break;
+            case R.id.rl_home:
+                startActivity(new Intent(getApplicationContext(), HomeActivity.class)
+                .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                finishAffinity();
+                break;
+            case R.id.rl_search:
+                startActivity(new Intent(getApplicationContext(), SearchActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                break;
+            case R.id.rl_post:
+                startActivity(new Intent(getApplicationContext(), PostActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                break;
+            case R.id.rl_notification:
+                startActivity(new Intent(getApplicationContext(), NotificationActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                break;
+            case R.id.rl_profile:
+                startActivity(new Intent(getApplicationContext(), ProfileActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                break;
+
         }
     }
 
