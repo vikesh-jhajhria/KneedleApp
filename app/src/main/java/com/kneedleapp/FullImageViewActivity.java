@@ -23,7 +23,7 @@ public class FullImageViewActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_full_image_view);
-
+CURRENT_PAGE = "FULL_IMAGE";
         Bundle extras = getIntent().getExtras();
 
         mUsername = extras.getString("USERNAME");

@@ -1,6 +1,7 @@
 package com.kneedleapp.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.widget.CardView;
@@ -25,12 +26,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.kneedleapp.AddCommentActivity;
 import com.kneedleapp.BaseActivity;
+import com.kneedleapp.FeedDetailActivity;
 import com.kneedleapp.KneedleApp;
+import com.kneedleapp.ProfileActivity;
 import com.kneedleapp.R;
-import com.kneedleapp.fragment.AddCommentFragment;
-import com.kneedleapp.fragment.FeedDetailFragment;
-import com.kneedleapp.fragment.ProfileFragment;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
@@ -43,7 +44,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.kneedleapp.utils.Config.fragmentManager;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
@@ -89,11 +90,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                 if (viewType.equalsIgnoreCase("LIST")) {
                     mListener.getItem(position, holder, feedItemVo.getLiked());
                 } else {
-                    FeedDetailFragment fragment = FeedDetailFragment.newInstance(feedItemVo.getmId());
-                    fragmentManager.beginTransaction()
-                            .add(R.id.main_frame, fragment, "FEED_DETAIL_FRAGMENT")
-                            .addToBackStack(null)
-                            .commit();
+                    context.startActivity(new Intent(getApplicationContext(), FeedDetailActivity.class)
+                            .putExtra("FEEDID",feedItemVo.getmId())
+                            .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 }
             }
         });
@@ -237,21 +236,17 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             holder.comment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    AddCommentFragment fragment = AddCommentFragment.newInstance(feedItemVo.getmId());
-                    fragmentManager.beginTransaction()
-                            .add(R.id.main_frame, fragment, "ADDCOMMENT_FRAGMENT")
-                            .addToBackStack(null)
-                            .commit();
+                    context.startActivity(new Intent(getApplicationContext(), AddCommentActivity.class)
+                            .putExtra("FEEDID",feedItemVo.getmId())
+                            .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 }
             });
             holder.ll_comment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    AddCommentFragment fragment = AddCommentFragment.newInstance(feedItemVo.getmId());
-                    fragmentManager.beginTransaction()
-                            .add(R.id.main_frame, fragment, "ADDCOMMENT_FRAGMENT")
-                            .addToBackStack(null)
-                            .commit();
+                    context.startActivity(new Intent(getApplicationContext(), AddCommentActivity.class)
+                            .putExtra("FEEDID",feedItemVo.getmId())
+                            .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 }
             });
             Glide.with(context).load(feedItemVo.getmUserImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(holder.imgUser);
@@ -259,9 +254,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                 @Override
                 public void onClick(View view) {
                     if (!isProfileFeed) {
-                        ((BaseActivity) context).addFragment(R.id.main_frame,
-                                ProfileFragment.newInstance(feedItemVo.getmUserId(),
-                                        feedItemVo.getmUserName()), "PROFILE_FRAGMENT", true);
+                        context.startActivity(new Intent(getApplicationContext(), ProfileActivity.class)
+                                .putExtra("USER_ID",feedItemVo.getmUserId())
+                                .putExtra("USER_NAME",feedItemVo.getmUserName())
+                                .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                     }
 
                 }
@@ -272,9 +268,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                 @Override
                 public void onClick(View view) {
                     if (!isProfileFeed) {
-                        ((BaseActivity) context).addFragment(R.id.main_frame,
-                                ProfileFragment.newInstance(feedItemVo.getmUserId(),
-                                        feedItemVo.getmUserName()), "PROFILE_FRAGMENT", true);
+                        context.startActivity(new Intent(getApplicationContext(), ProfileActivity.class)
+                                .putExtra("USER_ID",feedItemVo.getmUserId())
+                                .putExtra("USER_NAME",feedItemVo.getmUserName())
+                                .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                     }
                 }
             });

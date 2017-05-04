@@ -1,6 +1,7 @@
 package com.kneedleapp.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,14 +10,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.kneedleapp.BaseActivity;
+import com.kneedleapp.ProfileActivity;
 import com.kneedleapp.R;
-import com.kneedleapp.fragment.ProfileFragment;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.SearchResultVO;
 
 import java.util.ArrayList;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.CheckViewHolder> {
@@ -52,17 +54,19 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         holder.txt_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((BaseActivity) context).addFragment(R.id.main_frame,
-                        ProfileFragment.newInstance(searchResultVo.getmUserId(),
-                                searchResultVo.getmUserName()), "PROFILE_FRAGMENT", true);
+                context.startActivity(new Intent(getApplicationContext(), ProfileActivity.class)
+                        .putExtra("USER_ID",searchResultVo.getmUserId())
+                        .putExtra("USER_NAME", searchResultVo.getmUserName())
+                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
             }
         });
         holder.img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((BaseActivity) context).addFragment(R.id.main_frame,
-                        ProfileFragment.newInstance(searchResultVo.getmUserId(),
-                                searchResultVo.getmUserName()), "PROFILE_FRAGMENT", true);
+                context.startActivity(new Intent(getApplicationContext(), ProfileActivity.class)
+                        .putExtra("USER_ID",searchResultVo.getmUserId())
+                        .putExtra("USER_NAME", searchResultVo.getmUserName())
+                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
             }
         });
 

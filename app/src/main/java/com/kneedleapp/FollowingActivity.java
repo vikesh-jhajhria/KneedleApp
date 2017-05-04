@@ -1,10 +1,10 @@
 package com.kneedleapp;
 
-import android.view.View;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,8 +28,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.kneedleapp.utils.Config.fragmentManager;
-
 public class FollowingActivity extends BaseActivity {
 
     private UserListAdapter userListAdapter;
@@ -52,7 +50,7 @@ public class FollowingActivity extends BaseActivity {
 
         emptyView = (TextView) findViewById(R.id.empty_view);
         applyFonts();
-        Config.LAST_PAGE = "";
+        CURRENT_PAGE = "FOLLOWING";
         findViewById(R.id.img_back).setOnClickListener(this);
         ((TextView) findViewById(R.id.txt_title)).setText("Followings");
 
@@ -67,16 +65,6 @@ public class FollowingActivity extends BaseActivity {
         }
     }
 
-    @Override
-    public void onClick(View view) {
-
-        switch (view.getId()) {
-
-            case R.id.img_back:
-                fragmentManager.popBackStack();
-                break;
-        }
-    }
 
 
     private void applyFonts() {

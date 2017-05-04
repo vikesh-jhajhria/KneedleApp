@@ -55,11 +55,12 @@ public class NotificationActivity extends BaseActivity implements RecyclerView.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
+        findViewById(R.id.rl_notification_selected).setVisibility(View.VISIBLE);
         mList = new ArrayList<>();
 
         emptyView = (TextView) findViewById(R.id.empty_view);
         Utils.setTypeface(this, emptyView, Config.CENTURY_GOTHIC_REGULAR);
-        Config.LAST_PAGE = "HOME";
+        CURRENT_PAGE = "NOTIFICATION";
         final DividerDecoration divider = new DividerDecoration.Builder(this)
                 .setHeight(R.dimen.default_divider_height)
                 .setColorResource(R.color.gray)
@@ -218,12 +219,15 @@ public class NotificationActivity extends BaseActivity implements RecyclerView.O
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
                                 mList.clear();
-                                loadDataToList(jObject.getJSONObject("result").optJSONArray("likes"));
-                                loadDataToList(jObject.getJSONObject("result").optJSONArray("comments"));
-                                loadDataToList(jObject.getJSONObject("result").optJSONArray("followers"));
-                                loadDataToList(jObject.getJSONObject("result").optJSONArray("taged_users"));
-                                sortList();
-
+                                if(!jObject.isNull("result")) {
+                                    loadDataToList(jObject.getJSONObject("result").optJSONArray("likes"));
+                                    loadDataToList(jObject.getJSONObject("result").optJSONArray("comments"));
+                                    loadDataToList(jObject.getJSONObject("result").optJSONArray("followers"));
+                                    loadDataToList(jObject.getJSONObject("result").optJSONArray("taged_users"));
+                                    sortList();
+                                } else{
+                                    emptyView.setVisibility(View.VISIBLE);
+                                }
                             } else {
                                 if (mList.size() == 0) {
                                     emptyView.setText(jObject.getString("status_msg"));

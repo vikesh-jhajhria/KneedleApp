@@ -8,18 +8,16 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.kneedleapp.fragment.PostEditFragment;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.ImageCompression;
 import com.kneedleapp.utils.Utils;
 
-import static com.kneedleapp.utils.Config.fragmentManager;
+import static com.kneedleapp.utils.Config.postBitmap;
 
 public class PostActivity extends BaseActivity {
 
@@ -32,8 +30,10 @@ public class PostActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
+        findViewById(R.id.rl_post_selected).setVisibility(View.VISIBLE);
+        postBitmap = null;
         mImgContent = (ImageView) findViewById(R.id.img_content);
-        Config.LAST_PAGE = "HOME";
+        CURRENT_PAGE = "POST";
         findViewById(R.id.img_next).setOnClickListener(this);
         findViewById(R.id.txt_library).setOnClickListener(this);
         findViewById(R.id.txt_photo).setOnClickListener(this);
@@ -50,11 +50,9 @@ public class PostActivity extends BaseActivity {
             case R.id.img_next:
 
                 if (bitmap != null) {
-                    Fragment fragment = new PostEditFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable("POSTIMAGE", ((BitmapDrawable) mImgContent.getDrawable()).getBitmap());
-                    fragment.setArguments(bundle);
-                    fragmentManager.beginTransaction().add(R.id.main_frame, fragment).addToBackStack(null).commit();
+                    postBitmap = ((BitmapDrawable) mImgContent.getDrawable()).getBitmap();
+                    startActivity(new Intent(getApplicationContext(), PostEditActivity.class)
+                            .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 } else {
                     Toast.makeText(PostActivity.this, "Please choose image", Toast.LENGTH_SHORT).show();
                 }

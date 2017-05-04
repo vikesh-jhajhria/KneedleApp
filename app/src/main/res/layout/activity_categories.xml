@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
 
-        <include layout="@layout/layout_bottombar" />
+      <!--  <include layout="@layout/layout_bottombar" />-->
     </RelativeLayout>
 
 </RelativeLayout>

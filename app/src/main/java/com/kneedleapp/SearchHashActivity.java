@@ -47,6 +47,8 @@ public class SearchHashActivity extends BaseActivity implements FeedAdapter.Prof
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_hash);
+        CURRENT_PAGE = "SEARCH";
+        findViewById(R.id.rl_search_selected).setVisibility(View.VISIBLE);
 
         listBtn = (ImageView) findViewById(R.id.img_list);
         gridBtn = (ImageView) findViewById(R.id.img_grid);

@@ -30,8 +30,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.kneedleapp.adapter.CategoryAdapter;
-import com.kneedleapp.fragment.CategoriesFragment;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.CategoryVo;
@@ -44,7 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RegistrationActivity extends BaseActivity implements CategoryAdapter.Sender {
+public class RegistrationActivity extends BaseActivity {
     private String gender = "male";
     private ProgressDialog pd = null;
     private Dialog builder;
@@ -57,7 +55,7 @@ public class RegistrationActivity extends BaseActivity implements CategoryAdapte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-
+        mStoreList.clear();
         fetchUserLocation();
 
         applyFonts();
@@ -160,15 +158,13 @@ public class RegistrationActivity extends BaseActivity implements CategoryAdapte
                 ((ImageView) findViewById(R.id.img_homme)).setImageResource(R.drawable.ic_homme_white);
                 break;
             case R.id.txt_profile_type:
-                findViewById(R.id.nested_scroll_view).setVisibility(View.GONE);
-                Bundle bundle = new Bundle();
-                bundle.putString("KEY", "1");
-                CategoriesFragment fragment = new CategoriesFragment();
-                fragment.setArguments(bundle);
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_registration, fragment).commit();
+                startActivity(new Intent(getApplicationContext(), CategoriesActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 break;
         }
     }
+
+
 
     public void RegisterData() {
         showProgessDialog();
@@ -253,10 +249,7 @@ public class RegistrationActivity extends BaseActivity implements CategoryAdapte
         Utils.setTypeface(this, (TextView) findViewById(R.id.txt_terms_condition), Config.CENTURY_GOTHIC_REGULAR);
     }
 
-    @Override
-    public void sendData(ArrayList<String> data) {
 
-    }
 
     public class WebClientClass extends WebViewClient {
 

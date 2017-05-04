@@ -1,6 +1,5 @@
 package com.kneedleapp;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +16,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.kneedleapp.adapter.UserListAdapter;
-import com.kneedleapp.fragment.FollowerFragment;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.UserDetailsVo;
@@ -29,8 +27,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.kneedleapp.utils.Config.fragmentManager;
 
 public class BlockedUsersActivity extends BaseActivity {
 
@@ -54,7 +50,7 @@ public class BlockedUsersActivity extends BaseActivity {
 
         emptyView = (TextView) findViewById(R.id.empty_view);
         applyFonts();
-        Config.LAST_PAGE = "";
+        CURRENT_PAGE = "BLOCKED_USER";
         findViewById(R.id.img_back).setOnClickListener(this);
         ((TextView) findViewById(R.id.txt_title)).setText("Blocked Users");
 
@@ -69,20 +65,6 @@ public class BlockedUsersActivity extends BaseActivity {
         getBlockedUsers();
     }
     
-
-    @Override
-    public void onClick(View view) {
-
-        switch (view.getId()) {
-
-            case R.id.img_back:
-                fragmentManager.popBackStack();
-                break;
-        }
-    }
-
-
-
     private void applyFonts() {
         Utils.setTypeface(this, (TextView) findViewById(R.id.txt_title), Config.CENTURY_GOTHIC_BOLD);
         Utils.setTypeface(this, emptyView, Config.CENTURY_GOTHIC_REGULAR);

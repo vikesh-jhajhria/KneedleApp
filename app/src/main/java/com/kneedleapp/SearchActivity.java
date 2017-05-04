@@ -1,6 +1,7 @@
 package com.kneedleapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -12,16 +13,16 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.kneedleapp.fragment.SearchResultFragment;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.CategoryVo;
 
 import java.util.ArrayList;
+
+import static com.kneedleapp.RegistrationActivity.mStoreList;
 
 public class SearchActivity extends BaseActivity {
 
@@ -29,8 +30,9 @@ public class SearchActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-
-        Config.LAST_PAGE = "HOME";
+        findViewById(R.id.rl_search_selected).setVisibility(View.VISIBLE);
+        mStoreList.clear();
+        CURRENT_PAGE = "SEARCH";
         ((CheckBox) findViewById(R.id.check_near_me)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -75,12 +77,10 @@ public class SearchActivity extends BaseActivity {
                         bundle.putString("ZIP", ((EditText) findViewById(R.id.txt_zip)).getText().toString().trim());
                         bundle.putString("RANGE", (String) ((Spinner) findViewById(R.id.spinner_within)).getSelectedItem());
                     }
-                    SearchResultFragment fragment = SearchResultFragment.newInstance();
-                    fragment.setArguments(bundle);
-                    Config.fragmentManager.beginTransaction()
-                            .add(R.id.main_frame, fragment, "SEARCH_RESULT")
-                            .addToBackStack(null)
-                            .commit();
+
+                    startActivity(new Intent(getApplicationContext(), SearchResultActivity.class)
+                            .putExtras(bundle)
+                            .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                     hideKeyboard();
 
                 }
@@ -90,14 +90,12 @@ public class SearchActivity extends BaseActivity {
             }
         });
 
-        ((RelativeLayout) findViewById(R.id.rl_profile_type)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.rl_profile_type).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Bundle bundle = new Bundle();
-                Fragment fragment = new CategoriesFragment();
-                bundle.putString("KEY", "2");
-                fragment.setArguments(bundle);
-                getFragmentManager().beginTransaction().add(R.id.main_frame, fragment).addToBackStack(null).commit();*/
+                startActivity(new Intent(getApplicationContext(), CategoriesActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+
             }
         });
 
@@ -172,16 +170,9 @@ public class SearchActivity extends BaseActivity {
                     ((EditText) findViewById(R.id.txt_search)).setError("Please enter key to search.");
                     break;
                 }
-
-                Bundle bundle = new Bundle();
-                bundle.putString("SEARCHTEXT", searchText);
-
-                SearchResultFragment fragment = SearchResultFragment.newInstance();
-                fragment.setArguments(bundle);
-                Config.fragmentManager.beginTransaction()
-                        .add(R.id.main_frame, fragment, "SEARCH_RESULT")
-                        .addToBackStack(null)
-                        .commit();
+                startActivity(new Intent(getApplicationContext(), SearchResultActivity.class)
+                        .putExtra("SEARCHTEXT",searchText)
+                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 hideKeyboard();
                 break;
         }
@@ -200,12 +191,12 @@ public class SearchActivity extends BaseActivity {
         Log.v("Kneedle", "Search");
 
 
-        if (RegistrationActivity.mStoreList != null) {
+        if (mStoreList != null) {
             StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < RegistrationActivity.mStoreList.size(); i++) {
-                CategoryVo categoryVo = RegistrationActivity.mStoreList.get(i);
+            for (int i = 0; i < mStoreList.size(); i++) {
+                CategoryVo categoryVo = mStoreList.get(i);
                 if (categoryVo.isChecked()) {
-                    if (i < RegistrationActivity.mStoreList.size() - 1) {
+                    if (i < mStoreList.size() - 1) {
                         builder.append(categoryVo.getmCategoryName() + ", ");
                     } else {
                         builder.append(categoryVo.getmCategoryName());

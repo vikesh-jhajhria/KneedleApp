@@ -28,8 +28,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.kneedleapp.utils.Config.fragmentManager;
-
 public class FollowerActivity extends BaseActivity {
 
     private UserListAdapter followerAdapter;
@@ -52,7 +50,7 @@ public class FollowerActivity extends BaseActivity {
         ((TextView) findViewById(R.id.txt_title)).setText("Followers");
         emptyView = (TextView) findViewById(R.id.empty_view);
         applyFonts();
-        Config.LAST_PAGE = "";
+        CURRENT_PAGE = "FOLLOWER";
         findViewById(R.id.img_back).setOnClickListener(this);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -68,16 +66,6 @@ public class FollowerActivity extends BaseActivity {
 
     }
 
-    @Override
-    public void onClick(View view) {
-
-        switch (view.getId()) {
-
-            case R.id.img_back:
-                fragmentManager.popBackStack();
-                break;
-        }
-    }
 
 
     private void applyFonts() {

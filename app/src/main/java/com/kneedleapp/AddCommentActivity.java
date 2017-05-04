@@ -46,7 +46,7 @@ public class AddCommentActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_comment);
         feedId = getIntent().getExtras().getString(FEEDID);
-        Config.LAST_PAGE = "";
+        CURRENT_PAGE = "ADD_COMMENT";
         findViews();
         applyFonts();
         if (Utils.isNetworkConnected(AddCommentActivity.this, true)) {

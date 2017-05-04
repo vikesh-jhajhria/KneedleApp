@@ -1,6 +1,7 @@
 package com.kneedleapp.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
@@ -11,14 +12,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.kneedleapp.BaseActivity;
+import com.kneedleapp.ProfileActivity;
 import com.kneedleapp.R;
-import com.kneedleapp.fragment.ProfileFragment;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.CommentVo;
 
 import java.util.ArrayList;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by aman.sharma on 2/23/2017.
@@ -56,17 +58,20 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         holder.imgUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((BaseActivity) mContext).addFragment(R.id.main_frame,
-                        ProfileFragment.newInstance(obj.getUserId(),
-                                obj.getUserName()), "PROFILE_FRAGMENT", true);
+
+                mContext.startActivity(new Intent(getApplicationContext(), ProfileActivity.class)
+                        .putExtra("USER_ID",obj.getUserId())
+                        .putExtra("USER_NAME", obj.getUserName())
+                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
             }
         });
         holder.userName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((BaseActivity) mContext).addFragment(R.id.main_frame,
-                        ProfileFragment.newInstance(obj.getUserId(),
-                                obj.getUserName()), "PROFILE_FRAGMENT", true);
+                mContext.startActivity(new Intent(getApplicationContext(), ProfileActivity.class)
+                        .putExtra("USER_ID",obj.getUserId())
+                        .putExtra("USER_NAME", obj.getUserName())
+                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
             }
         });
     }

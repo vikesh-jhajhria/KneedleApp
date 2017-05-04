@@ -1,9 +1,7 @@
 package com.kneedleapp;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,7 +17,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.kneedleapp.adapter.CategoryAdapter;
-import com.kneedleapp.fragment.SearchFragment;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.CategoryVo;
@@ -32,26 +29,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CategoriesActivity extends BaseActivity implements CategoryAdapter.Sender {
+public class CategoriesActivity extends BaseActivity {
 
 
     private ArrayList<CategoryVo> mList;
     private RecyclerView mRecyclerView;
     private CategoryAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private ArrayList<String> mSendData;
-    private String mType;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_categories);
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            mType = bundle.getString("KEY");
-        }
-        Config.LAST_PAGE = "";
+        CURRENT_PAGE = "CATEGORIES";
         Utils.setTypeface(CategoriesActivity.this, (TextView) findViewById(R.id.btn_done), Config.CENTURY_GOTHIC_REGULAR);
         findViews();
         getCategory();
@@ -61,31 +52,15 @@ public class CategoriesActivity extends BaseActivity implements CategoryAdapter.
     private void findViews() {
 
         mList = new ArrayList<>();
-        mSendData = new ArrayList<>();
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_category);
         mLayoutManager = new LinearLayoutManager(CategoriesActivity.this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new CategoryAdapter(CategoriesActivity.this, mList);
         mRecyclerView.setAdapter(mAdapter);
-        ((TextView) findViewById(R.id.btn_done)).setOnClickListener(new View.OnClickListener() {
+         findViewById(R.id.btn_done).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (mType.equalsIgnoreCase("1")) {
-                    Intent intent = new Intent(CategoriesActivity.this, RegistrationActivity.class);
-                    intent.putStringArrayListExtra("ARRAY", mSendData);
-                    startActivity(intent);
-                    CategoriesActivity.this.finish();
-
-                } else {
-                    Bundle bundle = new Bundle();
-                    /*Fragment fragment = new SearchFragment();
-                    bundle.putStringArrayList("ARRAY", mSendData);
-                    fragment.setArguments(bundle);
-                    getFragmentManager().beginTransaction().replace(R.id.main_frame, fragment).commit();*/
-                }
-
-
+                CategoriesActivity.this.finish();
             }
         });
 
@@ -150,11 +125,6 @@ public class CategoriesActivity extends BaseActivity implements CategoryAdapter.
 
         RequestQueue queue = Volley.newRequestQueue(CategoriesActivity.this);
         queue.add(getCategory);
-    }
-
-    @Override
-    public void sendData(ArrayList<String> data) {
-        mSendData = data;
     }
 
 

@@ -45,13 +45,12 @@ public class HomeActivity extends BaseActivity implements FeedAdapter.ProfileIte
     private ImageView listBtn, gridBtn;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-    
-   
+        findViewById(R.id.rl_home_selected).setVisibility(View.VISIBLE);
+        CURRENT_PAGE = "HOME";
         listBtn = (ImageView) findViewById(R.id.img_list);
         gridBtn = (ImageView) findViewById(R.id.img_grid);
         emptyView = (TextView) findViewById(R.id.empty_view);
@@ -60,7 +59,7 @@ public class HomeActivity extends BaseActivity implements FeedAdapter.ProfileIte
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mLayoutManager = new LinearLayoutManager(HomeActivity.this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new FeedAdapter( mList,HomeActivity.this, "LIST", HomeActivity.this,false);
+        mAdapter = new FeedAdapter(mList, HomeActivity.this, "LIST", HomeActivity.this, false);
         mRecyclerView.setAdapter(mAdapter);
         listBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +68,7 @@ public class HomeActivity extends BaseActivity implements FeedAdapter.ProfileIte
                 gridBtn.setVisibility(View.VISIBLE);
                 mLayoutManager = new LinearLayoutManager(HomeActivity.this);
                 mRecyclerView.setLayoutManager(mLayoutManager);
-                mAdapter = new FeedAdapter( mList,HomeActivity.this, "LIST", HomeActivity.this,false);
+                mAdapter = new FeedAdapter(mList, HomeActivity.this, "LIST", HomeActivity.this, false);
                 mRecyclerView.setAdapter(mAdapter);
             }
         });
@@ -80,7 +79,7 @@ public class HomeActivity extends BaseActivity implements FeedAdapter.ProfileIte
                 listBtn.setVisibility(View.VISIBLE);
                 gridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
                 mRecyclerView.setLayoutManager(gridLayoutManager);
-                mAdapter = new FeedAdapter( mList,HomeActivity.this, "GRID", HomeActivity.this,false);
+                mAdapter = new FeedAdapter(mList, HomeActivity.this, "GRID", HomeActivity.this, false);
                 mRecyclerView.setAdapter(mAdapter);
             }
         });
@@ -105,7 +104,7 @@ public class HomeActivity extends BaseActivity implements FeedAdapter.ProfileIte
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 int lastvisibleitemposition;
-                if(gridBtn.getVisibility() != View.VISIBLE){
+                if (gridBtn.getVisibility() != View.VISIBLE) {
                     int[] arr = gridLayoutManager.findLastVisibleItemPositions(null);
                     lastvisibleitemposition = arr[0];
                     if (lastvisibleitemposition >= mAdapter.getItemCount() - 3) {
@@ -116,8 +115,7 @@ public class HomeActivity extends BaseActivity implements FeedAdapter.ProfileIte
                             getFeedData();
                         }
                     }
-                }
-                else {
+                } else {
                     lastvisibleitemposition = mLayoutManager.findLastVisibleItemPosition();
                     if (lastvisibleitemposition == mAdapter.getItemCount() - 1) {
 
@@ -132,8 +130,8 @@ public class HomeActivity extends BaseActivity implements FeedAdapter.ProfileIte
         });
 
 
-
     }
+
     @Override
     public void getItem(int position, FeedAdapter.ViewHolder holder, boolean isLiked) {
         Intent intent = new Intent(HomeActivity.this, FullImageViewActivity.class);
@@ -144,6 +142,7 @@ public class HomeActivity extends BaseActivity implements FeedAdapter.ProfileIte
         intent.putExtra("LIKEDORNOT", isLiked);
         startActivity(intent);
     }
+
     public void getFeedData() {
         emptyView.setVisibility(View.GONE);
         showProgessDialog();
@@ -210,9 +209,9 @@ public class HomeActivity extends BaseActivity implements FeedAdapter.ProfileIte
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("user_id", AppPreferences.getAppPreferences(HomeActivity.this).getStringValue(AppPreferences.USER_ID));
                 params.put("login_id", AppPreferences.getAppPreferences(HomeActivity.this).getStringValue(AppPreferences.USER_ID));
-                params.put("lmt", ""+limit);
-                params.put("offset", ""+offset);
-                Log.v("KNEEDLE","params: "+params);
+                params.put("lmt", "" + limit);
+                params.put("offset", "" + offset);
+                Log.v("KNEEDLE", "params: " + params);
                 return params;
             }
         };
@@ -225,5 +224,5 @@ public class HomeActivity extends BaseActivity implements FeedAdapter.ProfileIte
         RequestQueue feedqueue = Volley.newRequestQueue(HomeActivity.this);
         feedqueue.add(requestFeed);
     }
-    
+
 }

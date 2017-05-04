@@ -91,7 +91,7 @@ public class LoginActivity extends BaseActivity {
                                 JSONObject userJsonObject = userJsonArray.getJSONObject(0);
                                 mPrefernce.putStringValue(AppPreferences.USER_NAME,username);
                                 mPrefernce.setUserId(userJsonObject.getString("id"));
-                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                                 finishAffinity();
                             } else {
                                 Toast.makeText(LoginActivity.this, jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();

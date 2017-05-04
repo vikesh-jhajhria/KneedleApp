@@ -1,6 +1,7 @@
 package com.kneedleapp.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,8 +20,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.kneedleapp.BaseActivity;
+import com.kneedleapp.ProfileActivity;
 import com.kneedleapp.R;
-import com.kneedleapp.fragment.ProfileFragment;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
@@ -34,6 +35,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.CheckViewHolder> {
@@ -116,9 +119,10 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.CheckV
         holder.img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((BaseActivity) context).addFragment(R.id.main_frame,
-                        ProfileFragment.newInstance(userDetail.getUserId(),
-                                userDetail.getUsername()), "PROFILE_FRAGMENT", true);
+                context.startActivity(new Intent(getApplicationContext(), ProfileActivity.class)
+                        .putExtra("USER_ID",userDetail.getUserId())
+                        .putExtra("USER_NAME", userDetail.getUsername())
+                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
 
             }
         });
@@ -127,9 +131,10 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.CheckV
         holder.txt_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((BaseActivity) context).addFragment(R.id.main_frame,
-                        ProfileFragment.newInstance(userDetail.getUserId(),
-                                userDetail.getUsername()), "PROFILE_FRAGMENT", true);
+                context.startActivity(new Intent(getApplicationContext(), ProfileActivity.class)
+                        .putExtra("USER_ID",userDetail.getUserId())
+                        .putExtra("USER_NAME", userDetail.getUsername())
+                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
             }
         });
     }

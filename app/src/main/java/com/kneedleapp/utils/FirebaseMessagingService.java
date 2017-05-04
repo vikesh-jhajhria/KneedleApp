@@ -14,6 +14,8 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.firebase.messaging.RemoteMessage;
+import com.kneedleapp.FeedDetailActivity;
+import com.kneedleapp.ProfileActivity;
 import com.kneedleapp.R;
 
 
@@ -47,9 +49,11 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         Intent intent = null;
         if (user_id != null && !user_id.isEmpty()) {
-            intent = new Intent(this, NotificationBroadcast.class).putExtra("userId", user_id);
+            intent = new Intent(getApplicationContext(), ProfileActivity.class)
+                    .putExtra("USER_ID",user_id);
         } else if (feed_id != null && !feed_id.isEmpty()) {
-            intent = new Intent(this, NotificationBroadcast.class).putExtra("feedId", feed_id);
+            intent = new Intent(getApplicationContext(), FeedDetailActivity.class)
+                    .putExtra("FEEDID",feed_id);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent,

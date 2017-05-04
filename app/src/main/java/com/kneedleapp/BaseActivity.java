@@ -47,6 +47,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     private Context mContext;
     AppPreferences preferences;
     private Utils.MediaPermissionListener mediaPermissionListener;
+    protected String CURRENT_PAGE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,11 +71,12 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
 
     }
+
     public enum BottomBarTab {
         HOME, SEARCH, POST, NOTIFICATION, PROFILE;
     }
 
-    public enum NotificationType{
+    public enum NotificationType {
         LIKE, COMMENT, FOLLOW, TAGGED, HEADER;
     }
 
@@ -127,6 +129,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
             }
         } else {
             super.onBackPressed();
+            overridePendingTransition(0, 0);
         }
         new Handler().postDelayed(new Runnable() {
 
@@ -145,25 +148,40 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
                 onBackPressed();
                 break;
             case R.id.rl_home:
-                startActivity(new Intent(getApplicationContext(), HomeActivity.class)
-                .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
-                finishAffinity();
+                if(!CURRENT_PAGE.equals("HOME")) {
+                    startActivity(new Intent(getApplicationContext(), HomeActivity.class)
+                            .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                    overridePendingTransition(0, 0);
+                    finishAffinity();
+                }
                 break;
             case R.id.rl_search:
-                startActivity(new Intent(getApplicationContext(), SearchActivity.class)
-                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                if(!CURRENT_PAGE.equals("SEARCH")) {
+                    startActivity(new Intent(getApplicationContext(), SearchActivity.class)
+                            .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                    overridePendingTransition(0, 0);
+                }
                 break;
             case R.id.rl_post:
-                startActivity(new Intent(getApplicationContext(), PostActivity.class)
-                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                if(!CURRENT_PAGE.equals("POST")) {
+                    startActivity(new Intent(getApplicationContext(), PostActivity.class)
+                            .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                    overridePendingTransition(0, 0);
+                }
                 break;
             case R.id.rl_notification:
-                startActivity(new Intent(getApplicationContext(), NotificationActivity.class)
-                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                if(!CURRENT_PAGE.equals("NOTIFICATION")) {
+                    startActivity(new Intent(getApplicationContext(), NotificationActivity.class)
+                            .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                    overridePendingTransition(0, 0);
+                }
                 break;
             case R.id.rl_profile:
-                startActivity(new Intent(getApplicationContext(), ProfileActivity.class)
-                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                if(!CURRENT_PAGE.equals("PROFILE")) {
+                    startActivity(new Intent(getApplicationContext(), ProfileActivity.class)
+                            .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                    overridePendingTransition(0, 0);
+                }
                 break;
 
         }

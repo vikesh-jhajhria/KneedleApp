@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,10 +24,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.kneedleapp.adapter.FeedAdapter;
-import com.kneedleapp.fragment.EditProfileFragment;
-import com.kneedleapp.fragment.FollowerFragment;
-import com.kneedleapp.fragment.FollowingFragment;
-import com.kneedleapp.fragment.ProfileFragment;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
@@ -43,8 +38,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import static com.kneedleapp.utils.Config.fragmentManager;
 
 public class ProfileActivity extends BaseActivity implements FeedAdapter.ProfileItemListener {
 
@@ -66,33 +59,17 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
     private static final String USER_ID = "USER_ID";
     private static final String USER_NAME = "USER_NAME";
 
-    public static ProfileFragment newInstance(String userId, String userName) {
-        ProfileFragment fragment = new ProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(USER_ID, userId);
-        args.putString(USER_NAME, userName);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     public String getUserId() {
         return mUserId;
     }
 
-    public void loadMyProfile() {
-        mUserId = mPrefernce.getUserId();
-        mUserName = mPrefernce.getUserName();
-        findViewById(R.id.txt_btn_edit).setVisibility(View.VISIBLE);
-        if (Utils.isNetworkConnected(this, true)) {
-            getUserDetails();
-        }
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
+        CURRENT_PAGE = "PROFILE";
+        findViewById(R.id.rl_profile_selected).setVisibility(View.VISIBLE);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             mUserName = bundle.getString(USER_NAME);
@@ -148,7 +125,7 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
         findViewById(R.id.txt_btn_follow).setOnClickListener(this);
         findViewById(R.id.txt_btn_following).setOnClickListener(this);
         findViewById(R.id.img_back).setOnClickListener(this);
-        findViewById(R.id.img_chat).setOnClickListener(this);
+        findViewById(R.id.img_setting).setOnClickListener(this);
 
         num_of_posts = (TextView) findViewById(R.id.txt_post_count);
         num_of_followers = (TextView) findViewById(R.id.txt_follower_count);
@@ -235,9 +212,8 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
         switch (view.getId()) {
 
             case R.id.txt_btn_edit:
-                Bundle bundle = new Bundle();
-                Fragment fragment = new EditProfileFragment();
-                fragmentManager.beginTransaction().add(R.id.main_frame, fragment, "EDITPROFILE").addToBackStack(null).commit();
+                startActivity(new Intent(getApplicationContext(), EditProfileActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 break;
             case R.id.txt_btn_follow:
                 followUnfollowUser(mUserId, Utils.getCurrentDate());
@@ -247,52 +223,22 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
                 break;
             case R.id.img_back:
                 break;
-            case R.id.img_chat:
-               /* final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                View view1 = LayoutInflater.from(getContext()).inflate(R.layout.unfollow_popup, null);
-                builder.setCancelable(false);
-                builder.setView(view1);
+            case R.id.img_setting:
 
-                String text = "UNFOLLOW  ABIELKUNST?";
-                SpannableString spannableString = new SpannableString(text);
-                spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colourRed)), 0, 8, 0);
-                spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.textColorPrimary)), 9, text.length(), 0);
-                ((TextView) view1.findViewById(R.id.txt_unfollow)).setText(spannableString);
-                Utils.setTypeface(ProfileActivity.this, ((TextView) view1.findViewById(R.id.txt_unfollow)), Config.CENTURY_GOTHIC_BOLD);
-                Utils.setTypeface(ProfileActivity.this, ((TextView) view1.findViewById(R.id.txt_cancel)), Config.CENTURY_GOTHIC_BOLD);
-                Utils.setTypeface(ProfileActivity.this, ((TextView) view1.findViewById(R.id.txt_confirm)), Config.CENTURY_GOTHIC_BOLD);
-                final AlertDialog alertDialog = builder.create();
-
-                ((TextView) view1.findViewById(R.id.txt_cancel)).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        alertDialog.dismiss();
-                    }
-                });
-
-                ((TextView) view1.findViewById(R.id.txt_confirm)).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        alertDialog.dismiss();
-                    }
-                });
-                alertDialog.show();*/
-
-                /*Fragment fragment1 = SettingFragment.newInstance(getUserId());
-                getFragmentManager().beginTransaction().add(R.id.main_frame, fragment1).addToBackStack(null).commit();
-*/
+                startActivity(new Intent(getApplicationContext(), SettingActivity.class)
+                        .putExtra("USER_ID", mUserId)
+                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
 
                 break;
             case R.id.ll_followers:
-                FollowerFragment followerFragment = FollowerFragment.newInstance(getUserId());
-                fragmentManager.beginTransaction().add(R.id.main_frame, followerFragment)
-                        .addToBackStack(null).commit();
-
+                startActivity(new Intent(getApplicationContext(), FollowerActivity.class)
+                        .putExtra("USER_ID", getUserId())
+                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 break;
             case R.id.ll_following:
-                FollowingFragment followingFragment = FollowingFragment.newInstance(getUserId());
-                fragmentManager.beginTransaction().add(R.id.main_frame, followingFragment)
-                        .addToBackStack(null).commit();
+                startActivity(new Intent(getApplicationContext(), FollowingActivity.class)
+                        .putExtra("USER_ID", getUserId())
+                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 break;
 
 
@@ -340,7 +286,10 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
                                     findViewById(R.id.txt_btn_following).setVisibility(View.GONE);
                                     findViewById(R.id.txt_btn_edit).setVisibility(View.VISIBLE);
                                 }
-                                String str = userDataJsonObject.getString("profiletype") + " @" + userDataJsonObject.getString("company_info");
+                                String str = userDataJsonObject.getString("profiletype");
+                                if (!userDataJsonObject.getString("company_info").isEmpty()) {
+                                    str = str + " @" + userDataJsonObject.getString("company_info");
+                                }
                                 profile_type.setText(Utils.makeSpannable(ProfileActivity.this, str));
                                 profile_type.setMovementMethod(LinkMovementMethod.getInstance());
                                 profile_type.setHighlightColor(Color.TRANSPARENT);
@@ -383,7 +332,7 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
                 Map<String, String> params = new HashMap<String, String>();
 
                 params.put("user_id", mPrefernce.getUserId());
-                params.put("username", mUserName);
+                params.put("username", mUserName.isEmpty() ? mPrefernce.getUserName() : mUserName);
 
                 return params;
             }

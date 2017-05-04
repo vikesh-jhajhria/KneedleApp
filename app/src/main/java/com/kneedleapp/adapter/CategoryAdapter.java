@@ -8,33 +8,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.kneedleapp.BaseActivity;
-import com.kneedleapp.CategoriesActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.RegistrationActivity;
-import com.kneedleapp.fragment.CategoriesFragment;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.CategoryVo;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
-/**
- * Created by aman.sharma on 3/20/2017.
- */
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
     private Context mContext;
     private ArrayList<CategoryVo> mList;
     private String data;
-    private Sender sender;
     private ArrayList<String> mListSelected;
 
 
@@ -46,7 +33,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     public CategoryAdapter(Context mContext, ArrayList<CategoryVo> mList) {
         this.mContext = mContext;
         this.mList = mList;
-        sender = (CategoriesActivity)mContext;
         mListSelected = new ArrayList<>();
 
 
@@ -77,8 +63,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
                 mListSelected.add(data);
 
 
-
-
                 for (int i = 0; i < RegistrationActivity.mStoreList.size(); i++) {
                     CategoryVo obj = RegistrationActivity.mStoreList.get(i);
 
@@ -92,7 +76,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
                     RegistrationActivity.mStoreList.add(categoryVo);
 
                 Log.e("TAG", "" + mListSelected.size());
-                sender.sendData(mListSelected);
             }
         });
     }
@@ -108,7 +91,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         public ViewHolder(View itemView) {
             super(itemView);
             checkBox = (CheckBox) itemView.findViewById(R.id.checkbox_category);
-            Utils.setTypeface(mContext,checkBox,Config.CENTURY_GOTHIC_REGULAR);
+            Utils.setTypeface(mContext, checkBox, Config.CENTURY_GOTHIC_REGULAR);
         }
     }
 }

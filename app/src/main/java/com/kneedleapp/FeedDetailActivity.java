@@ -1,10 +1,12 @@
 package com.kneedleapp;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,8 +26,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.kneedleapp.fragment.AddCommentFragment;
-import com.kneedleapp.fragment.ProfileFragment;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
@@ -39,7 +39,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.kneedleapp.R.id.img_comment_down_arrow;
-import static com.kneedleapp.utils.Config.fragmentManager;
 
 public class FeedDetailActivity extends BaseActivity {
 
@@ -60,6 +59,7 @@ public class FeedDetailActivity extends BaseActivity {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed_detail);
+        CURRENT_PAGE = "FEED_DETAIL";
         feedId = getIntent().getExtras().getString(FEEDID);
         title = (TextView) findViewById(R.id.txt_title);
         tvTitle = (TextView) findViewById(R.id.textview_title);
@@ -116,7 +116,9 @@ public class FeedDetailActivity extends BaseActivity {
 
         tvTitle.setText(feedItemVo.getmFullName());
         tvSubTitle.setText(feedItemVo.getmUserName());
-        tvDescription.setText(feedItemVo.getmDescription());
+        tvDescription.setText(Utils.makeSpannable(this, feedItemVo.getmDescription()));
+        tvDescription.setMovementMethod(LinkMovementMethod.getInstance());
+        tvDescription.setHighlightColor(Color.TRANSPARENT);
         tvComment.setText(feedItemVo.getmCommentCount() + "");
         if (feedItemVo.getmCommentCount() > 0) {
             arrow.setVisibility(View.VISIBLE);
@@ -129,13 +131,17 @@ public class FeedDetailActivity extends BaseActivity {
             card1.setVisibility(View.GONE);
         } else {
             card1.setVisibility(View.VISIBLE);
-            comment1.setText(feedItemVo.getmComment_1());
+            comment1.setText(Utils.makeSpannable(this, feedItemVo.getmComment_1()));
+            comment1.setMovementMethod(LinkMovementMethod.getInstance());
+            comment1.setHighlightColor(Color.TRANSPARENT);
         }
         if (feedItemVo.getmComment_2().isEmpty()) {
             card2.setVisibility(View.GONE);
         } else {
             card2.setVisibility(View.VISIBLE);
-            comment2.setText(feedItemVo.getmComment_2());
+            comment2.setText(Utils.makeSpannable(this, feedItemVo.getmComment_2()));
+            comment2.setMovementMethod(LinkMovementMethod.getInstance());
+            comment2.setHighlightColor(Color.TRANSPARENT);
         }
         if (feedItemVo.getLiked()) {
             imgHeart.setImageResource(R.drawable.heart);
@@ -244,21 +250,18 @@ public class FeedDetailActivity extends BaseActivity {
         comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AddCommentFragment fragment = AddCommentFragment.newInstance(feedItemVo.getmId());
-                fragmentManager.beginTransaction()
-                        .add(R.id.main_frame, fragment, "ADDCOMMENT_FRAGMENT")
-                        .addToBackStack(null)
-                        .commit();
+                startActivity(new Intent(getApplicationContext(), AddCommentActivity.class)
+                        .putExtra("FEEDID", feedItemVo.getmId())
+                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+
             }
         });
         ll_comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AddCommentFragment fragment = AddCommentFragment.newInstance(feedItemVo.getmId());
-                fragmentManager.beginTransaction()
-                        .add(R.id.main_frame, fragment, "ADDCOMMENT_FRAGMENT")
-                        .addToBackStack(null)
-                        .commit();
+                startActivity(new Intent(getApplicationContext(), AddCommentActivity.class)
+                        .putExtra("FEEDID", feedItemVo.getmId())
+                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
             }
         });
         Glide.with(FeedDetailActivity.this).load(feedItemVo.getmUserImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(imgUser);
@@ -268,9 +271,11 @@ public class FeedDetailActivity extends BaseActivity {
         imgUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((BaseActivity) FeedDetailActivity.this).addFragment(R.id.main_frame,
-                        ProfileFragment.newInstance(feedItemVo.getmUserId(),
-                                feedItemVo.getmUserName()), "PROFILE_FRAGMENT", true);
+
+                startActivity(new Intent(getApplicationContext(), ProfileActivity.class)
+                        .putExtra("USER_ID", feedItemVo.getmUserId())
+                        .putExtra("USER_NAME", feedItemVo.getmUserName())
+                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
 
             }
         });
@@ -279,9 +284,10 @@ public class FeedDetailActivity extends BaseActivity {
         tvTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((BaseActivity) FeedDetailActivity.this).addFragment(R.id.main_frame,
-                        ProfileFragment.newInstance(feedItemVo.getmUserId(),
-                                feedItemVo.getmUserName()), "PROFILE_FRAGMENT", true);
+                startActivity(new Intent(getApplicationContext(), ProfileActivity.class)
+                        .putExtra("USER_ID", feedItemVo.getmUserId())
+                        .putExtra("USER_NAME", feedItemVo.getmUserName())
+                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
             }
         });
 
@@ -530,7 +536,7 @@ public class FeedDetailActivity extends BaseActivity {
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
                                 Log.e("reponce...::>>", response);
-                                fragmentManager.popBackStack();
+                                onBackPressed();
                             }
                             Toast.makeText(FeedDetailActivity.this, jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
                         } catch (JSONException e) {

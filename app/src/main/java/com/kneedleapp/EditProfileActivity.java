@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,7 +32,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.kneedleapp.fragment.LocationFragment;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.CustomMultipartRequest;
@@ -51,8 +49,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.kneedleapp.utils.Config.fragmentManager;
 
 public class EditProfileActivity extends BaseActivity {
 
@@ -74,8 +70,8 @@ public class EditProfileActivity extends BaseActivity {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
-
-        Config.LAST_PAGE = "";
+        findViewById(R.id.rl_profile_selected).setVisibility(View.VISIBLE);
+        CURRENT_PAGE = "PROFILE";
         applyFonts();
         findViewById(R.id.img_back).setOnClickListener(this);
         findViewById(R.id.img_location).setOnClickListener(this);
@@ -189,10 +185,6 @@ public class EditProfileActivity extends BaseActivity {
     public void onClick(View mView) {
         super.onClick(mView);
         switch (mView.getId()) {
-            case R.id.img_location:
-                Fragment fragment = new LocationFragment();
-                fragmentManager.beginTransaction().add(R.id.main_frame, fragment).addToBackStack(null).commit();
-                break;
             case R.id.img_femme:
                 gender = "female";
                 ((ImageView) findViewById(R.id.img_femme)).setImageResource(R.drawable.female_red);

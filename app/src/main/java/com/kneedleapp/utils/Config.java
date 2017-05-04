@@ -1,5 +1,6 @@
 package com.kneedleapp.utils;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 
@@ -18,12 +19,13 @@ public class Config {
     public static final int REQUEST_CHECK_SETTINGS = 0x1;
     public static FragmentManager fragmentManager;
     public static Uri CAMERAFILEURI;
-    public static String LAST_PAGE = "";
+    public static String CURRENT_PAGE = "";
     public static final int CAMERAIMAGE = 123;
     public static final int GALLERYIMAGE = 124;
     public static final int CROPIMAGE = 127;
     public static final int ROTATEIMAGE = 128;
     public static final String IMAGE_DIRECTORY_NAME = "KNEEDLE";
+    public static Bitmap postBitmap;
 
     public static ArrayList<String> PROFILE_TYPE = new ArrayList<>();
 
@@ -56,6 +58,7 @@ public class Config {
     public final static String GET_USER_DETAILS = BASE_URL + "get_user_details";
     public final static String LOG_OUT = BASE_URL + "logout";
     public final static String TERMS_CONDITION = BASE_URL + "terms_conditions";
+    public final static String PRIVACY_POLICY = BASE_URL + "privacy_policy";
     public final static String GET_CATEGORY = BASE_URL + "get_categories";
     public final static String GET_USER_FEEDS = BASE_URL + "get_user_feeds";
     public final static String UPDATE_PROFILE_PIC = BASE_URL + "update_profile_pic";

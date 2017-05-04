@@ -45,10 +45,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.kneedleapp.BaseActivity;
+import com.kneedleapp.ProfileActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.SearchHashActivity;
-import com.kneedleapp.fragment.ProfileFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -67,6 +66,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.kneedleapp.utils.Config.CENTURY_GOTHIC_REGULAR;
 
 
@@ -154,9 +154,10 @@ public class Utils {
             ClickableSpan clickableSpan = new ClickableSpan() {
                 @Override
                 public void onClick(View textView) {
-                    ((BaseActivity) context).addFragment(R.id.main_frame,
-                            ProfileFragment.newInstance("",
-                                    text_id), "PROFILE_FRAGMENT", true);
+                    context.startActivity(new Intent(getApplicationContext(), ProfileActivity.class)
+                            .putExtra("USER_ID","")
+                            .putExtra("USER_NAME", text_id)
+                            .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 }
 
                 @Override
