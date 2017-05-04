@@ -116,7 +116,14 @@
         <activity android:name=".SearchActivity" />
         <activity android:name=".PostActivity" />
         <activity android:name=".NotificationActivity" />
-        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".AddCommentActivity" />
+        <activity android:name=".BlockedUsersActivity" />
+        <activity android:name=".FollowerActivity" />
+        <activity android:name=".FollowingActivity" />
+        <activity android:name=".CategoriesActivity" />
+        <activity android:name=".EditProfileActivity" />
+        <activity android:name=".FeedDetailActivity"></activity>
     </application>
 
 </manifest>

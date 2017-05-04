@@ -11,6 +11,8 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kneedleapp.BaseActivity;
+import com.kneedleapp.CategoriesActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.RegistrationActivity;
 import com.kneedleapp.fragment.CategoriesFragment;
@@ -41,10 +43,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
     }
 
-    public CategoryAdapter(Context mContext, ArrayList<CategoryVo> mList, CategoriesFragment fragment) {
+    public CategoryAdapter(Context mContext, ArrayList<CategoryVo> mList) {
         this.mContext = mContext;
         this.mList = mList;
-        sender = fragment;
+        sender = (CategoriesActivity)mContext;
         mListSelected = new ArrayList<>();
 
 
