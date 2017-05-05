@@ -173,6 +173,8 @@ public class HomeActivity extends BaseActivity implements FeedAdapter.ProfileIte
                                     feedItemVo.setmCommentCount(jsonObject.getInt("comment_count"));
                                     feedItemVo.setmComment_1(jsonObject.getString("comment_1"));
                                     feedItemVo.setmComment_2(jsonObject.getString("comment_2"));
+                                    feedItemVo.setmUsername1(jsonObject.getString("user_name_1"));
+                                    feedItemVo.setmUsername2(jsonObject.getString("user_name_2"));
                                     feedItemVo.setLiked(jsonObject.getString("likes_status").equals("1"));
 
                                     mList.add(feedItemVo);

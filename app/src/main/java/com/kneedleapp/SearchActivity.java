@@ -70,9 +70,11 @@ public class SearchActivity extends BaseActivity {
 
                     }
 
+
                     Bundle bundle = new Bundle();
                     bundle.putString("SEARCHTEXT", ((EditText) findViewById(R.id.txt_search)).getText().toString().trim());
-                    bundle.putString("CATEGORY", ((TextView) findViewById(R.id.txt_category)).getText().toString().trim());
+                    String profileType = ((TextView) findViewById(R.id.txt_category)).getText().toString().trim();
+                    bundle.putString("CATEGORY", profileType.equalsIgnoreCase("Profile Type") ? "" : profileType);
                     if (((CheckBox) findViewById(R.id.check_near_me)).isChecked()) {
                         bundle.putString("ZIP", ((EditText) findViewById(R.id.txt_zip)).getText().toString().trim());
                         bundle.putString("RANGE", (String) ((Spinner) findViewById(R.id.spinner_within)).getSelectedItem());

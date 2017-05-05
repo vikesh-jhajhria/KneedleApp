@@ -44,7 +44,7 @@ public class FeedDetailActivity extends BaseActivity {
 
 
     private TextView title;
-    public TextView tvTitle, tvSubTitle, tvDescription, tvLikes, tvComment, comment1, comment2;
+    public TextView tvTitle, tvSubTitle, tvDescription, tvLikes, tvComment, comment1, comment2, username1, username2;
     public ImageView imgUser, imgHeart, imgMenu, comment, share, arrow;
     public ViewGroup transitionsContainer;
     public ImageView imgContent;
@@ -69,6 +69,8 @@ public class FeedDetailActivity extends BaseActivity {
         tvComment = (TextView) findViewById(R.id.tv_comments);
         comment1 = (TextView) findViewById(R.id.txt_comment_1);
         comment2 = (TextView) findViewById(R.id.txt_comment_2);
+        username1= (TextView) findViewById(R.id.txt_username_1);
+        username2 = (TextView) findViewById(R.id.txt_username_2);
         imgUser = (ImageView) findViewById(R.id.imageview_user);
         imgContent = (ImageView) findViewById(R.id.imageview_content);
         imgHeart = (ImageView) findViewById(R.id.imageview_like);
@@ -108,6 +110,8 @@ public class FeedDetailActivity extends BaseActivity {
         Utils.setTypeface(FeedDetailActivity.this, tvComment, Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(FeedDetailActivity.this, comment1, Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(FeedDetailActivity.this, comment2, Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(FeedDetailActivity.this, username1, Config.CENTURY_GOTHIC_BOLD);
+        Utils.setTypeface(FeedDetailActivity.this, username2, Config.CENTURY_GOTHIC_BOLD);
         Utils.setTypeface(FeedDetailActivity.this, title, Config.CENTURY_GOTHIC_REGULAR);
     }
 
@@ -143,6 +147,41 @@ public class FeedDetailActivity extends BaseActivity {
             comment2.setMovementMethod(LinkMovementMethod.getInstance());
             comment2.setHighlightColor(Color.TRANSPARENT);
         }
+
+        username1.setText(feedItemVo.getmUsername1());
+        username2.setText(feedItemVo.getmUsername2());
+
+
+        username1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ProfileActivity.class)
+                        .putExtra("USER_ID","")
+                        .putExtra("USER_NAME",feedItemVo.getmUsername1())
+                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+            }
+        });
+        username2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ProfileActivity.class)
+                        .putExtra("USER_ID","")
+                        .putExtra("USER_NAME",feedItemVo.getmUsername2())
+                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+            }
+        });
+
+        if(feedItemVo.getmUsername1().isEmpty()){
+            username1.setVisibility(View.GONE);
+        }else {
+            username1.setVisibility(View.VISIBLE);
+        }
+        if(feedItemVo.getmUsername2().isEmpty()){
+            username2.setVisibility(View.GONE);
+        }else {
+            username2.setVisibility(View.VISIBLE);
+        }
+
         if (feedItemVo.getLiked()) {
             imgHeart.setImageResource(R.drawable.heart);
         } else {
@@ -320,6 +359,8 @@ public class FeedDetailActivity extends BaseActivity {
                                 feedItemVo.setmCommentCount(jsonObject.getInt("comment_count"));
                                 feedItemVo.setmComment_1(jsonObject.getString("comment_1"));
                                 feedItemVo.setmComment_2(jsonObject.getString("comment_2"));
+                                feedItemVo.setmUsername1(jsonObject.getString("user_name_1"));
+                                feedItemVo.setmUsername2(jsonObject.getString("user_name_2"));
                                 feedItemVo.setLiked(jsonObject.getString("likes_status").equals("1"));
                                 bindData();
 

@@ -22,7 +22,7 @@ import com.kneedleapp.R;
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
     private static final String TAG = "StartingAndroid";
-    private String message, title, user_id, feed_id;
+    private String message, title, user_id, feed_id, user_name;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -38,6 +38,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         title = remoteMessage.getData().get("title");
         user_id = remoteMessage.getData().get("user_id");
         feed_id = remoteMessage.getData().get("feed_id");
+        user_name = remoteMessage.getData().get("body").split(" ")[0];
 
         //Calling method to generate notification
         //sendNotification(remoteMessage.getNotification().getTitle(), activityType, message);
@@ -50,13 +51,14 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         Intent intent = null;
         if (user_id != null && !user_id.isEmpty()) {
             intent = new Intent(getApplicationContext(), ProfileActivity.class)
-                    .putExtra("USER_ID",user_id);
+                    .putExtra("USER_ID",user_id)
+                    .putExtra("USER_NAME",user_name);
         } else if (feed_id != null && !feed_id.isEmpty()) {
             intent = new Intent(getApplicationContext(), FeedDetailActivity.class)
                     .putExtra("FEEDID",feed_id);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent,
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

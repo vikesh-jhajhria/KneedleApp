@@ -136,6 +136,12 @@ public class Utils {
                 if (i < (charArray.length - 1) && charArray[i + 1] != ' ') {
                     atStartIndexArray.add(i);
                     int endIndex = mainString.indexOf(" ", i);
+                    if(endIndex == -1){
+                        endIndex = mainString.indexOf("@", i+1);
+                    }
+                    if(endIndex == -1){
+                        endIndex = mainString.length();
+                    }
                     atEndIndexArray.add(endIndex > -1 ? endIndex : charArray.length);
                 }
             }
@@ -143,6 +149,12 @@ public class Utils {
                 if (i < (charArray.length - 1) && charArray[i + 1] != ' ') {
                     hashStartIndexArray.add(i);
                     int endIndex = mainString.indexOf(" ", i);
+                    if(endIndex == -1){
+                        endIndex = mainString.indexOf("#", i+1);
+                    }
+                    if(endIndex == -1){
+                        endIndex = mainString.length();
+                    }
                     hashEndIndexArray.add(endIndex > -1 ? endIndex : charArray.length);
                 }
             }

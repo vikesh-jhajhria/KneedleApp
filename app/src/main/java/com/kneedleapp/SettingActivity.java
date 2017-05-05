@@ -117,7 +117,7 @@ public class SettingActivity extends BaseActivity {
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
                                 Log.e("reponce...::>>", response);
-                                startActivity(new Intent(SettingActivity.this, LoginActivity.class));
+                                startActivity(new Intent(SettingActivity.this, LandingActivity.class));
                                 AppPreferences.getAppPreferences(SettingActivity.this).setUserName("");
                                 AppPreferences.getAppPreferences(SettingActivity.this).setUserId("");
                                 SettingActivity.this.finishAffinity();

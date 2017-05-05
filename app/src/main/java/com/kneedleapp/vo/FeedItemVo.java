@@ -2,7 +2,7 @@ package com.kneedleapp.vo;
 
 public class FeedItemVo {
     private String mId, mUserImage, mFullName, mUserName, mContentImage,
-            mDescription, mComment_1, mComment_2, mDate, mUserId;
+            mDescription, mComment_1, mComment_2, mDate, mUserId, mUsername1, mUsername2;
     private int mCommentCount, mLikes;
     private boolean mLiked;
 
@@ -45,6 +45,22 @@ public class FeedItemVo {
 
     public void setmComment_2(String value) {
         this.mComment_2 = value;
+    }
+
+    public String getmUsername1() {
+        return mUsername1;
+    }
+
+    public void setmUsername1(String value) {
+        this.mUsername1 = value;
+    }
+
+    public String getmUsername2() {
+        return mUsername2;
+    }
+
+    public void setmUsername2(String value) {
+        this.mUsername2 = value;
     }
 
     public String getmDate() {
