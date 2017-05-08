@@ -103,7 +103,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:paddingRight="@dimen/margin_15"
-                        android:text="Profile Type"
+                        android:text="Search By Category"
                         android:textColor="#ffffff"
                         android:textSize="@dimen/font_18" />
                 </RelativeLayout>
@@ -171,6 +171,7 @@
                             android:id="@+id/spinner_within"
                             style="@style/spinnerarrow"
                             android:layout_width="150dp"
+
                             android:layout_height="wrap_content" />
 
                         <View
@@ -179,6 +180,17 @@
                             android:background="@color/textColorPrimary" />
                     </LinearLayout>
                 </RelativeLayout>
+                <Button
+                    android:id="@+id/btn_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="@dimen/activity_horizontal_margin"
+                    android:background="@color/colourRed"
+                    android:gravity="center"
+                    android:text="Search"
+                    android:textColor="#ffffff"
+                    android:textSize="@dimen/font_18" />
             </LinearLayout>
 
         </android.support.v4.widget.NestedScrollView>

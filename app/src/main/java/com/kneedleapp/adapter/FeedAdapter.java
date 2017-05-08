@@ -108,8 +108,17 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             holder.imgContent.setLayoutParams(lp);
 
         } else {
-            holder.tvTitle.setText(feedItemVo.getmFullName());
-            holder.tvSubTitle.setText(feedItemVo.getmUserName());
+            holder.tvTitle.setText("@"+feedItemVo.getmUserName());
+            String location = "";
+            if(!feedItemVo.getCity().isEmpty()){
+                location = feedItemVo.getCity();
+                if(!feedItemVo.getState().isEmpty()){
+                    location = location+", "+feedItemVo.getState();
+                }
+            }else if(!feedItemVo.getState().isEmpty()){
+                location = feedItemVo.getState();
+            }
+            holder.tvSubTitle.setText(location);
             holder.tvDescription.setText(Utils.makeSpannable(context, feedItemVo.getmDescription()));
             holder.tvDescription.setMovementMethod(LinkMovementMethod.getInstance());
             holder.tvDescription.setHighlightColor(Color.TRANSPARENT);

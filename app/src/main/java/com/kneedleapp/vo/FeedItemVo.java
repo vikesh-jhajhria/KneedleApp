@@ -1,8 +1,37 @@
 package com.kneedleapp.vo;
 
 public class FeedItemVo {
-    private String mId, mUserImage, mFullName, mUserName, mContentImage,
-            mDescription, mComment_1, mComment_2, mDate, mUserId, mUsername1, mUsername2;
+    private String mId;
+    private String mUserImage;
+    private String mFullName;
+    private String mUserName;
+    private String mContentImage;
+    private String mDescription;
+    private String mComment_1;
+    private String mComment_2;
+    private String mDate;
+    private String mUserId;
+    private String mUsername1;
+    private String mUsername2;
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    private String city;
+    private String state;
     private int mCommentCount, mLikes;
     private boolean mLiked;
 

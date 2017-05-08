@@ -115,8 +115,17 @@ public class FeedDetailActivity extends BaseActivity {
 
     private void bindData() {
 
-        tvTitle.setText(feedItemVo.getmFullName());
-        tvSubTitle.setText(feedItemVo.getmUserName());
+        tvTitle.setText("@"+feedItemVo.getmUserName());
+        String location = "";
+        if(!feedItemVo.getCity().isEmpty()){
+            location = feedItemVo.getCity();
+            if(!feedItemVo.getState().isEmpty()){
+                location = location+", "+feedItemVo.getState();
+            }
+        }else if(!feedItemVo.getState().isEmpty()){
+            location = feedItemVo.getState();
+        }
+        tvSubTitle.setText(location);
         tvDescription.setText(Utils.makeSpannable(this, feedItemVo.getmDescription()));
         tvDescription.setMovementMethod(LinkMovementMethod.getInstance());
         tvDescription.setHighlightColor(Color.TRANSPARENT);
@@ -355,6 +364,8 @@ public class FeedDetailActivity extends BaseActivity {
                                 feedItemVo.setmLikes(jsonObject.getInt("likes_count"));
                                 feedItemVo.setmCommentCount(jsonObject.getInt("comment_count"));
                                 feedItemVo.setmComment_1(jsonObject.getString("comment_1"));
+                                feedItemVo.setCity(jsonObject.getString("city"));
+                                feedItemVo.setState(jsonObject.getString("state"));
                                 feedItemVo.setmComment_2(jsonObject.getString("comment_2"));
                                 feedItemVo.setmUsername1(jsonObject.getString("user_name_1"));
                                 feedItemVo.setmUsername2(jsonObject.getString("user_name_2"));

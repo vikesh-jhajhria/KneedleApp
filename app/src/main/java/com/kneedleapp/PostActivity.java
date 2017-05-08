@@ -40,6 +40,7 @@ public class PostActivity extends BaseActivity {
         Utils.setTypeface(PostActivity.this, (TextView) findViewById(R.id.txt_new_post), Config.CENTURY_GOTHIC_BOLD);
         Utils.setTypeface(PostActivity.this, (TextView) findViewById(R.id.txt_library), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(PostActivity.this, (TextView) findViewById(R.id.txt_photo), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(PostActivity.this, (TextView) findViewById(R.id.txt_info), Config.CENTURY_GOTHIC_REGULAR);
         hasPermission(Config.MEDIA_PERMISSION);
     }
 

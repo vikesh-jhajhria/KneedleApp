@@ -43,7 +43,7 @@ public class SearchActivity extends BaseActivity {
                 }
             }
         });
-
+        Utils.setTypeface(SearchActivity.this, (TextView)findViewById(R.id.btn_search), Config.CENTURY_GOTHIC_REGULAR);
         withinList = new ArrayList<>();
         withinList.add("10 KM");
         withinList.add("50 KM");
@@ -58,6 +58,7 @@ public class SearchActivity extends BaseActivity {
 
 
         applyFonts();
+        findViewById(R.id.btn_search).setOnClickListener(this);
 
         ((EditText) findViewById(R.id.txt_search)).setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -74,7 +75,7 @@ public class SearchActivity extends BaseActivity {
                     Bundle bundle = new Bundle();
                     bundle.putString("SEARCHTEXT", ((EditText) findViewById(R.id.txt_search)).getText().toString().trim());
                     String profileType = ((TextView) findViewById(R.id.txt_category)).getText().toString().trim();
-                    bundle.putString("CATEGORY", profileType.equalsIgnoreCase("Profile Type") ? "" : profileType);
+                    bundle.putString("CATEGORY", profileType.equalsIgnoreCase("Search By Category") ? "" : profileType);
                     if (((CheckBox) findViewById(R.id.check_near_me)).isChecked()) {
                         bundle.putString("ZIP", ((EditText) findViewById(R.id.txt_zip)).getText().toString().trim());
                         bundle.putString("RANGE", (String) ((Spinner) findViewById(R.id.spinner_within)).getSelectedItem());
@@ -86,7 +87,7 @@ public class SearchActivity extends BaseActivity {
                     hideKeyboard();
 
                 }
-                ((TextView) findViewById(R.id.txt_category)).setText("Profile Type");
+                ((TextView) findViewById(R.id.txt_category)).setText("Search By Category");
 
                 return false;
             }
@@ -154,7 +155,7 @@ public class SearchActivity extends BaseActivity {
 
         public View getCustomView(int position, View convertView, ViewGroup parent) {
             LayoutInflater inflater = SearchActivity.this.getLayoutInflater();
-            View row = inflater.inflate(R.layout.layout_spinner_item, parent, false);
+            View row = inflater.inflate(R.layout.layout_spinner_item_white, parent, false);
             TextView label = (TextView) row.findViewById(R.id.txt_item);
             Utils.setTypeface(SearchActivity.this, label, Config.CENTURY_GOTHIC_REGULAR);
             label.setText(withinList.get(position));
@@ -167,6 +168,7 @@ public class SearchActivity extends BaseActivity {
         super.onClick(view);
         switch (view.getId()) {
             case R.id.img_search:
+            case R.id.btn_search:
                 searchText = ((EditText) findViewById(R.id.txt_search)).getText().toString().trim();
                 if (searchText.isEmpty()) {
                     ((EditText) findViewById(R.id.txt_search)).setError("Please enter key to search.");
@@ -194,6 +196,9 @@ public class SearchActivity extends BaseActivity {
 
 
         if (mStoreList != null) {
+            if(mStoreList.isEmpty()){
+                ((TextView) findViewById(R.id.txt_category)).setText("Search By Category");
+            }
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < mStoreList.size(); i++) {
                 CategoryVo categoryVo = mStoreList.get(i);

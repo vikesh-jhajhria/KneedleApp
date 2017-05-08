@@ -54,6 +54,8 @@ public class SearchHashActivity extends BaseActivity implements FeedAdapter.Prof
         gridBtn = (ImageView) findViewById(R.id.img_grid);
         emptyView = (TextView) findViewById(R.id.empty_view);
         Utils.setTypeface(this, emptyView, Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(this, (TextView) findViewById(R.id.txt_title), Config.CENTURY_GOTHIC_BOLD);
+        ((TextView) findViewById(R.id.txt_title)).setText(getIntent().getStringExtra("HASH"));
         mList = new ArrayList<>();
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         gridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
@@ -159,7 +161,7 @@ public class SearchHashActivity extends BaseActivity implements FeedAdapter.Prof
                                 Log.e("responce....::>>>", response);
 
                                 JSONArray jsonArray = jObject.getJSONArray("search_data");
-                                isLastPage = !(jsonArray.length() > 0);
+                                isLastPage = !(jsonArray.length() == limit);
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                                     FeedItemVo feedItemVo = new FeedItemVo();

@@ -93,8 +93,8 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
             img = (ImageView) itemView.findViewById(R.id.img_profile);
 
 
-            Utils.setTypeface(context, txt_name, Config.CENTURY_GOTHIC_BOLD);
-            Utils.setTypeface(context, fullname, Config.CENTURY_GOTHIC_REGULAR);
+            Utils.setTypeface(context, txt_name, Config.CENTURY_GOTHIC_REGULAR);
+            Utils.setTypeface(context, fullname, Config.CENTURY_GOTHIC_BOLD);
             Utils.setTypeface(context, job, Config.CENTURY_GOTHIC_BOLD);
             Utils.setTypeface(context, place, Config.CENTURY_GOTHIC_REGULAR);
 

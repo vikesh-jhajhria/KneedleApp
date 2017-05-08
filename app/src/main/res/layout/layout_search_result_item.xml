@@ -32,17 +32,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/txt_username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="ABILE19"
-                    android:textAllCaps="true"
-                    android:textColor="#000"
-                    android:textSize="@dimen/font_14"
-                    android:textStyle="bold" />
-
                 <TextView
                     android:id="@+id/txt_fullname"
                     android:layout_width="wrap_content"
@@ -51,7 +40,19 @@
                     android:text="ABILE smith"
                     android:textAllCaps="true"
                     android:textColor="#000"
+
+                    android:textStyle="bold"
                     android:textSize="@dimen/font_14" />
+                <TextView
+                    android:id="@+id/txt_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ABILE19"
+                    android:textAllCaps="true"
+                    android:textColor="#000"
+                    android:textSize="@dimen/font_14"/>
+
+
             </LinearLayout>
 
             <RelativeLayout

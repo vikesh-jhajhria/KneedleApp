@@ -194,6 +194,7 @@
                                     android:layout_height="wrap_content"
                                     android:textColor="@color/colourBlack"
                                     android:textSize="@dimen/font_14"
+                                    android:autoLink="web"
                                     android:visibility="gone" />
 
                                 <TextView

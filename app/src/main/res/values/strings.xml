@@ -33,6 +33,7 @@
     <string name="new_post">NEW POST</string>
     <string name="library">LIBRARY</string>
     <string name="photo">PHOTO</string>
+    <string name="camera">CAMERA</string>
     <string name="add_caption">ADD CAPTION...</string>
     <string name="posts">POSTS</string>
     <string name="followers">FOLLOWERS</string>
@@ -80,6 +81,8 @@
     <string name="block_users">Blocked Users</string>
     <string name="logout_message">Do you really want to logout?</string>
     <string name="company_name">Company Name</string>
+    <string name="post_info">Upload photo from Gallery or capture a new by using Camera.</string>
+    <string name="gallery">Gallery</string>
 
 
 </resources>

@@ -187,6 +187,8 @@ public class SearchResultActivity extends BaseActivity implements FeedAdapter.Pr
                                         feedItemVo.setmCommentCount(jsonObject.getInt("comment_count"));
                                         feedItemVo.setmComment_1(jsonObject.getString("comment_1"));
                                         feedItemVo.setmUsername1(jsonObject.getString("user_name_1"));
+                                        feedItemVo.setCity(jsonObject.getString("city"));
+                                        feedItemVo.setState(jsonObject.getString("state"));
                                         feedItemVo.setmUsername2(jsonObject.getString("user_name_2"));
                                         feedItemVo.setmComment_2(jsonObject.getString("comment_2"));
                                         feedItemVo.setLiked(jsonObject.getString("likes_status").equals("1"));
