@@ -90,6 +90,7 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
         View view = mInflater.inflate(R.layout.notification_item, parent, false);
         NotificationDataViewHolder holder = new NotificationDataViewHolder(view);
         Utils.setTypeface(context, holder.mTvNoti, Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(context, holder.username, Config.CENTURY_GOTHIC_BOLD);
         return holder;
     }
 
@@ -99,14 +100,16 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
         final NotificationItemVo obj = mList.get(position);
         if (obj != null) {
             if (obj.getType() == BaseActivity.NotificationType.LIKE) {
-                ((NotificationDataViewHolder) holder).mTvNoti.setText(obj.getUsername() + " liked your post.");
+                ((NotificationDataViewHolder) holder).mTvNoti.setText(" liked your post.");
             } else if (obj.getType() == BaseActivity.NotificationType.COMMENT) {
-                ((NotificationDataViewHolder) holder).mTvNoti.setText(obj.getUsername() + " commented : " + obj.getComment());
+                ((NotificationDataViewHolder) holder).mTvNoti.setText(" commented : " + obj.getComment());
             } else if (obj.getType() == BaseActivity.NotificationType.FOLLOW) {
-                ((NotificationDataViewHolder) holder).mTvNoti.setText(obj.getUsername() + " started following you");
+                ((NotificationDataViewHolder) holder).mTvNoti.setText(" started following you");
             } else if (obj.getType() == BaseActivity.NotificationType.TAGGED) {
-                ((NotificationDataViewHolder) holder).mTvNoti.setText(obj.getUsername() + " tagged you in a post.");
+                ((NotificationDataViewHolder) holder).mTvNoti.setText(" tagged you in a post.");
             }
+            ((NotificationDataViewHolder) holder).username.setText(obj.getUsername());
+
             Log.v("Img url", "position:" + position+" url="+obj.getImgUser());
             if (!obj.getImgUser().isEmpty()) {
                 Glide.with(context).load(obj.getImgUser()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(((NotificationDataViewHolder) holder).imgUser);
@@ -129,6 +132,16 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
             }
         });
         ((NotificationDataViewHolder) holder).imgUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                context.startActivity(new Intent(getApplicationContext(), ProfileActivity.class)
+                        .putExtra("USER_ID",obj.getUserId())
+                        .putExtra("USER_NAME", obj.getUsername())
+                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+            }
+        });
+
+        ((NotificationDataViewHolder) holder).username.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 context.startActivity(new Intent(getApplicationContext(), ProfileActivity.class)
@@ -166,13 +179,14 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public static class NotificationDataViewHolder extends RecyclerView.ViewHolder {
-        private TextView mTvNoti;
+        private TextView mTvNoti, username;
         public ImageView imgUser;
 
         public NotificationDataViewHolder(View itemView) {
             super(itemView);
 
             mTvNoti = (TextView) itemView.findViewById(R.id.txt_notification);
+            username = (TextView) itemView.findViewById(R.id.txt_username);
             imgUser = (ImageView) itemView.findViewById(R.id.imgcircle_user);
 
         }

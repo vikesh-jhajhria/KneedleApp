@@ -43,7 +43,6 @@ import static com.kneedleapp.R.id.img_comment_down_arrow;
 public class FeedDetailActivity extends BaseActivity {
 
 
-    private TextView title;
     public TextView tvTitle, tvSubTitle, tvDescription, tvLikes, tvComment, comment1, comment2, username1, username2;
     public ImageView imgUser, imgHeart, imgMenu, comment, share, arrow;
     public ViewGroup transitionsContainer;
@@ -61,7 +60,6 @@ public class FeedDetailActivity extends BaseActivity {
         setContentView(R.layout.activity_feed_detail);
         CURRENT_PAGE = "FEED_DETAIL";
         feedId = getIntent().getExtras().getString(FEEDID);
-        title = (TextView) findViewById(R.id.txt_title);
         tvTitle = (TextView) findViewById(R.id.textview_title);
         tvSubTitle = (TextView) findViewById(R.id.textview_sub_title);
         tvDescription = (TextView) findViewById(R.id.textview_description);
@@ -112,7 +110,6 @@ public class FeedDetailActivity extends BaseActivity {
         Utils.setTypeface(FeedDetailActivity.this, comment2, Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(FeedDetailActivity.this, username1, Config.CENTURY_GOTHIC_BOLD);
         Utils.setTypeface(FeedDetailActivity.this, username2, Config.CENTURY_GOTHIC_BOLD);
-        Utils.setTypeface(FeedDetailActivity.this, title, Config.CENTURY_GOTHIC_REGULAR);
     }
 
 

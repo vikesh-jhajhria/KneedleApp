@@ -1,6 +1,7 @@
 package com.kneedleapp;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -60,7 +61,6 @@ public class SettingActivity extends BaseActivity {
 
     }
 
-    
 
     @Override
     public void onClick(View view) {
@@ -78,29 +78,28 @@ public class SettingActivity extends BaseActivity {
 
                 break;
             case R.id.txt_report_problem:
-              /*  Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("plain/text");
-                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"some@email.address"});
-                intent.putExtra(Intent.EXTRA_SUBJECT, "subject");
-                intent.putExtra(Intent.EXTRA_TEXT, "mail body");
-                startActivity(Intent.createChooser(intent, ""));*/
-                Intent emailIntent = new Intent(Intent.ACTION_SEND);
-                emailIntent.setType("text/plain");
-                startActivity(emailIntent);
+
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Report a problem");
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                }
+
                 break;
             case R.id.txt_privacy_policy:
                 startActivity(new Intent(getApplicationContext(), InfoActivity.class)
-                        .putExtra("INFO_TYPE","POLICY")
+                        .putExtra("INFO_TYPE", "POLICY")
                         .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 break;
             case R.id.txt_terms_of_service:
                 startActivity(new Intent(getApplicationContext(), InfoActivity.class)
-                        .putExtra("INFO_TYPE","TERMS")
+                        .putExtra("INFO_TYPE", "TERMS")
                         .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 break;
             case R.id.txt_blocked_user:
                 startActivity(new Intent(getApplicationContext(), BlockedUsersActivity.class)
-                        .putExtra("USER_ID",userId)
+                        .putExtra("USER_ID", userId)
                         .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 break;
         }
