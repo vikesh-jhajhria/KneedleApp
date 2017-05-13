@@ -26,6 +26,8 @@ public class Config {
     public static final int ROTATEIMAGE = 128;
     public static final String IMAGE_DIRECTORY_NAME = "KNEEDLE";
     public static Bitmap postBitmap;
+    public static Bitmap fullScreenFeedBitmap;
+    public static Bitmap fullScreenUserBitmap;
 
     public static ArrayList<String> PROFILE_TYPE = new ArrayList<>();
 

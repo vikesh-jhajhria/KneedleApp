@@ -23,13 +23,13 @@ public class FullImageViewActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_full_image_view);
-CURRENT_PAGE = "FULL_IMAGE";
+        CURRENT_PAGE = "FULL_IMAGE";
         Bundle extras = getIntent().getExtras();
 
         mUsername = extras.getString("USERNAME");
         mImgBitmapContent = extras.getString("IMAGE");
         mImgBitmapUser = extras.getString("USERIMAGE");
-        mLikes = ""+extras.getInt("LIKES");
+        mLikes = "" + extras.getInt("LIKES");
         mImageLike = extras.getBoolean("LIKEDORNOT");
 
         transitionFlag = getIntent().getBooleanExtra("transition", false);
@@ -44,8 +44,18 @@ CURRENT_PAGE = "FULL_IMAGE";
             ((TextView) findViewById(R.id.txt_likes)).setText(mLikes);
             Utils.setTypeface(this, ((TextView) findViewById(R.id.txt_user_name)), Config.CENTURY_GOTHIC_BOLD);
             Utils.setTypeface(this, ((TextView) findViewById(R.id.txt_likes)), Config.CENTURY_GOTHIC_REGULAR);
-            Glide.with(this).load(mImgBitmapContent).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into((ImageView) findViewById(R.id.img_full_image));
-            Glide.with(this).load(mImgBitmapUser).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into((ImageView) findViewById(R.id.img_user));
+            //Glide.with(this).load(mImgBitmapContent).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into((ImageView) findViewById(R.id.img_full_image));
+            //Glide.with(this).load(mImgBitmapUser).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into((ImageView) findViewById(R.id.img_user));
+            if(Config.fullScreenFeedBitmap != null) {
+                ((ImageView) findViewById(R.id.img_full_image)).setImageBitmap(Config.fullScreenFeedBitmap);
+            } else {
+                Glide.with(this).load(mImgBitmapContent).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into((ImageView) findViewById(R.id.img_full_image));
+            }
+            if(Config.fullScreenUserBitmap != null) {
+                ((ImageView) findViewById(R.id.img_user)).setImageBitmap(Config.fullScreenUserBitmap);
+            }else {
+                Glide.with(this).load(mImgBitmapUser).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into((ImageView) findViewById(R.id.img_user));
+            }
             if (mImageLike) {
                 ((ImageView) findViewById(R.id.img_heart)).setImageResource(R.drawable.heart);
             } else {

@@ -1,6 +1,8 @@
 package com.kneedleapp;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -8,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +29,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
@@ -286,13 +291,37 @@ public class FeedDetailActivity extends BaseActivity {
         imgContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(FeedDetailActivity.this, FullImageViewActivity.class);
-                intent.putExtra("USERNAME", feedItemVo.getmFullName());
-                intent.putExtra("IMAGE", feedItemVo.getmContentImage());
-                intent.putExtra("USERIMAGE", feedItemVo.getmUserImage());
-                intent.putExtra("LIKES", feedItemVo.getmLikes());
-                intent.putExtra("LIKEDORNOT", feedItemVo.getLiked());
-                startActivity(intent);
+
+                Config.fullScreenFeedBitmap = null;
+                Config.fullScreenUserBitmap = null;
+                BitmapDrawable feedDrawable = ((BitmapDrawable) imgContent.getDrawable());
+                if (feedDrawable != null) {
+                    Config.fullScreenFeedBitmap = feedDrawable.getBitmap();
+                    BitmapDrawable userDrawable = ((BitmapDrawable) imgUser.getDrawable());
+                    if(userDrawable != null) {
+                        Config.fullScreenUserBitmap = userDrawable.getBitmap();
+                    }
+                    Intent intent = new Intent(FeedDetailActivity.this, FullImageViewActivity.class);
+                    intent.putExtra("USERNAME", "@"+feedItemVo.getmUserName());
+                    intent.putExtra("IMAGE", feedItemVo.getmContentImage());
+                    intent.putExtra("USERIMAGE", feedItemVo.getmUserImage());
+                    intent.putExtra("LIKES", feedItemVo.getmLikes());
+                    intent.putExtra("LIKEDORNOT", feedItemVo.getLiked());
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(FeedDetailActivity.this,
+                                new Pair<View, String>(imgUser, "userimage"),
+                                new Pair<View, String>(imgContent, "image"),
+                                new Pair<View, String>(imgHeart, "heart"),
+                                new Pair<View, String>(tvTitle, "title"),
+                                new Pair<View, String>(tvLikes, "likes"));
+                        startActivity(intent, options.toBundle());
+                    } else {
+                        startActivity(intent);
+                    }
+                } else {
+                    Toast.makeText(FeedDetailActivity.this, "Image Loading", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
         comment.setOnClickListener(new View.OnClickListener() {
@@ -312,9 +341,25 @@ public class FeedDetailActivity extends BaseActivity {
                         .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
             }
         });
-        Glide.with(FeedDetailActivity.this).load(feedItemVo.getmUserImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(imgUser);
-        Glide.with(FeedDetailActivity.this).load(feedItemVo.getmContentImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(imgContent);
+        //Glide.with(FeedDetailActivity.this).load(feedItemVo.getmUserImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(imgUser);
+        //Glide.with(FeedDetailActivity.this).load(feedItemVo.getmContentImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(imgContent);
+        imgContent.setImageResource(R.drawable.default_feed);
+        Glide.with(this).load(feedItemVo.getmContentImage()).asBitmap().placeholder(R.drawable.default_feed)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                        imgContent.setImageBitmap(resource);
+                    }
+                });
 
+        imgUser.setImageResource(R.drawable.default_feed);
+        Glide.with(this).load(feedItemVo.getmUserImage()).asBitmap().placeholder(R.drawable.default_feed)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                        imgUser.setImageBitmap(resource);
+                    }
+                });
 
         imgUser.setOnClickListener(new View.OnClickListener() {
             @Override

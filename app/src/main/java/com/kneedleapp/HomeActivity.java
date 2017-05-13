@@ -1,12 +1,15 @@
 package com.kneedleapp;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -90,7 +93,7 @@ public class HomeActivity extends BaseActivity implements FeedAdapter.ProfileIte
         ((SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(Utils.isNetworkConnected(HomeActivity.this,true)) {
+                if (Utils.isNetworkConnected(HomeActivity.this, true)) {
                     mList.clear();
                     offset = 0;
                     isLastPage = false;
@@ -136,13 +139,35 @@ public class HomeActivity extends BaseActivity implements FeedAdapter.ProfileIte
 
     @Override
     public void getItem(int position, FeedAdapter.ViewHolder holder, boolean isLiked) {
-        Intent intent = new Intent(HomeActivity.this, FullImageViewActivity.class);
-        intent.putExtra("USERNAME", mList.get(position).getmFullName());
-        intent.putExtra("IMAGE", mList.get(position).getmContentImage());
-        intent.putExtra("USERIMAGE", mList.get(position).getmUserImage());
-        intent.putExtra("LIKES", mList.get(position).getmLikes());
-        intent.putExtra("LIKEDORNOT", isLiked);
-        startActivity(intent);
+        Config.fullScreenFeedBitmap = null;
+        Config.fullScreenUserBitmap = null;
+        BitmapDrawable feedDrawable = ((BitmapDrawable) holder.imgContent.getDrawable());
+        if (feedDrawable != null) {
+            Config.fullScreenFeedBitmap = feedDrawable.getBitmap();
+            BitmapDrawable userDrawable = ((BitmapDrawable) holder.imgUser.getDrawable());
+            if(userDrawable != null) {
+                Config.fullScreenUserBitmap = userDrawable.getBitmap();
+            }
+            Intent intent = new Intent(HomeActivity.this, FullImageViewActivity.class);
+            intent.putExtra("USERNAME", "@"+mList.get(position).getmUserName());
+            intent.putExtra("IMAGE", mList.get(position).getmContentImage());
+            intent.putExtra("USERIMAGE", mList.get(position).getmUserImage());
+            intent.putExtra("LIKES", mList.get(position).getmLikes());
+            intent.putExtra("LIKEDORNOT", isLiked);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(HomeActivity.this,
+                        new Pair<View, String>(holder.imgUser, "userimage"),
+                        new Pair<View, String>(holder.imgContent, "image"),
+                        new Pair<View, String>(holder.imgHeart, "heart"),
+                        new Pair<View, String>(holder.tvTitle, "title"),
+                        new Pair<View, String>(holder.tvLikes, "likes"));
+                startActivity(intent, options.toBundle());
+            } else {
+                startActivity(intent);
+            }
+        } else {
+            Toast.makeText(this, "Image Loading", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void getFeedData() {

@@ -115,7 +115,7 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
                 Glide.with(context).load(obj.getImgUser()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(((NotificationDataViewHolder) holder).imgUser);
             } else Log.v("Img url", "position:" + position);
         }
-        ((NotificationDataViewHolder) holder).time.setText(Utils.getTimeDifference(obj.getTime()));
+        //((NotificationDataViewHolder) holder).time.setText(Utils.getTimeDifference(obj.getTime()));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

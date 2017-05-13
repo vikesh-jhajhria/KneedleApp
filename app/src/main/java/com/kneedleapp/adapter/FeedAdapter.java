@@ -2,6 +2,7 @@ package com.kneedleapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.widget.CardView;
@@ -26,6 +27,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.kneedleapp.AddCommentActivity;
 import com.kneedleapp.BaseActivity;
 import com.kneedleapp.FeedDetailActivity;
@@ -98,9 +101,21 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
         });
         Log.v("Image Loading", "URL: " + feedItemVo.getmContentImage());
 
-        Glide.with(context).load(feedItemVo.getmContentImage()).centerCrop()
+        /*Glide.with(context).load(feedItemVo.getmContentImage()).centerCrop()
                 .placeholder(R.drawable.default_feed).error(R.drawable.default_feed)
                 .into(holder.imgContent);
+
+                Glide.with(context).load(feedItemVo.getmUserImage()).placeholder(R.drawable.default_feed)
+                .error(R.drawable.default_feed).into(holder.imgUser);*/
+        holder.imgContent.setImageResource(R.drawable.default_feed);
+        Glide.with(context).load(feedItemVo.getmContentImage()).asBitmap().placeholder(R.drawable.default_feed)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                        holder.imgContent.setImageBitmap(resource);
+                    }
+                });
+
 
         if (viewType.equalsIgnoreCase("GRID")) {
             ViewGroup.LayoutParams lp = holder.imgContent.getLayoutParams();
@@ -108,6 +123,14 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             holder.imgContent.setLayoutParams(lp);
 
         } else {
+            holder.imgUser.setImageResource(R.drawable.default_feed);
+            Glide.with(context).load(feedItemVo.getmUserImage()).asBitmap().placeholder(R.drawable.default_feed)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                            holder.imgUser.setImageBitmap(resource);
+                        }
+                    });
             holder.tvTitle.setText("@"+feedItemVo.getmUserName());
             String location = "";
             if(!feedItemVo.getCity().isEmpty()){
@@ -290,7 +313,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                             .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 }
             });
-            Glide.with(context).load(feedItemVo.getmUserImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(holder.imgUser);
+
             holder.imgUser.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
