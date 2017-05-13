@@ -80,10 +80,11 @@ public class SearchActivity extends BaseActivity {
                         bundle.putString("ZIP", ((EditText) findViewById(R.id.txt_zip)).getText().toString().trim());
                         bundle.putString("RANGE", (String) ((Spinner) findViewById(R.id.spinner_within)).getSelectedItem());
                     }
-
-                    startActivity(new Intent(getApplicationContext(), SearchResultActivity.class)
-                            .putExtras(bundle)
-                            .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                    if(Utils.isNetworkConnected(SearchActivity.this,true)) {
+                        startActivity(new Intent(getApplicationContext(), SearchResultActivity.class)
+                                .putExtras(bundle)
+                                .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                    }
                     hideKeyboard();
 
                 }
@@ -174,9 +175,11 @@ public class SearchActivity extends BaseActivity {
                     ((EditText) findViewById(R.id.txt_search)).setError("Please enter key to search.");
                     break;
                 }
-                startActivity(new Intent(getApplicationContext(), SearchResultActivity.class)
-                        .putExtra("SEARCHTEXT",searchText)
-                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                if(Utils.isNetworkConnected(this,true)) {
+                    startActivity(new Intent(getApplicationContext(), SearchResultActivity.class)
+                            .putExtra("SEARCHTEXT", searchText)
+                            .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                }
                 hideKeyboard();
                 break;
         }

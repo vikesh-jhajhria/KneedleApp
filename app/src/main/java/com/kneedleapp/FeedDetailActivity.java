@@ -43,7 +43,8 @@ import static com.kneedleapp.R.id.img_comment_down_arrow;
 public class FeedDetailActivity extends BaseActivity {
 
 
-    public TextView tvTitle, tvSubTitle, tvDescription, tvLikes, tvComment, comment1, comment2, username1, username2;
+    public TextView tvTitle, tvSubTitle, tvDescription, tvLikes, tvComment,
+            comment1, comment2, username1, username2, time;
     public ImageView imgUser, imgHeart, imgMenu, comment, share, arrow;
     public ViewGroup transitionsContainer;
     public ImageView imgContent;
@@ -67,6 +68,7 @@ public class FeedDetailActivity extends BaseActivity {
         tvComment = (TextView) findViewById(R.id.tv_comments);
         comment1 = (TextView) findViewById(R.id.txt_comment_1);
         comment2 = (TextView) findViewById(R.id.txt_comment_2);
+        time = (TextView) findViewById(R.id.txt_time);
         username1= (TextView) findViewById(R.id.txt_username_1);
         username2 = (TextView) findViewById(R.id.txt_username_2);
         imgUser = (ImageView) findViewById(R.id.imageview_user);
@@ -74,7 +76,6 @@ public class FeedDetailActivity extends BaseActivity {
         imgHeart = (ImageView) findViewById(R.id.imageview_like);
         comment = (ImageView) findViewById(R.id.img_comment);
         ll_comment = (LinearLayout) findViewById(R.id.ll_all_comment);
-        share = (ImageView) findViewById(R.id.img_share);
         imgMenu = (ImageView) findViewById(R.id.imageview_menu);
         transitionsContainer = (ViewGroup) findViewById(R.id.ll_container);
         card1 = (CardView) findViewById(R.id.card_comment_1);
@@ -108,6 +109,7 @@ public class FeedDetailActivity extends BaseActivity {
         Utils.setTypeface(FeedDetailActivity.this, tvComment, Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(FeedDetailActivity.this, comment1, Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(FeedDetailActivity.this, comment2, Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(FeedDetailActivity.this, time, Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(FeedDetailActivity.this, username1, Config.CENTURY_GOTHIC_BOLD);
         Utils.setTypeface(FeedDetailActivity.this, username2, Config.CENTURY_GOTHIC_BOLD);
     }
@@ -130,6 +132,7 @@ public class FeedDetailActivity extends BaseActivity {
         tvDescription.setMovementMethod(LinkMovementMethod.getInstance());
         tvDescription.setHighlightColor(Color.TRANSPARENT);
         tvComment.setText(feedItemVo.getmCommentCount() + "");
+        time.setText(Utils.getTimeDifference(feedItemVo.getmDate()));
         if (feedItemVo.getmCommentCount() > 0) {
             arrow.setVisibility(View.VISIBLE);
         } else {

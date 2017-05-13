@@ -122,6 +122,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             holder.tvDescription.setText(Utils.makeSpannable(context, feedItemVo.getmDescription()));
             holder.tvDescription.setMovementMethod(LinkMovementMethod.getInstance());
             holder.tvDescription.setHighlightColor(Color.TRANSPARENT);
+            holder.time.setText(Utils.getTimeDifference(feedItemVo.getmDate()));
 
             holder.username1.setText(feedItemVo.getmUsername1());
             holder.username2.setText(feedItemVo.getmUsername2());
@@ -328,7 +329,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvTitle, tvSubTitle, tvDescription, tvLikes, tvComment, comment1, comment2, username1, username2;
+        public TextView tvTitle, tvSubTitle, tvDescription, tvLikes, tvComment,
+                comment1, comment2, username1, username2, time;
         public ImageView imgUser, imgHeart, imgMenu, comment, share;
         public ViewGroup transitionsContainer;
         public ImageView imgContent;
@@ -348,11 +350,11 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                 comment2 = (TextView) itemView.findViewById(R.id.txt_comment_2);
                 username1 = (TextView) itemView.findViewById(R.id.txt_username_1);
                 username2 = (TextView) itemView.findViewById(R.id.txt_username_2);
+                time = (TextView) itemView.findViewById(R.id.txt_time);
                 imgUser = (ImageView) itemView.findViewById(R.id.imageview_user);
 
                 imgHeart = (ImageView) itemView.findViewById(R.id.imageview_like);
                 comment = (ImageView) itemView.findViewById(R.id.img_comment);
-                share = (ImageView) itemView.findViewById(R.id.img_share);
                 imgMenu = (ImageView) itemView.findViewById(R.id.imageview_menu);
                 transitionsContainer = (ViewGroup) itemView.findViewById(R.id.ll_container);
                 card1 = (CardView) itemView.findViewById(R.id.card_comment_1);
@@ -366,6 +368,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                 Utils.setTypeface(context, tvComment, Config.CENTURY_GOTHIC_REGULAR);
                 Utils.setTypeface(context, comment1, Config.CENTURY_GOTHIC_REGULAR);
                 Utils.setTypeface(context, comment2, Config.CENTURY_GOTHIC_REGULAR);
+                Utils.setTypeface(context, time, Config.CENTURY_GOTHIC_REGULAR);
                 Utils.setTypeface(context, username1, Config.CENTURY_GOTHIC_BOLD);
                 Utils.setTypeface(context, username2, Config.CENTURY_GOTHIC_BOLD);
             }

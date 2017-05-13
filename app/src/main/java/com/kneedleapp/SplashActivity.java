@@ -17,7 +17,9 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        Utils.getCategories(this);
+        if(Utils.isNetworkConnected(this,true)) {
+            Utils.getCategories(this);
+        }
         startTimer();
         try {
             if (preferences.getFirebaseId().isEmpty()) {

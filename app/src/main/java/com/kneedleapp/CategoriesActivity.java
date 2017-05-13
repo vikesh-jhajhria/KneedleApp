@@ -45,7 +45,9 @@ public class CategoriesActivity extends BaseActivity {
         CURRENT_PAGE = "CATEGORIES";
         Utils.setTypeface(CategoriesActivity.this, (TextView) findViewById(R.id.btn_done), Config.CENTURY_GOTHIC_REGULAR);
         findViews();
-        getCategory();
+        if(Utils.isNetworkConnected(this,true)) {
+            getCategory();
+        }
 
     }
 

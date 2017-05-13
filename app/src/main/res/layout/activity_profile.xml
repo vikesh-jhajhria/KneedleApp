@@ -7,8 +7,6 @@
     android:orientation="vertical">
 
 
-
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -61,7 +59,7 @@
                                 android:id="@+id/user_img"
                                 android:layout_width="@dimen/profile_image_height"
                                 android:layout_height="@dimen/profile_image_height"
-                                android:src="@drawable/default_feed" />
+                                android:src="@drawable/profile_pic" />
 
 
                             <LinearLayout
@@ -192,9 +190,9 @@
                                     android:id="@+id/txt_website"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:autoLink="web"
                                     android:textColor="@color/colourBlack"
                                     android:textSize="@dimen/font_14"
-                                    android:autoLink="web"
                                     android:visibility="gone" />
 
                                 <TextView
@@ -360,15 +358,34 @@
                 android:textSize="@dimen/font_18"
                 android:textStyle="bold" />
 
-            <ImageView
-                android:id="@+id/img_setting"
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:paddingLeft="@dimen/margin_5"
-                android:src="@drawable/settings" />
+                android:layout_centerVertical="true">
+
+                <ImageView
+                    android:id="@+id/img_setting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:visibility="gone"
+                    android:paddingLeft="@dimen/margin_5"
+                    android:src="@drawable/settings" />
+
+                <ImageView
+                    android:id="@+id/img_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:paddingLeft="@dimen/margin_5"
+                    android:src="@drawable/more_white"
+                    android:visibility="gone" />
+            </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"

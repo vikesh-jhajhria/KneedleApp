@@ -2,6 +2,7 @@ package com.kneedleapp;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -10,8 +11,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,11 +89,6 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
         mPrefernce = AppPreferences.getAppPreferences(ProfileActivity.this);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mList = new ArrayList<>();
-
-        if (mPrefernce.getUserId().equalsIgnoreCase(mUserId)) {
-            findViewById(R.id.txt_btn_edit).setVisibility(View.VISIBLE);
-        }
-
         listBtn = (ImageView) findViewById(R.id.img_list);
         gridBtn = (ImageView) findViewById(R.id.img_grid);
         feedAdapter = new FeedAdapter(mList, this, "GRID", this, true);
@@ -126,6 +125,7 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
         findViewById(R.id.txt_btn_following).setOnClickListener(this);
         findViewById(R.id.img_back).setOnClickListener(this);
         findViewById(R.id.img_setting).setOnClickListener(this);
+        findViewById(R.id.img_more).setOnClickListener(this);
 
         num_of_posts = (TextView) findViewById(R.id.txt_post_count);
         num_of_followers = (TextView) findViewById(R.id.txt_follower_count);
@@ -144,7 +144,9 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
         ((SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getUserDetails();
+                if(Utils.isNetworkConnected(ProfileActivity.this,true)) {
+                    getUserDetails();
+                }
                 ((SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout)).setRefreshing(false);
             }
         });
@@ -230,6 +232,34 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
                         .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
 
                 break;
+            case R.id.img_more:
+                int popupWidth = ViewGroup.LayoutParams.WRAP_CONTENT;
+                int popupHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
+                View popupView = LayoutInflater.from(this).inflate(R.layout.menu_popup, null);
+
+                Utils.setTypeface(this, (TextView) popupView.findViewById(R.id.txt_block), Config.CENTURY_GOTHIC_REGULAR);
+
+                final PopupWindow attachmentPopup = new PopupWindow(this);
+                attachmentPopup.setFocusable(true);
+                attachmentPopup.setWidth(popupWidth);
+                attachmentPopup.setHeight(popupHeight);
+                attachmentPopup.setContentView(popupView);
+                attachmentPopup.setBackgroundDrawable(new BitmapDrawable());
+                attachmentPopup.showAsDropDown(view, -5, 0);
+                  popupView.findViewById(R.id.txt_block).setVisibility(View.VISIBLE);
+                popupView.findViewById(R.id.txt_delete).setVisibility(View.GONE);
+                popupView.findViewById(R.id.txt_share_fb).setVisibility(View.GONE);
+                popupView.findViewById(R.id.txt_report).setVisibility(View.GONE);
+                popupView.findViewById(R.id.txt_tweet).setVisibility(View.GONE);
+
+                ((TextView) popupView.findViewById(R.id.txt_block)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        block(mUserId);
+                        attachmentPopup.dismiss();
+                    }
+                });
+                break;
             case R.id.ll_followers:
                 startActivity(new Intent(getApplicationContext(), FollowerActivity.class)
                         .putExtra("USER_ID", getUserId())
@@ -244,7 +274,52 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
 
         }
     }
+    public void block(final String userId) {
+        showProgessDialog();
+        StringRequest block = new StringRequest(Request.Method.POST, Config.BLOCK,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        dismissProgressDialog();
+                        try {
+                            final JSONObject jObject = new JSONObject(response);
+                            if (jObject.getString("status_id").equals("1")) {
+                                Log.e("reponce...::>>", response);
 
+                            }
+                            Toast.makeText(ProfileActivity.this, jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+
+                        Toast.makeText(ProfileActivity.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d("error", volleyError.getMessage());
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("friend_user_id", userId);
+                params.put("user_id", AppPreferences.getAppPreferences(ProfileActivity.this).getStringValue(AppPreferences.USER_ID));
+
+                return params;
+            }
+        };
+
+        block.setRetryPolicy(new DefaultRetryPolicy(
+                30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        RequestQueue queue = Volley.newRequestQueue(ProfileActivity.this);
+        queue.add(block);
+    }
     public void getUserDetails() {
         showProgessDialog();
         StringRequest requestUser = new StringRequest(Request.Method.POST, Config.USER_DETAILS,
@@ -268,9 +343,11 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
                                 num_of_following.setText(userDataJsonObject.getString("following"));
                                 num_of_followers.setText(userDataJsonObject.getString("followers"));
                                 if (!userDataJsonObject.getString("image").isEmpty()) {
-                                    Glide.with(ProfileActivity.this).load(Config.USER_IMAGE_URL + userDataJsonObject.getString("image")).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(userImgView);
+                                    Glide.with(ProfileActivity.this).load(Config.USER_IMAGE_URL + userDataJsonObject.getString("image")).placeholder(R.drawable.profile_pic).error(R.drawable.profile_pic).into(userImgView);
                                 }
                                 if (!mPrefernce.getUserId().equalsIgnoreCase(mUserId)) {
+                                    findViewById(R.id.img_setting).setVisibility(View.INVISIBLE);
+                                    findViewById(R.id.img_more).setVisibility(View.VISIBLE);
                                     findViewById(R.id.txt_btn_edit).setVisibility(View.GONE);
                                     if (userDataJsonObject.getString("follow_status").equalsIgnoreCase("0")) {
                                         mFollowStatus = 0;
@@ -285,6 +362,8 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
                                     findViewById(R.id.txt_btn_follow).setVisibility(View.GONE);
                                     findViewById(R.id.txt_btn_following).setVisibility(View.GONE);
                                     findViewById(R.id.txt_btn_edit).setVisibility(View.VISIBLE);
+                                    findViewById(R.id.img_setting).setVisibility(View.VISIBLE);
+                                    findViewById(R.id.img_more).setVisibility(View.INVISIBLE);
                                 }
                                 String str = userDataJsonObject.getString("profiletype");
                                 if (!userDataJsonObject.getString("company_info").isEmpty()) {
@@ -376,6 +455,8 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
                                     feedItemVo.setmCommentCount(jsonObject.getInt("comment_count"));
                                     feedItemVo.setmComment_1(jsonObject.getString("comment_1"));
                                     feedItemVo.setmComment_2(jsonObject.getString("comment_2"));
+                                    feedItemVo.setCity(jsonObject.getString("city"));
+                                    feedItemVo.setState(jsonObject.getString("state"));
                                     feedItemVo.setmUsername1(jsonObject.getString("user_name_1"));
                                     feedItemVo.setmUsername2(jsonObject.getString("user_name_2"));
                                     feedItemVo.setLiked(jsonObject.getString("likes_status").equals("1"));

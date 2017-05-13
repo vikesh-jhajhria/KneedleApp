@@ -112,8 +112,9 @@ public class EditProfileActivity extends BaseActivity {
                 if (citySpinner != null)
                     citySpinner.setSelection(0);
 
-
-                getDropdownValues(countrySpinnerList.get(position).getCountryID(), "STATE");
+                if(Utils.isNetworkConnected(EditProfileActivity.this,true)) {
+                    getDropdownValues(countrySpinnerList.get(position).getCountryID(), "STATE");
+                }
             }
 
             @Override
@@ -132,8 +133,9 @@ public class EditProfileActivity extends BaseActivity {
                 citySpinnerList.add(city);
                 if (citySpinner != null)
                     citySpinner.setSelection(0);
-
-                getDropdownValues(stateSpinnerList.get(position).getStateID(), "CITY");
+                if(Utils.isNetworkConnected(EditProfileActivity.this,true)) {
+                    getDropdownValues(stateSpinnerList.get(position).getStateID(), "CITY");
+                }
             }
 
             @Override
@@ -148,8 +150,10 @@ public class EditProfileActivity extends BaseActivity {
 
         ((ImageView) findViewById(R.id.img_femme)).setImageResource(R.drawable.female);
         ((ImageView) findViewById(R.id.img_homme)).setImageResource(R.drawable.male);
-        editProfile();
-        getDropdownValues("1", "COUNTRY");
+        if(Utils.isNetworkConnected(this,true)) {
+            editProfile();
+            getDropdownValues("1", "COUNTRY");
+        }
     }
 
     public class SpinnerAdapter extends ArrayAdapter<CountryVO> {

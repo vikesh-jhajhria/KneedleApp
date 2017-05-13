@@ -51,6 +51,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         final CommentVo obj = mList.get(position);
         holder.userName.setText(obj.getUserName());
         holder.userComment.setText(Utils.makeSpannable(mContext, obj.getmComment()));
+        holder.time.setText(Utils.getTimeDifference(obj.getmDate()));
         holder.userComment.setMovementMethod(LinkMovementMethod.getInstance());
         holder.userComment.setHighlightColor(Color.TRANSPARENT);
         Glide.with(mContext).load(Config.USER_IMAGE_URL + obj.getmUserImageUrl()).placeholder(R.drawable.profile_img).error(R.drawable.profile_img).into(holder.imgUser);
@@ -82,17 +83,19 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView userName, userComment;
+        private TextView userName, userComment, time;
         private ImageView imgUser;
 
         public ViewHolder(View itemView) {
             super(itemView);
             userName = (TextView) itemView.findViewById(R.id.txt_user_name);
             userComment = (TextView) itemView.findViewById(R.id.txt_comment);
+            time = (TextView) itemView.findViewById(R.id.txt_time);
             imgUser = (ImageView) itemView.findViewById(R.id.img_circle_comment);
 
             Utils.setTypeface(mContext, userName, Config.CENTURY_GOTHIC_BOLD);
             Utils.setTypeface(mContext, userComment, Config.CENTURY_GOTHIC_REGULAR);
+            Utils.setTypeface(mContext, time, Config.CENTURY_GOTHIC_REGULAR);
         }
     }
 }

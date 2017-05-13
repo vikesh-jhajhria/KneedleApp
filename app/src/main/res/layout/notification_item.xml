@@ -8,8 +8,8 @@
         android:layout_width="@dimen/list_profile_image_height"
         android:layout_height="@dimen/list_profile_image_height"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/margin_15"
-        android:layout_marginTop="@dimen/margin_20"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:src="@drawable/default_feed" />
 
     <TextView
@@ -37,7 +37,17 @@
         android:text=""
         android:textSize="@dimen/margin_15" />
 
-
+    <TextView
+        android:id="@+id/txt_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="@dimen/font_14"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/margin_10"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:gravity="center"
+        android:textColor="@color/gray"/>
 
     <View
         android:layout_width="match_parent"

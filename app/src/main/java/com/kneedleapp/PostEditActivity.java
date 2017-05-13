@@ -52,7 +52,9 @@ public class PostEditActivity extends BaseActivity {
         ((TextView) findViewById(R.id.txt_post)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                postComment();
+                if(Utils.isNetworkConnected(PostEditActivity.this,true)) {
+                    postComment();
+                }
             }
         });
     }

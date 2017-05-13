@@ -90,10 +90,12 @@ public class HomeActivity extends BaseActivity implements FeedAdapter.ProfileIte
         ((SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mList.clear();
-                offset = 0;
-                isLastPage = false;
-                getFeedData();
+                if(Utils.isNetworkConnected(HomeActivity.this,true)) {
+                    mList.clear();
+                    offset = 0;
+                    isLastPage = false;
+                    getFeedData();
+                }
                 ((SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout)).setRefreshing(false);
             }
         });

@@ -37,6 +37,7 @@ public class PostActivity extends BaseActivity {
         findViewById(R.id.img_next).setOnClickListener(this);
         findViewById(R.id.txt_library).setOnClickListener(this);
         findViewById(R.id.txt_photo).setOnClickListener(this);
+        findViewById(R.id.txt_info).setVisibility(View.VISIBLE);
         Utils.setTypeface(PostActivity.this, (TextView) findViewById(R.id.txt_new_post), Config.CENTURY_GOTHIC_BOLD);
         Utils.setTypeface(PostActivity.this, (TextView) findViewById(R.id.txt_library), Config.CENTURY_GOTHIC_REGULAR);
         Utils.setTypeface(PostActivity.this, (TextView) findViewById(R.id.txt_photo), Config.CENTURY_GOTHIC_REGULAR);
@@ -116,6 +117,7 @@ public class PostActivity extends BaseActivity {
                         }
                         bitmap = BitmapFactory.decodeFile(destinationUrl);
                         Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+                        findViewById(R.id.txt_info).setVisibility(View.GONE);
                         mImgContent.setImageDrawable(drawable);
                     }
                 }).execute(imagePath);

@@ -56,6 +56,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -136,10 +137,10 @@ public class Utils {
                 if (i < (charArray.length - 1) && charArray[i + 1] != ' ') {
                     atStartIndexArray.add(i);
                     int endIndex = mainString.indexOf(" ", i);
-                    if(endIndex == -1){
-                        endIndex = mainString.indexOf("@", i+1);
+                    if (endIndex == -1) {
+                        endIndex = mainString.indexOf("@", i + 1);
                     }
-                    if(endIndex == -1){
+                    if (endIndex == -1) {
                         endIndex = mainString.length();
                     }
                     atEndIndexArray.add(endIndex > -1 ? endIndex : charArray.length);
@@ -149,10 +150,10 @@ public class Utils {
                 if (i < (charArray.length - 1) && charArray[i + 1] != ' ') {
                     hashStartIndexArray.add(i);
                     int endIndex = mainString.indexOf(" ", i);
-                    if(endIndex == -1){
-                        endIndex = mainString.indexOf("#", i+1);
+                    if (endIndex == -1) {
+                        endIndex = mainString.indexOf("#", i + 1);
                     }
-                    if(endIndex == -1){
+                    if (endIndex == -1) {
                         endIndex = mainString.length();
                     }
                     hashEndIndexArray.add(endIndex > -1 ? endIndex : charArray.length);
@@ -167,7 +168,7 @@ public class Utils {
                 @Override
                 public void onClick(View textView) {
                     context.startActivity(new Intent(getApplicationContext(), ProfileActivity.class)
-                            .putExtra("USER_ID","")
+                            .putExtra("USER_ID", "")
                             .putExtra("USER_NAME", text_id)
                             .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 }
@@ -187,8 +188,8 @@ public class Utils {
             ClickableSpan clickableSpan = new ClickableSpan() {
                 @Override
                 public void onClick(View textView) {
-                    context.startActivity(new Intent(context, SearchHashActivity.class).putExtra("HASH",hash)
-                    .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                    context.startActivity(new Intent(context, SearchHashActivity.class).putExtra("HASH", hash)
+                            .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 }
 
                 @Override
@@ -385,6 +386,38 @@ public class Utils {
         return simpleDateFormat.format(date);
     }
 
+    public static String getTimeDifference(String date) {
+        String difference = "";
+        try {
+            Calendar calendar = Calendar.getInstance(Locale.getDefault());
+            Date currentTime = calendar.getTime();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+
+            Date secondTime = simpleDateFormat.parse(date);
+            if(currentTime != null && secondTime != null){
+                long diffMills = currentTime.getTime() - secondTime.getTime();
+                long days = diffMills / (1000*60*60*24);
+                if(days > 0){
+                    difference = days+"d";
+                    return difference;
+                }
+                long hours = diffMills / (1000*60*60);
+                if(hours > 0){
+                    difference = hours+"h";
+                    return difference;
+                }
+                long min = diffMills / (1000*60);
+                if(min > 0){
+                    difference = min+"m";
+                    return difference;
+                }
+                difference = "0m";
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return difference;
+    }
 
     public static class SpinnerAdapter extends ArrayAdapter<String> {
 

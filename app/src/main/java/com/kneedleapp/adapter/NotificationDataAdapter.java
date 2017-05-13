@@ -115,6 +115,7 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
                 Glide.with(context).load(obj.getImgUser()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(((NotificationDataViewHolder) holder).imgUser);
             } else Log.v("Img url", "position:" + position);
         }
+        ((NotificationDataViewHolder) holder).time.setText(Utils.getTimeDifference(obj.getTime()));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -179,7 +180,7 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public static class NotificationDataViewHolder extends RecyclerView.ViewHolder {
-        private TextView mTvNoti, username;
+        private TextView mTvNoti, username, time;
         public ImageView imgUser;
 
         public NotificationDataViewHolder(View itemView) {
@@ -187,6 +188,7 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             mTvNoti = (TextView) itemView.findViewById(R.id.txt_notification);
             username = (TextView) itemView.findViewById(R.id.txt_username);
+            time = (TextView) itemView.findViewById(R.id.txt_time);
             imgUser = (ImageView) itemView.findViewById(R.id.imgcircle_user);
 
         }
