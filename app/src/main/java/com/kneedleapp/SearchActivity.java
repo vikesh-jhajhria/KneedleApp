@@ -10,11 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
@@ -33,7 +32,7 @@ public class SearchActivity extends BaseActivity {
         findViewById(R.id.rl_search_selected).setVisibility(View.VISIBLE);
         mStoreList.clear();
         CURRENT_PAGE = "SEARCH";
-        ((CheckBox) findViewById(R.id.check_near_me)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        /*((CheckBox) findViewById(R.id.check_near_me)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
@@ -42,17 +41,19 @@ public class SearchActivity extends BaseActivity {
                     findViewById(R.id.rl_zip).setVisibility(View.INVISIBLE);
                 }
             }
-        });
-        Utils.setTypeface(SearchActivity.this, (TextView)findViewById(R.id.btn_search), Config.CENTURY_GOTHIC_REGULAR);
+        });*/
+        Utils.setTypeface(SearchActivity.this, (TextView) findViewById(R.id.btn_search), Config.CENTURY_GOTHIC_REGULAR);
         withinList = new ArrayList<>();
-        withinList.add("10 KM");
-        withinList.add("50 KM");
-        withinList.add("100 KM");
-        withinList.add("200 KM");
+        withinList.add("WITHIN");
+        withinList.add("10 Miles");
+        withinList.add("50 Miles");
+        withinList.add("100 Miles");
+        withinList.add("200 Miles");
         WithinSpinnerAdapter withinAdapter = new WithinSpinnerAdapter(SearchActivity.this, R.layout.layout_spinner_item, withinList);
         ((Spinner) findViewById(R.id.spinner_within)).setAdapter(withinAdapter);
 
         findViewById(R.id.img_search).setOnClickListener(this);
+        findViewById(R.id.txt_clear).setOnClickListener(this);
 
         SpinnerAdapter spinnerAdapter = new SpinnerAdapter(SearchActivity.this, R.layout.layout_spinner_item, spinnerDataList);
 
@@ -65,27 +66,7 @@ public class SearchActivity extends BaseActivity {
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
 
                 if (i == EditorInfo.IME_ACTION_SEARCH) {
-
-                    if (((EditText) findViewById(R.id.txt_search)).getText().toString().trim().isEmpty()) {
-                        ((EditText) findViewById(R.id.txt_search)).setError("Please enter key to search.");
-
-                    }
-
-
-                    Bundle bundle = new Bundle();
-                    bundle.putString("SEARCHTEXT", ((EditText) findViewById(R.id.txt_search)).getText().toString().trim());
-                    String profileType = ((TextView) findViewById(R.id.txt_category)).getText().toString().trim();
-                    bundle.putString("CATEGORY", profileType.equalsIgnoreCase("Search By Category") ? "" : profileType);
-                    if (((CheckBox) findViewById(R.id.check_near_me)).isChecked()) {
-                        bundle.putString("ZIP", ((EditText) findViewById(R.id.txt_zip)).getText().toString().trim());
-                        bundle.putString("RANGE", (String) ((Spinner) findViewById(R.id.spinner_within)).getSelectedItem());
-                    }
-                    if(Utils.isNetworkConnected(SearchActivity.this,true)) {
-                        startActivity(new Intent(getApplicationContext(), SearchResultActivity.class)
-                                .putExtras(bundle)
-                                .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
-                    }
-                    hideKeyboard();
+                    performSearch();
 
                 }
                 ((TextView) findViewById(R.id.txt_category)).setText("Search By Category");
@@ -164,23 +145,53 @@ public class SearchActivity extends BaseActivity {
         }
     }
 
+    private void performSearch() {
+        Bundle bundle = new Bundle();
+        bundle.putString("SEARCHTEXT", ((EditText) findViewById(R.id.txt_search)).getText().toString().trim());
+        String profileType = ((TextView) findViewById(R.id.txt_category)).getText().toString().trim();
+        bundle.putString("CATEGORY", profileType.equalsIgnoreCase("Search By Category") ? "" : profileType);
+        String zip = ((EditText) findViewById(R.id.txt_zip)).getText().toString().trim();
+        String range = (String) ((Spinner) findViewById(R.id.spinner_within)).getSelectedItem();
+        if (!zip.isEmpty() || !range.equalsIgnoreCase("WITHIN")) {
+            if (range.equalsIgnoreCase("WITHIN")) {
+                Toast.makeText(this, "Please select within range", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (zip.isEmpty()) {
+                Toast.makeText(this, "Please enter zip code", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            bundle.putString("ZIP", zip);
+            bundle.putString("RANGE", range.substring(0,range.indexOf(" ")));
+        } else {
+            searchText = ((EditText) findViewById(R.id.txt_search)).getText().toString().trim();
+            if (searchText.isEmpty()) {
+                ((EditText) findViewById(R.id.txt_search)).setError("Please enter key to search.");
+                return;
+            }
+        }
+        if (Utils.isNetworkConnected(SearchActivity.this, true)) {
+            startActivity(new Intent(getApplicationContext(), SearchResultActivity.class)
+                    .putExtras(bundle)
+                    .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+        }
+
+        hideKeyboard();
+    }
+
     @Override
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()) {
             case R.id.img_search:
             case R.id.btn_search:
-                searchText = ((EditText) findViewById(R.id.txt_search)).getText().toString().trim();
-                if (searchText.isEmpty()) {
-                    ((EditText) findViewById(R.id.txt_search)).setError("Please enter key to search.");
-                    break;
-                }
-                if(Utils.isNetworkConnected(this,true)) {
-                    startActivity(new Intent(getApplicationContext(), SearchResultActivity.class)
-                            .putExtra("SEARCHTEXT", searchText)
-                            .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
-                }
-                hideKeyboard();
+                performSearch();
+                break;
+            case R.id.txt_clear:
+                ((EditText) findViewById(R.id.txt_search)).setText("");
+                ((EditText) findViewById(R.id.txt_zip)).setText("");
+                ((Spinner) findViewById(R.id.spinner_within)).setSelection(0);
+                ((TextView) findViewById(R.id.txt_category)).setText("Search By Category");
                 break;
         }
     }
@@ -199,7 +210,7 @@ public class SearchActivity extends BaseActivity {
 
 
         if (mStoreList != null) {
-            if(mStoreList.isEmpty()){
+            if (mStoreList.isEmpty()) {
                 ((TextView) findViewById(R.id.txt_category)).setText("Search By Category");
             }
             StringBuilder builder = new StringBuilder();

@@ -53,6 +53,7 @@ public class Config {
     public final static String ADD_COMMENT = BASE_URL + "add_comment";
     public final static String GET_NOTIFICATIONS = BASE_URL + "get_notifications";
     public final static String GET_SEARCH_ITEM = BASE_URL + "searchtext";
+    public final static String GET_USERS_CRITERIA = BASE_URL + "get_users_criteria";
     public final static String POST_COMMENT = BASE_URL + "add_feed";
     public final static String REPORT_PROBLEM = BASE_URL + "report_a_problem";
     public final static String BLOCK = BASE_URL + "block_unblock_user";

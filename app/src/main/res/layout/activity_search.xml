@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -125,18 +126,20 @@
                     android:text="Near me"
                     android:textAllCaps="true"
                     android:textColor="@color/textColorPrimary"
-                    android:textSize="@dimen/font_16" />
+                    android:textSize="@dimen/font_16"
+                    android:visibility="gone" />
 
-                <RelativeLayout
-                    android:id="@+id/rl_zip"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_10"
-                    android:visibility="invisible">
+                    android:visibility="visible">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight=".5"
                         android:layout_height="wrap_content"
+                        android:id="@+id/ll_zip"
                         android:layout_alignParentBottom="true"
                         android:orientation="vertical">
 
@@ -160,26 +163,29 @@
                             android:background="@color/textColorPrimary" />
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentRight="true"
-                        android:orientation="vertical">
+                    <android.support.v4.widget.Space
+                        android:layout_width="2dp"
+                        android:layout_height="1dp" />
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_weight=".5"
+                        android:layout_height="match_parent">
 
                         <Spinner
                             android:id="@+id/spinner_within"
                             style="@style/spinnerarrow"
                             android:layout_width="150dp"
-
                             android:layout_height="wrap_content" />
 
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
+                            android:layout_alignParentBottom="true"
                             android:background="@color/textColorPrimary" />
-                    </LinearLayout>
-                </RelativeLayout>
+                    </RelativeLayout>
+                </LinearLayout>
+
                 <Button
                     android:id="@+id/btn_search"
                     android:layout_width="match_parent"
@@ -189,6 +195,16 @@
                     android:background="@color/colourRed"
                     android:gravity="center"
                     android:text="Search"
+                    android:textColor="#ffffff"
+                    android:textSize="@dimen/font_18" />
+
+                <TextView
+                    android:id="@+id/txt_clear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="CLEAR"
+                    android:padding="@dimen/margin_5"
                     android:textColor="#ffffff"
                     android:textSize="@dimen/font_18" />
             </LinearLayout>

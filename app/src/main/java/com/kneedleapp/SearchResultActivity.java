@@ -8,9 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -46,7 +44,7 @@ public class SearchResultActivity extends BaseActivity implements FeedAdapter.Pr
     private ArrayList<FeedItemVo> mFeedList;
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
-    private String mSearchText, mCategory, mZip, hashString = "";
+    private String mSearchText, mCategory, mZip, hashString = "",mRange;
 
 
     @Override
@@ -59,6 +57,7 @@ public class SearchResultActivity extends BaseActivity implements FeedAdapter.Pr
             mSearchText = bundle.getString("SEARCHTEXT", "");
             mCategory = bundle.getString("CATEGORY", "");
             mZip = bundle.getString("ZIP", "");
+            mRange = bundle.getString("RANGE", "");
 
         }
 
@@ -69,8 +68,11 @@ public class SearchResultActivity extends BaseActivity implements FeedAdapter.Pr
         mList = new ArrayList<>();
         mFeedList = new ArrayList<>();
 
-        getSearchItem();
-
+        if(!mZip.isEmpty() && !mRange.isEmpty()){
+            getCriteria();
+        } else {
+            getSearchItem();
+        }
         layoutManager = new LinearLayoutManager(SearchResultActivity.this);
         recyclerView.setLayoutManager(layoutManager);
         searchResultAdapter = new SearchResultAdapter(mList, SearchResultActivity.this);
@@ -81,7 +83,7 @@ public class SearchResultActivity extends BaseActivity implements FeedAdapter.Pr
         ((EditText) findViewById(R.id.txt_title)).setText(mSearchText);
 
 
-        ((EditText) findViewById(R.id.txt_title)).setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        /*((EditText) findViewById(R.id.txt_title)).setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_SEARCH) {
@@ -94,7 +96,7 @@ public class SearchResultActivity extends BaseActivity implements FeedAdapter.Pr
                 }
                 return false;
             }
-        });
+        });*/
 
         ((ImageView) findViewById(R.id.img_close)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,7 +144,100 @@ public class SearchResultActivity extends BaseActivity implements FeedAdapter.Pr
     private void applyFonts() {
         Utils.setTypeface(SearchResultActivity.this, (TextView) findViewById(R.id.txt_title), Config.CENTURY_GOTHIC_REGULAR);
     }
+    public void getCriteria() {
+        showProgessDialog();
+        StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.GET_USERS_CRITERIA,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        dismissProgressDialog();
+                        try {
+                            searchResultAdapter.notifyDataSetChanged();
 
+                            final JSONObject jObject = new JSONObject(response);
+                            if (jObject.getString("status_id").equals("1")) {
+                                Log.e("responce....::>>>", response);
+
+                                boolean isFeedData = false;
+                                JSONArray jsonArray = jObject.getJSONArray("search_data");
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                    if (!isFeedData && jsonObject.isNull("id")) {
+                                        SearchResultVO searchResultVO = new SearchResultVO();
+                                        searchResultVO.setmUserId(jsonObject.getString("user_id"));
+                                        searchResultVO.setmUserName(jsonObject.getString("username"));
+                                        searchResultVO.setmFullName(jsonObject.getString("fullname"));
+                                        searchResultVO.setmProfileType(jsonObject.getString("profiletype"));
+                                        searchResultVO.setmCityName(jsonObject.getString("city"));
+                                        searchResultVO.setmImgUrl(jsonObject.getString("profile_pic"));
+                                        mList.add(searchResultVO);
+                                    } else {
+                                        isFeedData = true;
+                                        FeedItemVo feedItemVo = new FeedItemVo();
+                                        feedItemVo.setmFullName(jsonObject.getString("fullname"));
+                                        feedItemVo.setmId(jsonObject.getString("id"));
+                                        feedItemVo.setmUserId(jsonObject.getString("user_id"));
+                                        feedItemVo.setmDate(jsonObject.getString("date"));
+                                        feedItemVo.setmUserName(jsonObject.getString("username"));
+                                        feedItemVo.setmUserImage(Config.USER_IMAGE_URL + jsonObject.getString("mypic"));
+                                        feedItemVo.setmContentImage(Config.FEED_IMAGE_URL + jsonObject.getString("image"));
+                                        feedItemVo.setmDescription(jsonObject.getString("caption"));
+                                        feedItemVo.setmLikes(jsonObject.getInt("likes_count"));
+                                        feedItemVo.setmCommentCount(jsonObject.getInt("comment_count"));
+                                        feedItemVo.setmComment_1(jsonObject.getString("comment_1"));
+                                        feedItemVo.setmUsername1(jsonObject.getString("user_name_1"));
+                                        feedItemVo.setCity(jsonObject.getString("city"));
+                                        feedItemVo.setState(jsonObject.getString("state"));
+                                        feedItemVo.setmUsername2(jsonObject.getString("user_name_2"));
+                                        feedItemVo.setmComment_2(jsonObject.getString("comment_2"));
+                                        feedItemVo.setLiked(jsonObject.getString("likes_status").equals("1"));
+
+                                        mFeedList.add(feedItemVo);
+                                    }
+                                }
+
+                                if (isFeedData) {
+                                    recyclerView.setAdapter(mFeedAdapter);
+                                    mFeedAdapter.notifyDataSetChanged();
+                                } else {
+                                    recyclerView.setAdapter(searchResultAdapter);
+                                    searchResultAdapter.notifyDataSetChanged();
+                                }
+
+                            } else {
+                                Toast.makeText(SearchResultActivity.this, "no data available", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(SearchResultActivity.this, volleyError.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d("error", volleyError.getMessage());
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                    params.put("zipcode", mZip);
+                    params.put("radius", mRange);
+
+                Log.v("Kneedle", "Params: " + params);
+                return params;
+            }
+        };
+
+        requestFeed.setRetryPolicy(new DefaultRetryPolicy(
+                30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        RequestQueue feedqueue = Volley.newRequestQueue(SearchResultActivity.this);
+        feedqueue.add(requestFeed);
+    }
 
     public void getSearchItem() {
         showProgessDialog();
