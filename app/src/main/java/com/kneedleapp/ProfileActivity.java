@@ -2,6 +2,7 @@ package com.kneedleapp;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -29,6 +30,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.kneedleapp.adapter.FeedAdapter;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
@@ -50,7 +53,7 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
 
     private FeedAdapter feedAdapter;
     private ArrayList<FeedItemVo> mList = new ArrayList<>();
-    public static RecyclerView recyclerView;
+    private RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
     StaggeredGridLayoutManager gridLayoutManager;
     private ImageView listBtn, gridBtn;
@@ -166,9 +169,11 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
                     if (lastvisibleitemposition >= feedAdapter.getItemCount() - 3) {
 
                         if (!loading && !isLastPage) {
-                            offset = limit + offset;
-                            loading = true;
-                            FeedData(mUserId);
+                            if (Utils.isNetworkConnected(ProfileActivity.this, true)) {
+                                offset = limit + offset;
+                                loading = true;
+                                FeedData(mUserId);
+                            }
                         }
                     }
                 } else {
@@ -176,9 +181,11 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
                     if (lastvisibleitemposition == feedAdapter.getItemCount() - 1) {
 
                         if (!loading && !isLastPage) {
-                            offset = offset + limit;
-                            loading = true;
-                            FeedData(mUserId);
+                            if (Utils.isNetworkConnected(ProfileActivity.this, true)) {
+                                offset = offset + limit;
+                                loading = true;
+                                FeedData(mUserId);
+                            }
                         }
                     }
                 }
@@ -214,6 +221,9 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
                 getUserDetails();
             }
         }
+        if(feedAdapter != null){
+            feedAdapter.notifyDataSetChanged();
+        }
         isLoading = false;
     }
 
@@ -227,10 +237,14 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
                         .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 break;
             case R.id.txt_btn_follow:
-                followUnfollowUser(mUserId, Utils.getCurrentDate());
+                if (Utils.isNetworkConnected(ProfileActivity.this, true)) {
+                    followUnfollowUser(mUserId, Utils.getCurrentDate());
+                }
                 break;
             case R.id.txt_btn_following:
-                followUnfollowUser(mUserId, Utils.getCurrentDate());
+                if (Utils.isNetworkConnected(ProfileActivity.this, true)) {
+                    followUnfollowUser(mUserId, Utils.getCurrentDate());
+                }
                 break;
             case R.id.img_back:
                 break;
@@ -264,7 +278,9 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
                 ((TextView) popupView.findViewById(R.id.txt_block)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        block(mUserId);
+                        if (Utils.isNetworkConnected(ProfileActivity.this, true)) {
+                            block(mUserId);
+                        }
                         attachmentPopup.dismiss();
                     }
                 });
@@ -349,10 +365,12 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
                                 mUserId = userDataJsonObject.getString("user_id");
 
                                 if (!Config.updateProfile) {
-                                    mList.clear();
-                                    offset = 0;
-                                    isLastPage = false;
-                                    FeedData(mUserId);
+                                    if (Utils.isNetworkConnected(ProfileActivity.this, true)) {
+                                        mList.clear();
+                                        offset = 0;
+                                        isLastPage = false;
+                                        FeedData(mUserId);
+                                    }
                                 }
                                 Config.updateProfile = false;
 
@@ -360,7 +378,13 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
                                 num_of_following.setText(userDataJsonObject.getString("following"));
                                 num_of_followers.setText(userDataJsonObject.getString("followers"));
                                 if (!userDataJsonObject.getString("image").isEmpty()) {
-                                    Glide.with(ProfileActivity.this).load(Config.USER_IMAGE_URL + userDataJsonObject.getString("image")).into(userImgView);
+                                    Glide.with(ProfileActivity.this).load(Config.USER_IMAGE_URL + userDataJsonObject.getString("image")).asBitmap().placeholder(R.drawable.profile_pic)
+                                            .into(new SimpleTarget<Bitmap>() {
+                                                @Override
+                                                public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                                                    userImgView.setImageBitmap(resource);
+                                                }
+                                            });
                                 }
                                 if (!mPrefernce.getUserId().equalsIgnoreCase(mUserId)) {
                                     findViewById(R.id.img_setting).setVisibility(View.INVISIBLE);

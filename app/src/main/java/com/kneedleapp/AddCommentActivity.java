@@ -20,6 +20,7 @@ import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.CommentVo;
+import com.kneedleapp.vo.FeedItemVo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,6 +41,7 @@ public class AddCommentActivity extends BaseActivity {
     private String mComment;
     private EditText mEdtComment;
     private String feedId;
+    public static FeedItemVo feedItemVo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,10 +88,12 @@ public class AddCommentActivity extends BaseActivity {
                 if (mEdtComment.getText().toString().isEmpty()) {
                     Toast.makeText(AddCommentActivity.this, "Please write the comment", Toast.LENGTH_LONG).show();
                 } else {
-                    mComment = mEdtComment.getText().toString();
-                    addComment(AppPreferences.getAppPreferences(AddCommentActivity.this).getUserId(), feedId, mComment, "");
-                    mEdtComment.setText("");
-                    hideKeyboard();
+                    if (Utils.isNetworkConnected(AddCommentActivity.this, true)) {
+                        mComment = mEdtComment.getText().toString();
+                        addComment(AppPreferences.getAppPreferences(AddCommentActivity.this).getUserId(), feedId, mComment, "");
+                        mEdtComment.setText("");
+                        hideKeyboard();
+                    }
                 }
                 break;
         }
@@ -122,6 +126,7 @@ public class AddCommentActivity extends BaseActivity {
                                     obj.setmDate(commentObj.getString("created_at"));
 
                                     mList.add(obj);
+
 
                                 }
                                 mAdapter.notifyDataSetChanged();
@@ -198,6 +203,14 @@ public class AddCommentActivity extends BaseActivity {
                                     obj.setmDate(commentObj.getString("created_at"));
 
                                     mList.add(obj);
+
+                                }
+                                if (feedItemVo != null) {
+                                    feedItemVo.setmCommentCount(feedItemVo.getmCommentCount() + 1);
+                                    feedItemVo.setmUsername2(feedItemVo.getmUsername1());
+                                    feedItemVo.setmComment_2(feedItemVo.getmComment_1());
+                                    feedItemVo.setmUsername1(AppPreferences.getAppPreferences(getApplicationContext()).getUserName());
+                                    feedItemVo.setmComment_1(comment);
 
                                 }
                                 mAdapter.notifyDataSetChanged();

@@ -32,6 +32,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.CustomMultipartRequest;
@@ -79,6 +81,7 @@ public class EditProfileActivity extends BaseActivity {
         findViewById(R.id.img_femme).setOnClickListener(this);
         findViewById(R.id.btn_save_changes).setOnClickListener(this);
         findViewById(R.id.img_profile).setOnClickListener(this);
+        findViewById(R.id.txt_edit).setOnClickListener(this);
 
         citySpinner = ((Spinner) findViewById(R.id.spinner_city));
         stateSpinner = ((Spinner) findViewById(R.id.spinner_state));
@@ -124,7 +127,7 @@ public class EditProfileActivity extends BaseActivity {
                 if (citySpinner != null)
                     citySpinner.setSelection(0);
 
-                if(Utils.isNetworkConnected(EditProfileActivity.this,true)) {
+                if (Utils.isNetworkConnected(EditProfileActivity.this, true)) {
                     country = countrySpinnerList.get(position).getName();
                     getDropdownValues(countrySpinnerList.get(position).getCountryID(), "STATE");
                 }
@@ -146,7 +149,7 @@ public class EditProfileActivity extends BaseActivity {
                 citySpinnerList.add(city);
                 if (citySpinner != null)
                     citySpinner.setSelection(0);
-                if(Utils.isNetworkConnected(EditProfileActivity.this,true)) {
+                if (Utils.isNetworkConnected(EditProfileActivity.this, true)) {
                     state = stateSpinnerList.get(position).getName();
                     getDropdownValues(stateSpinnerList.get(position).getStateID(), "CITY");
                 }
@@ -175,7 +178,7 @@ public class EditProfileActivity extends BaseActivity {
 
         ((ImageView) findViewById(R.id.img_femme)).setImageResource(R.drawable.female);
         ((ImageView) findViewById(R.id.img_homme)).setImageResource(R.drawable.male);
-        if(Utils.isNetworkConnected(this,true)) {
+        if (Utils.isNetworkConnected(this, true)) {
             editProfile();
         }
     }
@@ -224,6 +227,7 @@ public class EditProfileActivity extends BaseActivity {
                 ((ImageView) findViewById(R.id.img_homme)).setImageResource(R.drawable.male_red);
                 break;
             case R.id.img_profile:
+            case R.id.txt_edit:
                 selectImage();
                 break;
             case R.id.btn_save_changes:
@@ -284,15 +288,22 @@ public class EditProfileActivity extends BaseActivity {
                                     ((ImageView) findViewById(R.id.img_femme)).setImageResource(R.drawable.female_red);
                                 }
 
-                                Glide.with(EditProfileActivity.this).load(Config.USER_IMAGE_URL + jsonObject.getString("image")).placeholder(R.drawable.profile_img).error(R.drawable.profile_img).into(((ImageView) findViewById(R.id.img_profile)));
-
-                                for(String pt:Config.PROFILE_TYPE){
-                                    if(pt.equalsIgnoreCase(profiletype)){
+                                Glide.with(EditProfileActivity.this).load(Config.USER_IMAGE_URL + jsonObject.getString("image")).asBitmap().placeholder(R.drawable.profile_pic)
+                                        .into(new SimpleTarget<Bitmap>() {
+                                            @Override
+                                            public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                                                ((ImageView) findViewById(R.id.img_profile)).setImageBitmap(resource);
+                                            }
+                                        });
+                                for (String pt : Config.PROFILE_TYPE) {
+                                    if (pt.equalsIgnoreCase(profiletype)) {
                                         profileSpinner.setSelection(Config.PROFILE_TYPE.indexOf(pt));
                                         break;
                                     }
                                 }
-                                getDropdownValues("1", "COUNTRY");
+                                if (Utils.isNetworkConnected(EditProfileActivity.this, true)) {
+                                    getDropdownValues("1", "COUNTRY");
+                                }
 
                             } else {
                                 Toast.makeText(EditProfileActivity.this, jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
@@ -333,12 +344,12 @@ public class EditProfileActivity extends BaseActivity {
 
     public void getDropdownValues(final String id, final String type) {
         if (id != null && !id.isEmpty()) {
-            ((BaseActivity) EditProfileActivity.this).showProgessDialog();
+            //((BaseActivity) EditProfileActivity.this).showProgessDialog();
             StringRequest editProfile = new StringRequest(Request.Method.POST, Config.GET_DROPDOWN,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            ((BaseActivity) EditProfileActivity.this).dismissProgressDialog();
+                            //((BaseActivity) EditProfileActivity.this).dismissProgressDialog();
                             try {
                                 final JSONObject jObject = new JSONObject(response);
                                 if (jObject.getString("status_id").equals("1")) {
@@ -352,7 +363,7 @@ public class EditProfileActivity extends BaseActivity {
                                                 countryVO = new CountryVO(arr.getJSONObject(i).getString("countryName"));
                                                 countryVO.setWebCode(arr.getJSONObject(i).getString("webCode"));
                                                 countryVO.setCountryID(arr.getJSONObject(i).getString("countryID"));
-                                                if(countryVO.getName().equalsIgnoreCase(country)){
+                                                if (countryVO.getName().equalsIgnoreCase(country)) {
                                                     country_index = countrySpinnerList.size();
                                                 }
                                                 countrySpinnerList.add(countryVO);
@@ -362,7 +373,7 @@ public class EditProfileActivity extends BaseActivity {
                                                 countryVO = new CountryVO(arr.getJSONObject(i).getString("stateName"));
                                                 countryVO.setStateID(arr.getJSONObject(i).getString("stateID"));
                                                 countryVO.setCountryID(arr.getJSONObject(i).getString("countryID"));
-                                                if(countryVO.getName().equalsIgnoreCase(state)){
+                                                if (countryVO.getName().equalsIgnoreCase(state)) {
                                                     state_index = stateSpinnerList.size();
                                                 }
                                                 stateSpinnerList.add(countryVO);
@@ -370,7 +381,7 @@ public class EditProfileActivity extends BaseActivity {
                                                 break;
                                             case "CITY":
                                                 countryVO = new CountryVO(arr.getJSONObject(i).getString("cityName"));
-                                                if(countryVO.getName().equalsIgnoreCase(city)){
+                                                if (countryVO.getName().equalsIgnoreCase(city)) {
                                                     city_index = citySpinnerList.size();
                                                 }
                                                 citySpinnerList.add(countryVO);
@@ -497,7 +508,9 @@ public class EditProfileActivity extends BaseActivity {
                         bitmap = BitmapFactory.decodeFile(destinationUrl);
                         Drawable drawable = new BitmapDrawable(getResources(), bitmap);
                         ((ImageView) findViewById(R.id.img_profile)).setImageDrawable(drawable);
-                        updateProfilePic();
+                        if (Utils.isNetworkConnected(EditProfileActivity.this, true)) {
+                            updateProfilePic();
+                        }
                     }
                 }).execute(imagePath);
 
@@ -559,7 +572,7 @@ public class EditProfileActivity extends BaseActivity {
                         try {
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
-
+                                Config.updateProfile = true;
                             }
                             Toast.makeText(EditProfileActivity.this, jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
                         } catch (JSONException e) {
@@ -587,7 +600,7 @@ public class EditProfileActivity extends BaseActivity {
                         try {
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
-
+                                Config.updateProfile = true;
                             }
                             Toast.makeText(EditProfileActivity.this, jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
                         } catch (JSONException e) {

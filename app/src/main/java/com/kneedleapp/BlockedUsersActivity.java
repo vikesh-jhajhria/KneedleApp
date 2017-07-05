@@ -61,8 +61,9 @@ public class BlockedUsersActivity extends BaseActivity {
         recyclerView.setLayoutManager(layoutManager);
         userListAdapter = new UserListAdapter(this, blockedUserList, "BLOCKED_USER");
         recyclerView.setAdapter(userListAdapter);
-
-        getBlockedUsers();
+        if (Utils.isNetworkConnected(BlockedUsersActivity.this, true)) {
+            getBlockedUsers();
+        }
     }
     
     private void applyFonts() {

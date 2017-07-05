@@ -68,11 +68,12 @@ public class SearchResultActivity extends BaseActivity implements FeedAdapter.Pr
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mList = new ArrayList<>();
         mFeedList = new ArrayList<>();
-
-        if (!mZip.isEmpty() && !mRange.isEmpty()) {
-            getCriteria();
-        } else {
-            getSearchItem();
+        if (Utils.isNetworkConnected(SearchResultActivity.this, true)) {
+            if (!mZip.isEmpty() && !mRange.isEmpty()) {
+                getCriteria();
+            } else {
+                getSearchItem();
+            }
         }
         layoutManager = new LinearLayoutManager(SearchResultActivity.this);
         recyclerView.setLayoutManager(layoutManager);
@@ -132,12 +133,14 @@ public class SearchResultActivity extends BaseActivity implements FeedAdapter.Pr
         ((SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mFeedList.clear();
-                mList.clear();
-                if (!mZip.isEmpty() && !mRange.isEmpty()) {
-                    getCriteria();
-                } else {
-                    getSearchItem();
+                if (Utils.isNetworkConnected(SearchResultActivity.this, true)) {
+                    mFeedList.clear();
+                    mList.clear();
+                    if (!mZip.isEmpty() && !mRange.isEmpty()) {
+                        getCriteria();
+                    } else {
+                        getSearchItem();
+                    }
                 }
                 ((SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout)).setRefreshing(false);
             }
@@ -145,7 +148,13 @@ public class SearchResultActivity extends BaseActivity implements FeedAdapter.Pr
 
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(mFeedAdapter != null){
+            mFeedAdapter.notifyDataSetChanged();
+        }
+    }
     private void applyFonts() {
         Utils.setTypeface(SearchResultActivity.this, (TextView) findViewById(R.id.txt_title), Config.CENTURY_GOTHIC_REGULAR);
     }

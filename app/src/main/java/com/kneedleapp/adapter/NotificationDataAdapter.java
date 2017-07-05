@@ -2,6 +2,7 @@ package com.kneedleapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.kneedleapp.BaseActivity;
 import com.kneedleapp.FeedDetailActivity;
 import com.kneedleapp.ProfileActivity;
@@ -112,7 +115,13 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             Log.v("Img url", "position:" + position+" url="+obj.getImgUser());
             if (!obj.getImgUser().isEmpty()) {
-                Glide.with(context).load(obj.getImgUser()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(((NotificationDataViewHolder) holder).imgUser);
+                Glide.with(context).load(obj.getImgUser()).asBitmap().placeholder(R.drawable.profile_pic)
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                                ((NotificationDataViewHolder) holder).imgUser.setImageBitmap(resource);
+                            }
+                        });
             } else Log.v("Img url", "position:" + position);
         }
         //((NotificationDataViewHolder) holder).time.setText(Utils.getTimeDifference(obj.getTime()));

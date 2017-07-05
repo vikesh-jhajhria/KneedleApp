@@ -2,6 +2,7 @@ package com.kneedleapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
@@ -12,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.kneedleapp.ProfileActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.utils.Config;
@@ -46,7 +49,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
 
         final CommentVo obj = mList.get(position);
         holder.userName.setText(obj.getUserName());
@@ -54,8 +57,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         //holder.time.setText(Utils.getTimeDifference(obj.getmDate()));
         holder.userComment.setMovementMethod(LinkMovementMethod.getInstance());
         holder.userComment.setHighlightColor(Color.TRANSPARENT);
-        Glide.with(mContext).load(Config.USER_IMAGE_URL + obj.getmUserImageUrl()).placeholder(R.drawable.profile_img).error(R.drawable.profile_img).into(holder.imgUser);
-
+        Glide.with(mContext).load(Config.USER_IMAGE_URL + obj.getmUserImageUrl()).asBitmap().placeholder(R.drawable.profile_pic)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                        holder.imgUser.setImageBitmap(resource);
+                    }
+                });
         holder.imgUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

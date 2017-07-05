@@ -93,6 +93,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                 if (viewType.equalsIgnoreCase("LIST")) {
                     mListener.getItem(position, holder, feedItemVo.getLiked());
                 } else {
+                    AddCommentActivity.feedItemVo = feedItemVo;
                     context.startActivity(new Intent(getApplicationContext(), FeedDetailActivity.class)
                             .putExtra("FEEDID",feedItemVo.getmId())
                             .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
@@ -262,21 +263,27 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                     ((TextView) popupView.findViewById(R.id.txt_report)).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            reportProblem(feedItemVo.getmId());
+                            if (Utils.isNetworkConnected(context, true)) {
+                                reportProblem(feedItemVo.getmId());
+                            }
                             attachmentPopup.dismiss();
                         }
                     });
                     ((TextView) popupView.findViewById(R.id.txt_block)).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            block(feedItemVo.getmUserId());
+                            if (Utils.isNetworkConnected(context, true)) {
+                                block(feedItemVo.getmUserId());
+                            }
                             attachmentPopup.dismiss();
                         }
                     });
                     ((TextView) popupView.findViewById(R.id.txt_delete)).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            delete(feedItemVo.getmId(), position);
+                            if (Utils.isNetworkConnected(context, true)) {
+                                delete(feedItemVo.getmId(), position);
+                            }
                             attachmentPopup.dismiss();
                         }
                     });
@@ -300,6 +307,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             holder.comment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    AddCommentActivity.feedItemVo = feedItemVo;
                     context.startActivity(new Intent(getApplicationContext(), AddCommentActivity.class)
                             .putExtra("FEEDID",feedItemVo.getmId())
                             .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
@@ -308,6 +316,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
             holder.ll_comment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    AddCommentActivity.feedItemVo = feedItemVo;
                     context.startActivity(new Intent(getApplicationContext(), AddCommentActivity.class)
                             .putExtra("FEEDID",feedItemVo.getmId())
                             .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));

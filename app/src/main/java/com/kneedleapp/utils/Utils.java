@@ -273,7 +273,7 @@ public class Utils {
         NetworkInfo netInfo = conManager.getActiveNetworkInfo();
         boolean isConnected = netInfo != null && netInfo.isConnected();
         if (!isConnected && showToast)
-            Toast.makeText(context, "No connection", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "No internet connection!", Toast.LENGTH_LONG).show();
         return (netInfo != null && netInfo.isConnected());
     }
 

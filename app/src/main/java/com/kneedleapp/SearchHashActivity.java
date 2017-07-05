@@ -91,10 +91,12 @@ public class SearchHashActivity extends BaseActivity implements FeedAdapter.Prof
         ((SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mList.clear();
-                offset = 0;
-                isLastPage = false;
-                getFeedData();
+                if (Utils.isNetworkConnected(SearchHashActivity.this, true)) {
+                    mList.clear();
+                    offset = 0;
+                    isLastPage = false;
+                    getFeedData();
+                }
                 ((SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout)).setRefreshing(false);
             }
         });
@@ -111,9 +113,11 @@ public class SearchHashActivity extends BaseActivity implements FeedAdapter.Prof
                     if (lastvisibleitemposition >= mAdapter.getItemCount() - 3) {
 
                         if (!loading && !isLastPage) {
-                            offset = offset + limit;
-                            loading = true;
-                            getFeedData();
+                            if (Utils.isNetworkConnected(SearchHashActivity.this, true)) {
+                                offset = offset + limit;
+                                loading = true;
+                                getFeedData();
+                            }
                         }
                     }
                 }
@@ -122,9 +126,11 @@ public class SearchHashActivity extends BaseActivity implements FeedAdapter.Prof
                     if (lastvisibleitemposition == mAdapter.getItemCount() - 1) {
 
                         if (!loading && !isLastPage) {
-                            offset = offset + limit;
-                            loading = true;
-                            getFeedData();
+                            if (Utils.isNetworkConnected(SearchHashActivity.this, true)) {
+                                offset = offset + limit;
+                                loading = true;
+                                getFeedData();
+                            }
                         }
                     }
                 }
@@ -134,7 +140,13 @@ public class SearchHashActivity extends BaseActivity implements FeedAdapter.Prof
 
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(mAdapter != null){
+            mAdapter.notifyDataSetChanged();
+        }
+    }
 
 
     @Override

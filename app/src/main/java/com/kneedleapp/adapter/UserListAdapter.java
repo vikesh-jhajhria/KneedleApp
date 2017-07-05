@@ -98,21 +98,27 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.CheckV
         holder.follow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                followUnfollowUser(userDetail.getUserId(), currentDate, position);
+                if (Utils.isNetworkConnected(context, true)) {
+                    followUnfollowUser(userDetail.getUserId(), currentDate, position);
+                }
             }
         });
 
         holder.unfollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                followUnfollowUser(userDetail.getUserId(), currentDate, position);
+                if (Utils.isNetworkConnected(context, true)) {
+                    followUnfollowUser(userDetail.getUserId(), currentDate, position);
+                }
             }
         });
 
         holder.unblock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                unblock(userDetail.getUserId(),position);
+                if (Utils.isNetworkConnected(context, true)) {
+                    unblock(userDetail.getUserId(), position);
+                }
             }
         });
 

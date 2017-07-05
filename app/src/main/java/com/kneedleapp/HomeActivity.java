@@ -104,6 +104,7 @@ public class HomeActivity extends BaseActivity implements FeedAdapter.ProfileIte
         });
 
 
+
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -115,9 +116,11 @@ public class HomeActivity extends BaseActivity implements FeedAdapter.ProfileIte
                     if (lastvisibleitemposition >= mAdapter.getItemCount() - 3) {
 
                         if (!loading && !isLastPage) {
-                            offset = offset + limit;
-                            loading = true;
-                            getFeedData();
+                            if (Utils.isNetworkConnected(HomeActivity.this, true)) {
+                                offset = offset + limit;
+                                loading = true;
+                                getFeedData();
+                            }
                         }
                     }
                 } else {
@@ -125,9 +128,11 @@ public class HomeActivity extends BaseActivity implements FeedAdapter.ProfileIte
                     if (lastvisibleitemposition == mAdapter.getItemCount() - 1) {
 
                         if (!loading && !isLastPage) {
-                            offset = offset + limit;
-                            loading = true;
-                            getFeedData();
+                            if (Utils.isNetworkConnected(HomeActivity.this, true)) {
+                                offset = offset + limit;
+                                loading = true;
+                                getFeedData();
+                            }
                         }
                     }
                 }
@@ -135,6 +140,14 @@ public class HomeActivity extends BaseActivity implements FeedAdapter.ProfileIte
         });
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(mAdapter != null){
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override

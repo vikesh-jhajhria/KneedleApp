@@ -93,10 +93,11 @@ public class FeedDetailActivity extends BaseActivity {
         findViewById(R.id.img_back).setOnClickListener(this);
 
         if (Utils.isNetworkConnected(FeedDetailActivity.this, true)) {
+            isLoading = true;
             getFeedData(feedId);
         }
     }
-
+private  boolean isLoading;
 
     @Override
     public void onClick(View mView) {
@@ -119,9 +120,18 @@ public class FeedDetailActivity extends BaseActivity {
         Utils.setTypeface(FeedDetailActivity.this, username2, Config.CENTURY_GOTHIC_BOLD);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(AddCommentActivity.feedItemVo != null && !isLoading) {
+            feedItemVo = AddCommentActivity.feedItemVo;
+            bindData();
+        }
+
+    }
 
     private void bindData() {
-
+        AddCommentActivity.feedItemVo = feedItemVo;
         tvTitle.setText("@"+feedItemVo.getmUserName());
         String location = "";
         if(!feedItemVo.getCity().isEmpty()){
@@ -255,21 +265,27 @@ public class FeedDetailActivity extends BaseActivity {
                 ((TextView) popupView.findViewById(R.id.txt_report)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        reportProblem(feedItemVo.getmId());
+                        if (Utils.isNetworkConnected(FeedDetailActivity.this, true)) {
+                            reportProblem(feedItemVo.getmId());
+                        }
                         attachmentPopup.dismiss();
                     }
                 });
                 ((TextView) popupView.findViewById(R.id.txt_block)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        block(feedItemVo.getmUserId());
+                        if (Utils.isNetworkConnected(FeedDetailActivity.this, true)) {
+                            block(feedItemVo.getmUserId());
+                        }
                         attachmentPopup.dismiss();
                     }
                 });
                 ((TextView) popupView.findViewById(R.id.txt_delete)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        delete(feedItemVo.getmId());
+                        if (Utils.isNetworkConnected(FeedDetailActivity.this, true)) {
+                            delete(feedItemVo.getmId());
+                        }
                         attachmentPopup.dismiss();
                     }
                 });
@@ -392,6 +408,7 @@ public class FeedDetailActivity extends BaseActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        isLoading = false;
                         ((BaseActivity) FeedDetailActivity.this).dismissProgressDialog();
                         try {
                             final JSONObject jObject = new JSONObject(response);

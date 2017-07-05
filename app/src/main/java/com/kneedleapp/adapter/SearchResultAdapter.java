@@ -2,6 +2,7 @@ package com.kneedleapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.kneedleapp.ProfileActivity;
 import com.kneedleapp.R;
 import com.kneedleapp.utils.Config;
@@ -49,9 +52,14 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         holder.fullname.setText(searchResultVo.getmFullName());
         holder.job.setText(searchResultVo.getmProfileType());
         holder.place.setText(searchResultVo.getmCityName());
-        Glide.with(context).load(Config.USER_IMAGE_URL + searchResultVo.getmImgUrl()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(holder.img);
-
-        holder.txt_name.setOnClickListener(new View.OnClickListener() {
+        Glide.with(context).load(Config.USER_IMAGE_URL + searchResultVo.getmImgUrl()).asBitmap().placeholder(R.drawable.profile_pic)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                        holder.img.setImageBitmap(resource);
+                    }
+                });
+        holder.fullname.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 context.startActivity(new Intent(getApplicationContext(), ProfileActivity.class)
