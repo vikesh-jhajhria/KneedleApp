@@ -23,6 +23,7 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -57,7 +58,10 @@ public class SignUpActivity extends BaseActivity implements FBLoginClass.OnFBRes
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    Toast.makeText(SignUpActivity.this,user.getUid()+" "+user.getDisplayName()+" "+user.getEmail(),Toast.LENGTH_LONG).show();
+                    //Toast.makeText(SignUpActivity.this,user.getUid()+" "+user.getDisplayName()+" "+user.getEmail(),Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(SignUpActivity.this,RegistrationActivity.class);
+                    intent.putExtra("username", user.getDisplayName().replace(" ","_"));
+                    startActivity(intent);
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -142,8 +146,11 @@ public class SignUpActivity extends BaseActivity implements FBLoginClass.OnFBRes
     }
 
     @Override
-    public void onFBResult(JSONObject result) {
-        Toast.makeText(SignUpActivity.this, result.toString(), Toast.LENGTH_LONG).show();
+    public void onFBResult(JSONObject result) throws JSONException {
+        //Toast.makeText(SignUpActivity.this, result.toString(), Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(SignUpActivity.this,RegistrationActivity.class);
+        intent.putExtra("username", result.getString("name").replace(" ","_"));
+        startActivity(intent);
     }
 
 

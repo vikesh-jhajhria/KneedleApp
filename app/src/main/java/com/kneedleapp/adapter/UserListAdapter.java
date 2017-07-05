@@ -185,6 +185,9 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.CheckV
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
                                 Log.e("responce....::>>>", response);
+                                Config.updateFollower = true;
+                                Config.updateFollowing = true;
+                                Config.updateProfile = true;
                                 if(list.get(position).getStatus().equalsIgnoreCase("1")){
                                     list.get(position).setStatus("0");
                                 } else {

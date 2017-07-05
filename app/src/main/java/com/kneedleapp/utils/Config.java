@@ -29,10 +29,12 @@ public class Config {
     public static Bitmap fullScreenFeedBitmap;
     public static Bitmap fullScreenUserBitmap;
 
+    public static boolean updateProfile, updateFollower, updateFollowing;
+
     public static ArrayList<String> PROFILE_TYPE = new ArrayList<>();
 
-    public static final String TWITTER_KEY = "IPXy5QI9bvsbg0E6X5RPyI8V3";
-    public static final String TWITTER_SECRET = "KIheMUxPOpnnsCZkC6kxwKGVTiAOGoRhecPcnwee1eyPzOLjxF";
+    public static final String TWITTER_KEY = "TN7kGWPfeUHiIAU3v3HfSnUMp";
+    public static final String TWITTER_SECRET = "tlQaaIxgtFtsgmRzZlQACLpA5lAmApp2m2EPKEKsCZhizMmdrJ";
 
     public final static int SPLASH_TIME = 2000;
     public final static String BASE_URL = "http://kneedleapp.com/restAPIs/api/";

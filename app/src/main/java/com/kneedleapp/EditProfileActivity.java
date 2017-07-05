@@ -64,7 +64,7 @@ public class EditProfileActivity extends BaseActivity {
 
     private Bitmap bitmap;
     String imagePath = "";
-    String gender = "male";
+    String gender = "male", profiletype = "", country = "", state = "", city = "";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -94,6 +94,18 @@ public class EditProfileActivity extends BaseActivity {
 
         Utils.SpinnerAdapter profileSpinnerAdapter = new Utils.SpinnerAdapter(EditProfileActivity.this, R.layout.layout_spinner_item, Config.PROFILE_TYPE);
         profileSpinner.setAdapter(profileSpinnerAdapter);
+        profileSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                profiletype = Config.PROFILE_TYPE.get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
         countrySpinnerAdapter = new SpinnerAdapter(EditProfileActivity.this, R.layout.layout_spinner_item, countrySpinnerList);
         ((Spinner) findViewById(R.id.spinner_country)).setAdapter(countrySpinnerAdapter);
@@ -113,6 +125,7 @@ public class EditProfileActivity extends BaseActivity {
                     citySpinner.setSelection(0);
 
                 if(Utils.isNetworkConnected(EditProfileActivity.this,true)) {
+                    country = countrySpinnerList.get(position).getName();
                     getDropdownValues(countrySpinnerList.get(position).getCountryID(), "STATE");
                 }
             }
@@ -134,6 +147,7 @@ public class EditProfileActivity extends BaseActivity {
                 if (citySpinner != null)
                     citySpinner.setSelection(0);
                 if(Utils.isNetworkConnected(EditProfileActivity.this,true)) {
+                    state = stateSpinnerList.get(position).getName();
                     getDropdownValues(stateSpinnerList.get(position).getStateID(), "CITY");
                 }
             }
@@ -146,13 +160,23 @@ public class EditProfileActivity extends BaseActivity {
 
         citySpinnerAdapter = new SpinnerAdapter(EditProfileActivity.this, R.layout.layout_spinner_item, citySpinnerList);
         ((Spinner) findViewById(R.id.spinner_city)).setAdapter(citySpinnerAdapter);
+        citySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                city = citySpinnerList.get(position).getName();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
 
         ((ImageView) findViewById(R.id.img_femme)).setImageResource(R.drawable.female);
         ((ImageView) findViewById(R.id.img_homme)).setImageResource(R.drawable.male);
         if(Utils.isNetworkConnected(this,true)) {
             editProfile();
-            getDropdownValues("1", "COUNTRY");
         }
     }
 
@@ -248,6 +272,10 @@ public class EditProfileActivity extends BaseActivity {
                                 ((TextView) findViewById(R.id.txt_website)).setText(jsonObject.getString("website"));
                                 ((TextView) findViewById(R.id.txt_company)).setText(jsonObject.getString("company_info"));
                                 ((TextView) findViewById(R.id.txt_zip)).setText(jsonObject.getString("zipcode"));
+                                profiletype = jsonObject.getString("profiletype");
+                                country = jsonObject.getString("country");
+                                state = jsonObject.getString("state");
+                                city = jsonObject.getString("city");
                                 if (jsonObject.getString("gender").equalsIgnoreCase("male")) {
                                     gender = "male";
                                     ((ImageView) findViewById(R.id.img_homme)).setImageResource(R.drawable.male_red);
@@ -258,6 +286,13 @@ public class EditProfileActivity extends BaseActivity {
 
                                 Glide.with(EditProfileActivity.this).load(Config.USER_IMAGE_URL + jsonObject.getString("image")).placeholder(R.drawable.profile_img).error(R.drawable.profile_img).into(((ImageView) findViewById(R.id.img_profile)));
 
+                                for(String pt:Config.PROFILE_TYPE){
+                                    if(pt.equalsIgnoreCase(profiletype)){
+                                        profileSpinner.setSelection(Config.PROFILE_TYPE.indexOf(pt));
+                                        break;
+                                    }
+                                }
+                                getDropdownValues("1", "COUNTRY");
 
                             } else {
                                 Toast.makeText(EditProfileActivity.this, jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
@@ -309,6 +344,7 @@ public class EditProfileActivity extends BaseActivity {
                                 if (jObject.getString("status_id").equals("1")) {
                                     Log.e("reponce...::>>", response);
                                     JSONArray arr = jObject.getJSONArray("result_data");
+                                    int country_index = 0, state_index = 0, city_index = 0;
                                     for (int i = 0; i < arr.length(); i++) {
                                         CountryVO countryVO;
                                         switch (type) {
@@ -316,6 +352,9 @@ public class EditProfileActivity extends BaseActivity {
                                                 countryVO = new CountryVO(arr.getJSONObject(i).getString("countryName"));
                                                 countryVO.setWebCode(arr.getJSONObject(i).getString("webCode"));
                                                 countryVO.setCountryID(arr.getJSONObject(i).getString("countryID"));
+                                                if(countryVO.getName().equalsIgnoreCase(country)){
+                                                    country_index = countrySpinnerList.size();
+                                                }
                                                 countrySpinnerList.add(countryVO);
                                                 countrySpinnerAdapter.notifyDataSetChanged();
                                                 break;
@@ -323,11 +362,17 @@ public class EditProfileActivity extends BaseActivity {
                                                 countryVO = new CountryVO(arr.getJSONObject(i).getString("stateName"));
                                                 countryVO.setStateID(arr.getJSONObject(i).getString("stateID"));
                                                 countryVO.setCountryID(arr.getJSONObject(i).getString("countryID"));
+                                                if(countryVO.getName().equalsIgnoreCase(state)){
+                                                    state_index = stateSpinnerList.size();
+                                                }
                                                 stateSpinnerList.add(countryVO);
                                                 stateSpinnerAdapter.notifyDataSetChanged();
                                                 break;
                                             case "CITY":
                                                 countryVO = new CountryVO(arr.getJSONObject(i).getString("cityName"));
+                                                if(countryVO.getName().equalsIgnoreCase(city)){
+                                                    city_index = citySpinnerList.size();
+                                                }
                                                 citySpinnerList.add(countryVO);
                                                 citySpinnerAdapter.notifyDataSetChanged();
                                                 break;
@@ -335,7 +380,17 @@ public class EditProfileActivity extends BaseActivity {
 
 
                                     }
-
+                                    switch (type) {
+                                        case "COUNTRY":
+                                            countrySpinner.setSelection(country_index);
+                                            break;
+                                        case "STATE":
+                                            stateSpinner.setSelection(state_index);
+                                            break;
+                                        case "CITY":
+                                            citySpinner.setSelection(city_index);
+                                            break;
+                                    }
 
                                 } else {
                                     Toast.makeText(EditProfileActivity.this, jObject.getString("status_msg"), Toast.LENGTH_SHORT).show();
@@ -558,11 +613,11 @@ public class EditProfileActivity extends BaseActivity {
                 params.put("bio", ((EditText) findViewById(R.id.txt_bio)).getText().toString().trim());
                 params.put("email", ((EditText) findViewById(R.id.txt_email)).getText().toString().trim());
                 params.put("password", ((EditText) findViewById(R.id.txt_password)).getText().toString().trim());
-                params.put("profiletype", profileSpinner.getSelectedItem().toString());
+                params.put("profiletype", profiletype);
                 params.put("companyInfo", ((EditText) findViewById(R.id.txt_company)).getText().toString().trim());
-                params.put("city", ((CountryVO) citySpinner.getSelectedItem()).getName());
-                params.put("state", ((CountryVO) stateSpinner.getSelectedItem()).getName());
-                params.put("country", ((CountryVO) countrySpinner.getSelectedItem()).getName());
+                params.put("city", city);
+                params.put("state", state);
+                params.put("country", country);
                 params.put("website", ((EditText) findViewById(R.id.txt_website)).getText().toString().trim());
                 params.put("gender", gender);
                 params.put("privacy", "");

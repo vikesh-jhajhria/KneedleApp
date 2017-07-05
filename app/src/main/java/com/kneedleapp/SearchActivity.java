@@ -49,6 +49,9 @@ public class SearchActivity extends BaseActivity {
         withinList.add("50 Miles");
         withinList.add("100 Miles");
         withinList.add("200 Miles");
+        withinList.add("500 Miles");
+        withinList.add("1000 Miles");
+        withinList.add("2000 Miles");
         WithinSpinnerAdapter withinAdapter = new WithinSpinnerAdapter(SearchActivity.this, R.layout.layout_spinner_item, withinList);
         ((Spinner) findViewById(R.id.spinner_within)).setAdapter(withinAdapter);
 
@@ -188,6 +191,7 @@ public class SearchActivity extends BaseActivity {
                 performSearch();
                 break;
             case R.id.txt_clear:
+                mStoreList.clear();
                 ((EditText) findViewById(R.id.txt_search)).setText("");
                 ((EditText) findViewById(R.id.txt_zip)).setText("");
                 ((Spinner) findViewById(R.id.spinner_within)).setSelection(0);

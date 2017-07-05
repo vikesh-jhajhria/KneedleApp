@@ -37,6 +37,7 @@ public class FollowerActivity extends BaseActivity {
     private TextView emptyView;
     private java.util.List<UserDetailsVo> followersList = new ArrayList<>();
 
+    private boolean isLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +62,23 @@ public class FollowerActivity extends BaseActivity {
         recyclerView.setAdapter(followerAdapter);
 
         if (Utils.isNetworkConnected(FollowerActivity.this, true)) {
+            isLoading = true;
             getFollowers();
         }
 
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(Config.updateFollower && !isLoading){
+            if (Utils.isNetworkConnected(FollowerActivity.this, true)) {
+                getFollowers();
+            }
+        }
+        isLoading = false;
+    }
 
     private void applyFonts() {
         Utils.setTypeface(FollowerActivity.this, (TextView) findViewById(R.id.txt_title), Config.CENTURY_GOTHIC_BOLD);
@@ -75,6 +87,7 @@ public class FollowerActivity extends BaseActivity {
 
 
     private void getFollowers() {
+        followersList.clear();
         emptyView.setVisibility(View.GONE);
         showProgessDialog();
         StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.FOLLOWERS,
@@ -87,6 +100,7 @@ public class FollowerActivity extends BaseActivity {
                             if (jObject.getString("status_id").equals("1")) {
                                 Log.e("responce....::>>>", response);
 
+                                Config.updateFollower = false;
                                 JSONArray jsonArray = jObject.getJSONArray("followers_data");
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject jsonObject = jsonArray.getJSONObject(i);

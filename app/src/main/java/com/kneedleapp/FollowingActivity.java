@@ -35,7 +35,7 @@ public class FollowingActivity extends BaseActivity {
     LinearLayoutManager layoutManager;
     private String mUserId;
     private TextView emptyView;
-
+    private boolean isLoading;
     private java.util.List<UserDetailsVo> followingsList = new ArrayList<>();
 
 
@@ -61,11 +61,22 @@ public class FollowingActivity extends BaseActivity {
         userListAdapter = new UserListAdapter(FollowingActivity.this, followingsList, "FOLLOWING");
         recyclerView.setAdapter(userListAdapter);
         if (Utils.isNetworkConnected(FollowingActivity.this, true)) {
+            isLoading = true;
             getFollowing();
         }
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (Config.updateFollowing && !isLoading) {
+            if (Utils.isNetworkConnected(FollowingActivity.this, true)) {
+                getFollowing();
+            }
+        }
+        isLoading = false;
+    }
 
     private void applyFonts() {
         Utils.setTypeface(FollowingActivity.this, (TextView) findViewById(R.id.txt_title), Config.CENTURY_GOTHIC_BOLD);
@@ -74,6 +85,7 @@ public class FollowingActivity extends BaseActivity {
 
 
     private void getFollowing() {
+        followingsList.clear();
         emptyView.setVisibility(View.GONE);
         showProgessDialog();
         StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.FOLLOWING,
@@ -85,7 +97,7 @@ public class FollowingActivity extends BaseActivity {
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
                                 Log.e("responce....::>>>", response);
-
+                                Config.updateFollowing = false;
                                 JSONArray jsonArray = jObject.getJSONArray("following_data");
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject jsonObject = jsonArray.getJSONObject(i);

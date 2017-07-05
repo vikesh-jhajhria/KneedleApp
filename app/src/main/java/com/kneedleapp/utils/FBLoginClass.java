@@ -18,6 +18,7 @@ import com.facebook.ProfileTracker;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -151,7 +152,7 @@ public class FBLoginClass implements FacebookCallback<LoginResult> {
     }
 
     public interface OnFBResultListener {
-        void onFBResult(JSONObject object);
+        void onFBResult(JSONObject object) throws JSONException;
     }
 
 

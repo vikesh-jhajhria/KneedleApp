@@ -119,6 +119,10 @@ public class PostActivity extends BaseActivity {
                         Drawable drawable = new BitmapDrawable(getResources(), bitmap);
                         findViewById(R.id.txt_info).setVisibility(View.GONE);
                         mImgContent.setImageDrawable(drawable);
+
+                        postBitmap = ((BitmapDrawable) mImgContent.getDrawable()).getBitmap();
+                        startActivity(new Intent(getApplicationContext(), PostEditActivity.class)
+                                .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                     }
                 }).execute(imagePath);
 

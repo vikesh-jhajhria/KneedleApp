@@ -150,119 +150,126 @@
                             </LinearLayout>
                         </LinearLayout>
 
-
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                            android:layout_marginRight="@dimen/activity_horizontal_margin">
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:id="@+id/txt_profile_type"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/colourBlack"
-                                    android:textSize="@dimen/font_14" />
-
-                                <TextView
-                                    android:id="@+id/txt_company"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/colourBlack"
-                                    android:textSize="@dimen/font_14"
-                                    android:visibility="gone" />
-
-                                <TextView
-                                    android:id="@+id/txt_bio"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/colourBlack"
-                                    android:textSize="@dimen/font_14"
-                                    android:visibility="gone" />
-
-                                <TextView
-                                    android:id="@+id/txt_website"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:autoLink="web"
-                                    android:textColor="@color/colourBlack"
-                                    android:textSize="@dimen/font_14"
-                                    android:visibility="gone" />
-
-                                <TextView
-                                    android:id="@+id/txt_location"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/colourBlack"
-                                    android:textSize="@dimen/font_14"
-                                    android:visibility="gone" />
-                            </LinearLayout>
-
-
-                            <TextView
-                                android:id="@+id/txt_btn_edit"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:background="@drawable/round_corner_white"
-                                android:paddingBottom="@dimen/margin_5"
-                                android:paddingLeft="@dimen/margin_40"
-                                android:paddingRight="@dimen/margin_40"
-                                android:paddingTop="@dimen/margin_5"
-                                android:text="@string/edit"
-                                android:textColor="@color/colourRed"
-                                android:visibility="gone" />
-
-                            <TextView
-                                android:id="@+id/txt_btn_follow"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:background="@drawable/round_corner_white"
-                                android:paddingBottom="@dimen/margin_5"
-                                android:paddingLeft="@dimen/margin_40"
-                                android:paddingRight="@dimen/margin_40"
-                                android:paddingTop="@dimen/margin_5"
-                                android:text="@string/follow"
-                                android:textColor="@color/colourRed"
-                                android:visibility="gone" />
-
-                            <TextView
-                                android:id="@+id/txt_btn_following"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:background="@drawable/round_corner_red"
-                                android:paddingBottom="@dimen/margin_5"
-                                android:paddingLeft="@dimen/margin_20"
-                                android:paddingRight="@dimen/margin_20"
-                                android:paddingTop="@dimen/margin_5"
-                                android:text="@string/following"
-                                android:textColor="@color/textColorPrimary"
-                                android:textSize="@dimen/margin_12"
-                                android:textStyle="bold"
-                                android:visibility="gone" />
-
-
-                        </RelativeLayout>
-
-
-                        <View
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/margin_1"
-                            android:layout_marginTop="@dimen/margin_10"
-                            android:background="@color/colourLightGrey" />
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                            android:layout_marginRight="@dimen/activity_horizontal_margin"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/txt_profile_type"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/colourBlack"
+                                android:textSize="@dimen/font_14" />
+
+                            <TextView
+                                android:id="@+id/txt_company"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/colourBlack"
+                                android:textSize="@dimen/font_14"
+                                android:visibility="gone" />
+
+                            <TextView
+                                android:id="@+id/txt_bio"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/colourBlack"
+                                android:textSize="@dimen/font_14"
+                                android:visibility="gone" />
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <RelativeLayout
+                                    android:id="@+id/rl_btn"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentBottom="true"
+                                    android:layout_alignParentRight="true">
 
 
+                                    <TextView
+                                        android:id="@+id/txt_btn_edit"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:background="@drawable/round_corner_white"
+                                        android:paddingBottom="@dimen/margin_5"
+                                        android:paddingLeft="@dimen/margin_40"
+                                        android:paddingRight="@dimen/margin_40"
+                                        android:paddingTop="@dimen/margin_5"
+                                        android:text="@string/edit"
+                                        android:textColor="@color/colourRed"
+                                        android:visibility="gone" />
+
+                                    <TextView
+                                        android:id="@+id/txt_btn_follow"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:background="@drawable/round_corner_white"
+                                        android:paddingBottom="@dimen/margin_5"
+                                        android:paddingLeft="@dimen/margin_40"
+                                        android:paddingRight="@dimen/margin_40"
+                                        android:paddingTop="@dimen/margin_5"
+                                        android:text="@string/follow"
+                                        android:textColor="@color/colourRed"
+                                        android:visibility="gone" />
+
+                                    <TextView
+                                        android:id="@+id/txt_btn_following"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:background="@drawable/round_corner_red"
+                                        android:paddingBottom="@dimen/margin_5"
+                                        android:paddingLeft="@dimen/margin_20"
+                                        android:paddingRight="@dimen/margin_20"
+                                        android:paddingTop="@dimen/margin_5"
+                                        android:text="@string/following"
+                                        android:textColor="@color/textColorPrimary"
+                                        android:textSize="@dimen/margin_12"
+                                        android:textStyle="bold"
+                                        android:visibility="gone" />
+
+
+                                </RelativeLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_toLeftOf="@id/rl_btn"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/txt_website"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:autoLink="web"
+                                        android:textColor="@color/colourBlack"
+                                        android:textSize="@dimen/font_14"
+                                        android:visibility="gone" />
+
+                                    <TextView
+                                        android:id="@+id/txt_location"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/colourBlack"
+                                        android:textSize="@dimen/font_14"
+                                        android:visibility="gone" />
+
+                                </LinearLayout>
+                            </RelativeLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/margin_1"
+                                android:layout_marginTop="@dimen/margin_10"
+                                android:background="@color/colourLightGrey" />
+
+                        </LinearLayout>
                     </LinearLayout>
 
 
@@ -371,9 +378,9 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:visibility="gone"
                     android:paddingLeft="@dimen/margin_5"
-                    android:src="@drawable/settings" />
+                    android:src="@drawable/settings"
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/img_more"

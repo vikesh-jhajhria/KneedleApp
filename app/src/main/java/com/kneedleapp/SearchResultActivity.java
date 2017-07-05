@@ -3,6 +3,7 @@ package com.kneedleapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -44,7 +45,7 @@ public class SearchResultActivity extends BaseActivity implements FeedAdapter.Pr
     private ArrayList<FeedItemVo> mFeedList;
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
-    private String mSearchText, mCategory, mZip, hashString = "",mRange;
+    private String mSearchText, mCategory, mZip, hashString = "", mRange;
 
 
     @Override
@@ -68,7 +69,7 @@ public class SearchResultActivity extends BaseActivity implements FeedAdapter.Pr
         mList = new ArrayList<>();
         mFeedList = new ArrayList<>();
 
-        if(!mZip.isEmpty() && !mRange.isEmpty()){
+        if (!mZip.isEmpty() && !mRange.isEmpty()) {
             getCriteria();
         } else {
             getSearchItem();
@@ -128,15 +129,19 @@ public class SearchResultActivity extends BaseActivity implements FeedAdapter.Pr
 
             }
         });
-        /*((SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        ((SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 mFeedList.clear();
                 mList.clear();
-                getSearchItem();
+                if (!mZip.isEmpty() && !mRange.isEmpty()) {
+                    getCriteria();
+                } else {
+                    getSearchItem();
+                }
                 ((SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout)).setRefreshing(false);
             }
-        });*/
+        });
 
     }
 
@@ -144,6 +149,7 @@ public class SearchResultActivity extends BaseActivity implements FeedAdapter.Pr
     private void applyFonts() {
         Utils.setTypeface(SearchResultActivity.this, (TextView) findViewById(R.id.txt_title), Config.CENTURY_GOTHIC_REGULAR);
     }
+
     public void getCriteria() {
         showProgessDialog();
         StringRequest requestFeed = new StringRequest(Request.Method.POST, Config.GET_USERS_CRITERIA,
@@ -222,9 +228,9 @@ public class SearchResultActivity extends BaseActivity implements FeedAdapter.Pr
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                    params.put("zipcode", mZip);
-                    params.put("radius", mRange);
-
+                params.put("zipcode", mZip);
+                params.put("radius", mRange);
+                params.put("profiletype", mCategory);
                 Log.v("Kneedle", "Params: " + params);
                 return params;
             }
@@ -341,7 +347,7 @@ public class SearchResultActivity extends BaseActivity implements FeedAdapter.Pr
                 }
                 params.put("hashkeyword", hashString);
                 params.put("searchtext", "");
-                if(hashString.isEmpty()){
+                if (hashString.isEmpty()) {
                     params.put("searchtext", mSearchText);
                 }
                 Log.v("Kneedle", "Params: " + params);

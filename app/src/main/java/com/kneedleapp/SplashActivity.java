@@ -17,6 +17,7 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        Utils.printKeyHash(this);
         if(Utils.isNetworkConnected(this,true)) {
             Utils.getCategories(this);
         }

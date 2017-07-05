@@ -64,6 +64,7 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
 
     private static final String USER_ID = "USER_ID";
     private static final String USER_NAME = "USER_NAME";
+    private boolean isLoading;
 
     public String getUserId() {
         return mUserId;
@@ -141,12 +142,14 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
 
 
         if (Utils.isNetworkConnected(ProfileActivity.this, true)) {
+            isLoading = true;
             getUserDetails();
         }
         ((SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(Utils.isNetworkConnected(ProfileActivity.this,true)) {
+                if (Utils.isNetworkConnected(ProfileActivity.this, true)) {
+                    Config.updateProfile = true;
                     getUserDetails();
                 }
                 ((SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout)).setRefreshing(false);
@@ -206,8 +209,12 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
     @Override
     public void onResume() {
         super.onResume();
-        Log.v("Kneedle", "Profile");
-
+        if (Config.updateProfile && !isLoading) {
+            if (Utils.isNetworkConnected(ProfileActivity.this, true)) {
+                getUserDetails();
+            }
+        }
+        isLoading = false;
     }
 
     @Override
@@ -248,7 +255,7 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
                 attachmentPopup.setContentView(popupView);
                 attachmentPopup.setBackgroundDrawable(new BitmapDrawable());
                 attachmentPopup.showAsDropDown(view, -5, 0);
-                  popupView.findViewById(R.id.txt_block).setVisibility(View.VISIBLE);
+                popupView.findViewById(R.id.txt_block).setVisibility(View.VISIBLE);
                 popupView.findViewById(R.id.txt_delete).setVisibility(View.GONE);
                 popupView.findViewById(R.id.txt_share_fb).setVisibility(View.GONE);
                 popupView.findViewById(R.id.txt_report).setVisibility(View.GONE);
@@ -276,6 +283,7 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
 
         }
     }
+
     public void block(final String userId) {
         showProgessDialog();
         StringRequest block = new StringRequest(Request.Method.POST, Config.BLOCK,
@@ -322,6 +330,7 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
         RequestQueue queue = Volley.newRequestQueue(ProfileActivity.this);
         queue.add(block);
     }
+
     public void getUserDetails() {
         showProgessDialog();
         StringRequest requestUser = new StringRequest(Request.Method.POST, Config.USER_DETAILS,
@@ -332,20 +341,26 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
                         try {
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
-                                mList.clear();
-                                offset = 0;
-                                isLastPage = false;
+
 
                                 Log.e("responce....::>>>", response);
 
                                 JSONObject userDataJsonObject = jObject.getJSONObject("user_data");
                                 mUserId = userDataJsonObject.getString("user_id");
-                                FeedData(mUserId);
+
+                                if (!Config.updateProfile) {
+                                    mList.clear();
+                                    offset = 0;
+                                    isLastPage = false;
+                                    FeedData(mUserId);
+                                }
+                                Config.updateProfile = false;
+
                                 num_of_posts.setText(userDataJsonObject.getString("posts"));
                                 num_of_following.setText(userDataJsonObject.getString("following"));
                                 num_of_followers.setText(userDataJsonObject.getString("followers"));
                                 if (!userDataJsonObject.getString("image").isEmpty()) {
-                                    Glide.with(ProfileActivity.this).load(Config.USER_IMAGE_URL + userDataJsonObject.getString("image")).placeholder(R.drawable.profile_pic).error(R.drawable.profile_pic).into(userImgView);
+                                    Glide.with(ProfileActivity.this).load(Config.USER_IMAGE_URL + userDataJsonObject.getString("image")).into(userImgView);
                                 }
                                 if (!mPrefernce.getUserId().equalsIgnoreCase(mUserId)) {
                                     findViewById(R.id.img_setting).setVisibility(View.INVISIBLE);
@@ -524,6 +539,9 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
                                 Log.e("responce....::>>>", response);
+                                Config.updateFollower = true;
+                                Config.updateFollowing = true;
+                                Config.updateProfile = true;
                                 String num = num_of_following.getText().toString().trim();
                                 if (mFollowStatus == 0) {
                                     if (!num.isEmpty())
@@ -584,11 +602,11 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
         if (feedDrawable != null) {
             Config.fullScreenFeedBitmap = feedDrawable.getBitmap();
             BitmapDrawable userDrawable = ((BitmapDrawable) holder.imgUser.getDrawable());
-            if(userDrawable != null) {
+            if (userDrawable != null) {
                 Config.fullScreenUserBitmap = userDrawable.getBitmap();
             }
             Intent intent = new Intent(this, FullImageViewActivity.class);
-            intent.putExtra("USERNAME", "@"+mList.get(position).getmUserName());
+            intent.putExtra("USERNAME", "@" + mList.get(position).getmUserName());
             intent.putExtra("IMAGE", mList.get(position).getmContentImage());
             intent.putExtra("USERIMAGE", mList.get(position).getmUserImage());
             intent.putExtra("LIKES", mList.get(position).getmLikes());

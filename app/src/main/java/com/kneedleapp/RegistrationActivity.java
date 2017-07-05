@@ -61,6 +61,12 @@ public class RegistrationActivity extends BaseActivity {
         applyFonts();
         findViews();
 
+        if(getIntent().getExtras() != null){
+            String username = getIntent().getExtras().getString("username","");
+            if(username != null && !username.isEmpty()){
+                ((EditText)findViewById(R.id.txt_username)).setText(username);
+            }
+        }
 
         String terms = "I agree with Terms and Conditions";
 

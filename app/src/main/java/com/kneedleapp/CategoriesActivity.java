@@ -77,6 +77,7 @@ public class CategoriesActivity extends BaseActivity {
                         dismissProgressDialog();
                         try {
                             final JSONObject jObject = new JSONObject(response);
+                            Log.v(TAG,response);
                             if (jObject.getString("status_id").equals("1")) {
                                 JSONArray jsonArray = jObject.getJSONArray("category_data");
                                 for (int i = 0; i < jsonArray.length(); i++) {
