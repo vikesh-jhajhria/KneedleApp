@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.text.method.LinkMovementMethod;
@@ -31,15 +34,22 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.FeedItemVo;
+import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -74,7 +84,7 @@ public class FeedDetailActivity extends BaseActivity {
         comment1 = (TextView) findViewById(R.id.txt_comment_1);
         comment2 = (TextView) findViewById(R.id.txt_comment_2);
         time = (TextView) findViewById(R.id.txt_time);
-        username1= (TextView) findViewById(R.id.txt_username_1);
+        username1 = (TextView) findViewById(R.id.txt_username_1);
         username2 = (TextView) findViewById(R.id.txt_username_2);
         imgUser = (ImageView) findViewById(R.id.imageview_user);
         imgContent = (ImageView) findViewById(R.id.imageview_content);
@@ -97,7 +107,8 @@ public class FeedDetailActivity extends BaseActivity {
             getFeedData(feedId);
         }
     }
-private  boolean isLoading;
+
+    private boolean isLoading;
 
     @Override
     public void onClick(View mView) {
@@ -123,7 +134,7 @@ private  boolean isLoading;
     @Override
     protected void onResume() {
         super.onResume();
-        if(AddCommentActivity.feedItemVo != null && !isLoading) {
+        if (AddCommentActivity.feedItemVo != null && !isLoading) {
             feedItemVo = AddCommentActivity.feedItemVo;
             bindData();
         }
@@ -132,14 +143,14 @@ private  boolean isLoading;
 
     private void bindData() {
         AddCommentActivity.feedItemVo = feedItemVo;
-        tvTitle.setText("@"+feedItemVo.getmUserName());
+        tvTitle.setText("@" + feedItemVo.getmUserName());
         String location = "";
-        if(!feedItemVo.getCity().isEmpty()){
+        if (!feedItemVo.getCity().isEmpty()) {
             location = feedItemVo.getCity();
-            if(!feedItemVo.getState().isEmpty()){
-                location = location+", "+feedItemVo.getState();
+            if (!feedItemVo.getState().isEmpty()) {
+                location = location + ", " + feedItemVo.getState();
             }
-        }else if(!feedItemVo.getState().isEmpty()){
+        } else if (!feedItemVo.getState().isEmpty()) {
             location = feedItemVo.getState();
         }
         tvSubTitle.setText(location);
@@ -180,8 +191,8 @@ private  boolean isLoading;
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), ProfileActivity.class)
-                        .putExtra("USER_ID","")
-                        .putExtra("USER_NAME",feedItemVo.getmUsername1())
+                        .putExtra("USER_ID", "")
+                        .putExtra("USER_NAME", feedItemVo.getmUsername1())
                         .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
             }
         });
@@ -189,20 +200,20 @@ private  boolean isLoading;
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), ProfileActivity.class)
-                        .putExtra("USER_ID","")
-                        .putExtra("USER_NAME",feedItemVo.getmUsername2())
+                        .putExtra("USER_ID", "")
+                        .putExtra("USER_NAME", feedItemVo.getmUsername2())
                         .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
             }
         });
 
-        if(feedItemVo.getmUsername1().isEmpty()){
+        if (feedItemVo.getmUsername1().isEmpty()) {
             username1.setVisibility(View.GONE);
-        }else {
+        } else {
             username1.setVisibility(View.VISIBLE);
         }
-        if(feedItemVo.getmUsername2().isEmpty()){
+        if (feedItemVo.getmUsername2().isEmpty()) {
             username2.setVisibility(View.GONE);
-        }else {
+        } else {
             username2.setVisibility(View.VISIBLE);
         }
 
@@ -292,12 +303,63 @@ private  boolean isLoading;
                 ((TextView) popupView.findViewById(R.id.txt_share_fb)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        if (Utils.isNetworkConnected(FeedDetailActivity.this, true)) {
+                            showProgessDialog();
+                            ShareDialog shareDialog = new ShareDialog(FeedDetailActivity.this);
+                            if (ShareDialog.canShow(ShareLinkContent.class)) {
+
+                                ShareLinkContent linkContent = new ShareLinkContent.Builder().setContentTitle(getResources().getString(R.string.app_name))
+                                        .setContentDescription("@" + feedItemVo.getmUserName())
+                                        .setContentUrl(Uri.parse(feedItemVo.getmContentImage()))
+                                        .build();
+                                shareDialog.show(linkContent);
+                                dismissProgressDialog();
+                            }
+                        }
                         attachmentPopup.dismiss();
                     }
                 });
                 ((TextView) popupView.findViewById(R.id.txt_tweet)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        if (Utils.isNetworkConnected(FeedDetailActivity.this, true)) {
+                            showProgessDialog();
+                            Bitmap bitmap = ((BitmapDrawable) imgContent.getDrawable()).getBitmap();
+                            String url = "";
+
+                            File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                                    Config.IMAGE_DIRECTORY_NAME);
+
+                            if (!mediaStorageDir.exists()) {
+                                if (!mediaStorageDir.mkdirs()) {
+                                    url = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, feedItemVo.getmUserName(), "");
+                                }
+                            }
+
+                            File pictureFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + ".jpg");
+                            url = pictureFile.getAbsolutePath();
+                            try {
+                                FileOutputStream fos = new FileOutputStream(pictureFile);
+                                bitmap.compress(Bitmap.CompressFormat.PNG, 90, fos);
+                                fos.close();
+                            } catch (FileNotFoundException e) {
+                                Log.d("KneedleApp", "File not found: " + e.getMessage());
+                            } catch (IOException e) {
+                                Log.d("KneedleApp", "Error accessing file: " + e.getMessage());
+                            }
+
+                            TweetComposer.Builder builder = null;
+
+                            try {
+                                builder = new TweetComposer.Builder(FeedDetailActivity.this)
+                                        .image(Uri.parse(url))
+                                        .text(getResources().getString(R.string.app_name) + "\n@" + feedItemVo.getmUserName());
+                                builder.show();
+                                dismissProgressDialog();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
                         attachmentPopup.dismiss();
                     }
                 });
@@ -314,11 +376,11 @@ private  boolean isLoading;
                 if (feedDrawable != null) {
                     Config.fullScreenFeedBitmap = feedDrawable.getBitmap();
                     BitmapDrawable userDrawable = ((BitmapDrawable) imgUser.getDrawable());
-                    if(userDrawable != null) {
+                    if (userDrawable != null) {
                         Config.fullScreenUserBitmap = userDrawable.getBitmap();
                     }
                     Intent intent = new Intent(FeedDetailActivity.this, FullImageViewActivity.class);
-                    intent.putExtra("USERNAME", "@"+feedItemVo.getmUserName());
+                    intent.putExtra("USERNAME", "@" + feedItemVo.getmUserName());
                     intent.putExtra("IMAGE", feedItemVo.getmContentImage());
                     intent.putExtra("USERIMAGE", feedItemVo.getmUserImage());
                     intent.putExtra("LIKES", feedItemVo.getmLikes());

@@ -189,6 +189,11 @@ public class NotificationActivity extends BaseActivity implements RecyclerView.O
                         date1 = curFormater.parse(n1.getTime());
                         date2 = curFormater.parse(n2.getTime());
                     } catch (Exception e) {
+                        if(date1 == null){
+                            mList.remove(n1);
+                        }else{
+                            mList.remove(n2);
+                        }
                         e.printStackTrace();
                     }
                     if (date1 != null && date2 != null) {

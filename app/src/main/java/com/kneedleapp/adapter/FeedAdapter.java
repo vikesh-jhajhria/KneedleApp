@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
@@ -29,6 +32,8 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.kneedleapp.AddCommentActivity;
 import com.kneedleapp.BaseActivity;
 import com.kneedleapp.FeedDetailActivity;
@@ -39,15 +44,25 @@ import com.kneedleapp.utils.AppPreferences;
 import com.kneedleapp.utils.Config;
 import com.kneedleapp.utils.Utils;
 import com.kneedleapp.vo.FeedItemVo;
+import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
+import static com.kneedleapp.utils.Utils.getOutputMediaFile;
 
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
@@ -57,6 +72,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
     private ArrayList<FeedItemVo> mList;
     private ProfileItemListener mListener;
     private boolean isProfileFeed;
+    private String shareBody = "Hi, download the Dil Ke Rishte mobile app to find your best match as a life partner." + Uri.parse("https://play.google.com/store/apps/details?id=net.todayswalkins.todayswalkins&hl=en");
 
     public FeedAdapter(ArrayList<FeedItemVo> list, Context context, String viewType, ProfileItemListener mListener, boolean isProfileFeed) {
         this.context = context;
@@ -95,7 +111,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                 } else {
                     AddCommentActivity.feedItemVo = feedItemVo;
                     context.startActivity(new Intent(getApplicationContext(), FeedDetailActivity.class)
-                            .putExtra("FEEDID",feedItemVo.getmId())
+                            .putExtra("FEEDID", feedItemVo.getmId())
                             .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 }
             }
@@ -132,14 +148,14 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                             holder.imgUser.setImageBitmap(resource);
                         }
                     });
-            holder.tvTitle.setText("@"+feedItemVo.getmUserName());
+            holder.tvTitle.setText("@" + feedItemVo.getmUserName());
             String location = "";
-            if(!feedItemVo.getCity().isEmpty()){
+            if (!feedItemVo.getCity().isEmpty()) {
                 location = feedItemVo.getCity();
-                if(!feedItemVo.getState().isEmpty()){
-                    location = location+", "+feedItemVo.getState();
+                if (!feedItemVo.getState().isEmpty()) {
+                    location = location + ", " + feedItemVo.getState();
                 }
-            }else if(!feedItemVo.getState().isEmpty()){
+            } else if (!feedItemVo.getState().isEmpty()) {
                 location = feedItemVo.getState();
             }
             holder.tvSubTitle.setText(location);
@@ -155,8 +171,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     context.startActivity(new Intent(getApplicationContext(), ProfileActivity.class)
-                            .putExtra("USER_ID","")
-                            .putExtra("USER_NAME",feedItemVo.getmUsername1())
+                            .putExtra("USER_ID", "")
+                            .putExtra("USER_NAME", feedItemVo.getmUsername1())
                             .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 }
             });
@@ -164,19 +180,19 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     context.startActivity(new Intent(getApplicationContext(), ProfileActivity.class)
-                            .putExtra("USER_ID","")
-                            .putExtra("USER_NAME",feedItemVo.getmUsername2())
+                            .putExtra("USER_ID", "")
+                            .putExtra("USER_NAME", feedItemVo.getmUsername2())
                             .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 }
             });
-            if(feedItemVo.getmUsername1().isEmpty()){
+            if (feedItemVo.getmUsername1().isEmpty()) {
                 holder.username1.setVisibility(View.GONE);
-            }else {
+            } else {
                 holder.username1.setVisibility(View.VISIBLE);
             }
-            if(feedItemVo.getmUsername2().isEmpty()){
+            if (feedItemVo.getmUsername2().isEmpty()) {
                 holder.username2.setVisibility(View.GONE);
-            }else {
+            } else {
                 holder.username2.setVisibility(View.VISIBLE);
             }
             holder.tvComment.setText(feedItemVo.getmCommentCount() + "");
@@ -290,12 +306,64 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                     ((TextView) popupView.findViewById(R.id.txt_share_fb)).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            if (Utils.isNetworkConnected(context, true)) {
+                                ((BaseActivity) context).showProgessDialog();
+                                ShareDialog shareDialog = new ShareDialog((BaseActivity) context);
+                                if (ShareDialog.canShow(ShareLinkContent.class)) {
+
+                                    ShareLinkContent linkContent = new ShareLinkContent.Builder().setContentTitle(context.getResources().getString(R.string.app_name))
+                                            .setContentDescription("@" + feedItemVo.getmUserName())
+                                            .setContentUrl(Uri.parse(feedItemVo.getmContentImage()))
+                                            .build();
+                                    shareDialog.show(linkContent);
+                                    ((BaseActivity) context).dismissProgressDialog();
+                                }
+                            }
                             attachmentPopup.dismiss();
                         }
                     });
                     ((TextView) popupView.findViewById(R.id.txt_tweet)).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            if (Utils.isNetworkConnected(context, true)) {
+                                ((BaseActivity) context).showProgessDialog();
+                                Bitmap bitmap = ((BitmapDrawable) holder.imgContent.getDrawable()).getBitmap();
+                                String url = "";
+
+                                File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                                        Config.IMAGE_DIRECTORY_NAME);
+
+                                if (!mediaStorageDir.exists()) {
+                                    if (!mediaStorageDir.mkdirs()) {
+                                        url = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, feedItemVo.getmUserName(), "");
+                                    }
+                                }
+
+                                File pictureFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + ".jpg");
+                                url = pictureFile.getAbsolutePath();
+                                try {
+                                    FileOutputStream fos = new FileOutputStream(pictureFile);
+                                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, fos);
+                                    fos.close();
+                                } catch (FileNotFoundException e) {
+                                    Log.d("KneedleApp", "File not found: " + e.getMessage());
+                                } catch (IOException e) {
+                                    Log.d("KneedleApp", "Error accessing file: " + e.getMessage());
+                                }
+
+                                TweetComposer.Builder builder = null;
+
+                                try {
+                                    builder = new TweetComposer.Builder(context)
+                                            .image(Uri.parse(url))
+                                            .text(context.getResources().getString(R.string.app_name) + "\n@" + feedItemVo.getmUserName());
+                                            //+"\n"+feedItemVo.getmContentImage());
+                                    builder.show();
+                                    ((BaseActivity) context).dismissProgressDialog();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
                             attachmentPopup.dismiss();
                         }
                     });
@@ -309,7 +377,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                 public void onClick(View view) {
                     AddCommentActivity.feedItemVo = feedItemVo;
                     context.startActivity(new Intent(getApplicationContext(), AddCommentActivity.class)
-                            .putExtra("FEEDID",feedItemVo.getmId())
+                            .putExtra("FEEDID", feedItemVo.getmId())
                             .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 }
             });
@@ -318,7 +386,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                 public void onClick(View view) {
                     AddCommentActivity.feedItemVo = feedItemVo;
                     context.startActivity(new Intent(getApplicationContext(), AddCommentActivity.class)
-                            .putExtra("FEEDID",feedItemVo.getmId())
+                            .putExtra("FEEDID", feedItemVo.getmId())
                             .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 }
             });
@@ -328,8 +396,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                 public void onClick(View view) {
                     if (!isProfileFeed) {
                         context.startActivity(new Intent(getApplicationContext(), ProfileActivity.class)
-                                .putExtra("USER_ID",feedItemVo.getmUserId())
-                                .putExtra("USER_NAME",feedItemVo.getmUserName())
+                                .putExtra("USER_ID", feedItemVo.getmUserId())
+                                .putExtra("USER_NAME", feedItemVo.getmUserName())
                                 .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                     }
 
@@ -342,8 +410,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                 public void onClick(View view) {
                     if (!isProfileFeed) {
                         context.startActivity(new Intent(getApplicationContext(), ProfileActivity.class)
-                                .putExtra("USER_ID",feedItemVo.getmUserId())
-                                .putExtra("USER_NAME",feedItemVo.getmUserName())
+                                .putExtra("USER_ID", feedItemVo.getmUserId())
+                                .putExtra("USER_NAME", feedItemVo.getmUserName())
                                 .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                     }
                 }
