@@ -125,14 +125,15 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                 Glide.with(context).load(feedItemVo.getmUserImage()).placeholder(R.drawable.default_feed)
                 .error(R.drawable.default_feed).into(holder.imgUser);*/
         holder.imgContent.setImageResource(R.drawable.default_feed);
-        Glide.with(context).load(feedItemVo.getmContentImage()).asBitmap().placeholder(R.drawable.default_feed)
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
-                        holder.imgContent.setImageBitmap(resource);
-                    }
-                });
-
+        if(!feedItemVo.getmContentImage().isEmpty()) {
+            Glide.with(context).load(feedItemVo.getmContentImage()).asBitmap().placeholder(R.drawable.default_feed)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                            holder.imgContent.setImageBitmap(resource);
+                        }
+                    });
+        }
 
         if (viewType.equalsIgnoreCase("GRID")) {
             ViewGroup.LayoutParams lp = holder.imgContent.getLayoutParams();
@@ -141,13 +142,15 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
         } else {
             holder.imgUser.setImageResource(R.drawable.default_feed);
-            Glide.with(context).load(feedItemVo.getmUserImage()).asBitmap().placeholder(R.drawable.default_feed)
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
-                            holder.imgUser.setImageBitmap(resource);
-                        }
-                    });
+            if(!feedItemVo.getmUserImage().isEmpty()) {
+                Glide.with(context).load(feedItemVo.getmUserImage()).asBitmap().placeholder(R.drawable.default_feed)
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                                holder.imgUser.setImageBitmap(resource);
+                            }
+                        });
+            }
             holder.tvTitle.setText("@" + feedItemVo.getmUserName());
             String location = "";
             if (!feedItemVo.getCity().isEmpty()) {
@@ -311,8 +314,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                                 ShareDialog shareDialog = new ShareDialog((BaseActivity) context);
                                 if (ShareDialog.canShow(ShareLinkContent.class)) {
 
-                                    ShareLinkContent linkContent = new ShareLinkContent.Builder().setContentTitle(context.getResources().getString(R.string.app_name))
-                                            .setContentDescription("@" + feedItemVo.getmUserName())
+                                    ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                                            .setContentDescription(feedItemVo.getmDescription())
                                             .setContentUrl(Uri.parse(feedItemVo.getmContentImage()))
                                             .build();
                                     shareDialog.show(linkContent);
@@ -356,8 +359,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
                                 try {
                                     builder = new TweetComposer.Builder(context)
                                             .image(Uri.parse(url))
-                                            .text(context.getResources().getString(R.string.app_name) + "\n@" + feedItemVo.getmUserName());
-                                            //+"\n"+feedItemVo.getmContentImage());
+                                            .text(feedItemVo.getmDescription());
                                     builder.show();
                                     ((BaseActivity) context).dismissProgressDialog();
                                 } catch (Exception e) {

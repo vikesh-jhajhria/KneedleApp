@@ -41,7 +41,6 @@
                     android:layout_marginTop="5dp"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textAllCaps="true"
                     android:textColor="#000"
                     android:textSize="@dimen/font_14"
                     android:textStyle="bold" />
@@ -52,7 +51,6 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textAllCaps="true"
                     android:textColor="#000"
                     android:textSize="@dimen/font_14" />
 
@@ -73,7 +71,6 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:layout_marginTop="@dimen/margin_5"
-                    android:textAllCaps="true"
                     android:textColor="#000"
                     android:textSize="@dimen/font_14"
                     android:textStyle="bold" />
@@ -88,7 +85,6 @@
                     android:layout_marginTop="5dp"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textAllCaps="true"
                     android:textColor="#000"
                     android:textSize="@dimen/font_14" />
             </RelativeLayout>

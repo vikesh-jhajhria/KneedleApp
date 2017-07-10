@@ -104,7 +104,8 @@ public class FollowingActivity extends BaseActivity {
                                     UserDetailsVo userObject = new UserDetailsVo();
                                     userObject.setUserId(jsonObject.getString("user_id"));
                                     userObject.setFullname(jsonObject.getString("fullname"));
-                                    userObject.setImage(Config.USER_IMAGE_URL + jsonObject.getString("image"));
+                                    userObject.setImage(jsonObject.getString("image").isEmpty() ? ""
+                                            : Config.USER_IMAGE_URL + jsonObject.getString("image"));
                                     userObject.setProfiletype(jsonObject.getString("profiletype"));
                                     userObject.setUsername(jsonObject.getString("username"));
                                     userObject.setGender(jsonObject.getString("gender"));

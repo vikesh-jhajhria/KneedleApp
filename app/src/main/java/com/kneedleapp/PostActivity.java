@@ -136,7 +136,12 @@ public class PostActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-
+        ((TextView) findViewById(R.id.txt_photo)).setTextColor(getResources().getColor(R.color.colourBlack));
+        ((TextView) findViewById(R.id.txt_library)).setTextColor(getResources().getColor(R.color.colourBlack));
+        Utils.setTypeface(PostActivity.this, (TextView) findViewById(R.id.txt_photo), Config.CENTURY_GOTHIC_REGULAR);
+        Utils.setTypeface(PostActivity.this, (TextView) findViewById(R.id.txt_library), Config.CENTURY_GOTHIC_REGULAR);
+        mImgContent.setImageDrawable(null);
+        findViewById(R.id.txt_info).setVisibility(View.VISIBLE);
     }
 
     @Override

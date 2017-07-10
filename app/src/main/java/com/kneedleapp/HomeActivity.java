@@ -206,8 +206,10 @@ public class HomeActivity extends BaseActivity implements FeedAdapter.ProfileIte
                                     feedItemVo.setmUserId(jsonObject.getString("user_id"));
                                     feedItemVo.setmDate(jsonObject.getString("date"));
                                     feedItemVo.setmUserName(jsonObject.getString("username"));
-                                    feedItemVo.setmUserImage(Config.USER_IMAGE_URL + jsonObject.getString("mypic"));
-                                    feedItemVo.setmContentImage(Config.FEED_IMAGE_URL + jsonObject.getString("image"));
+                                    feedItemVo.setmUserImage(jsonObject.getString("mypic").isEmpty() ? ""
+                                            : Config.USER_IMAGE_URL + jsonObject.getString("mypic"));
+                                    feedItemVo.setmContentImage(jsonObject.getString("image").isEmpty() ? ""
+                                            : Config.FEED_IMAGE_URL + jsonObject.getString("image"));
                                     feedItemVo.setmDescription(jsonObject.getString("caption"));
                                     feedItemVo.setmLikes(jsonObject.getInt("likes_count"));
                                     feedItemVo.setmCommentCount(jsonObject.getInt("comment_count"));

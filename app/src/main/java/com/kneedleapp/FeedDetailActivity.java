@@ -308,8 +308,8 @@ public class FeedDetailActivity extends BaseActivity {
                             ShareDialog shareDialog = new ShareDialog(FeedDetailActivity.this);
                             if (ShareDialog.canShow(ShareLinkContent.class)) {
 
-                                ShareLinkContent linkContent = new ShareLinkContent.Builder().setContentTitle(getResources().getString(R.string.app_name))
-                                        .setContentDescription("@" + feedItemVo.getmUserName())
+                                ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                                        .setContentDescription(feedItemVo.getmDescription())
                                         .setContentUrl(Uri.parse(feedItemVo.getmContentImage()))
                                         .build();
                                 shareDialog.show(linkContent);
@@ -353,7 +353,7 @@ public class FeedDetailActivity extends BaseActivity {
                             try {
                                 builder = new TweetComposer.Builder(FeedDetailActivity.this)
                                         .image(Uri.parse(url))
-                                        .text(getResources().getString(R.string.app_name) + "\n@" + feedItemVo.getmUserName());
+                                        .text(feedItemVo.getmDescription());
                                 builder.show();
                                 dismissProgressDialog();
                             } catch (Exception e) {
@@ -422,23 +422,25 @@ public class FeedDetailActivity extends BaseActivity {
         //Glide.with(FeedDetailActivity.this).load(feedItemVo.getmUserImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(imgUser);
         //Glide.with(FeedDetailActivity.this).load(feedItemVo.getmContentImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(imgContent);
         imgContent.setImageResource(R.drawable.default_feed);
-        Glide.with(this).load(feedItemVo.getmContentImage()).asBitmap().placeholder(R.drawable.default_feed)
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
-                        imgContent.setImageBitmap(resource);
-                    }
-                });
-
+        if(!feedItemVo.getmContentImage().isEmpty()) {
+            Glide.with(this).load(feedItemVo.getmContentImage()).asBitmap().placeholder(R.drawable.default_feed)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                            imgContent.setImageBitmap(resource);
+                        }
+                    });
+        }
         imgUser.setImageResource(R.drawable.default_feed);
-        Glide.with(this).load(feedItemVo.getmUserImage()).asBitmap().placeholder(R.drawable.default_feed)
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
-                        imgUser.setImageBitmap(resource);
-                    }
-                });
-
+        if(!feedItemVo.getmUserImage().isEmpty()) {
+            Glide.with(this).load(feedItemVo.getmUserImage()).asBitmap().placeholder(R.drawable.default_feed)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                            imgUser.setImageBitmap(resource);
+                        }
+                    });
+        }
         imgUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -485,8 +487,10 @@ public class FeedDetailActivity extends BaseActivity {
                                 feedItemVo.setmUserId(jsonObject.getString("user_id"));
                                 feedItemVo.setmDate(jsonObject.getString("date"));
                                 feedItemVo.setmUserName(jsonObject.getString("username"));
-                                feedItemVo.setmUserImage(Config.USER_IMAGE_URL + jsonObject.getString("mypic"));
-                                feedItemVo.setmContentImage(Config.FEED_IMAGE_URL + jsonObject.getString("image"));
+                                feedItemVo.setmUserImage(jsonObject.getString("mypic").isEmpty() ? ""
+                                        : Config.USER_IMAGE_URL + jsonObject.getString("mypic"));
+                                feedItemVo.setmContentImage(jsonObject.getString("image").isEmpty() ? ""
+                                        : Config.FEED_IMAGE_URL + jsonObject.getString("image"));
                                 feedItemVo.setmDescription(jsonObject.getString("caption"));
                                 feedItemVo.setmLikes(jsonObject.getInt("likes_count"));
                                 feedItemVo.setmCommentCount(jsonObject.getInt("comment_count"));

@@ -2,6 +2,7 @@ package com.kneedleapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +20,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.kneedleapp.BaseActivity;
 import com.kneedleapp.ProfileActivity;
 import com.kneedleapp.R;
@@ -77,8 +80,16 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.CheckV
         holder.txt_name.setText(userDetail.getUsername());
         holder.fullname.setText(userDetail.getFullname());
         holder.job.setText(userDetail.getProfiletype());
+        holder.img.setImageDrawable(context.getResources().getDrawable(R.drawable.default_feed));
+
         if (!userDetail.getImage().isEmpty()) {
-            Glide.with(context).load(userDetail.getImage()).placeholder(R.drawable.default_feed).error(R.drawable.default_feed).into(holder.img);
+            Glide.with(context).load(userDetail.getImage()).asBitmap().placeholder(R.drawable.default_feed)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                            holder.img.setImageBitmap(resource);
+                        }
+                    });
         }
 
         if (!listType.equalsIgnoreCase("BLOCKED_USER")) {
@@ -186,11 +197,11 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.CheckV
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        Log.e("responce....::>>>", response);
                         ((BaseActivity) context).dismissProgressDialog();
                         try {
                             final JSONObject jObject = new JSONObject(response);
                             if (jObject.getString("status_id").equals("1")) {
-                                Log.e("responce....::>>>", response);
                                 Config.updateFollower = true;
                                 Config.updateFollowing = true;
                                 Config.updateProfile = true;

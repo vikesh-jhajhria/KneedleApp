@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -78,6 +79,7 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        Config.updateProfile = false;
         CURRENT_PAGE = "PROFILE";
         findViewById(R.id.rl_profile_selected).setVisibility(View.VISIBLE);
         Bundle bundle = getIntent().getExtras();
@@ -378,7 +380,8 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
                                 num_of_following.setText(userDataJsonObject.getString("following"));
                                 num_of_followers.setText(userDataJsonObject.getString("followers"));
                                 if (!userDataJsonObject.getString("image").isEmpty()) {
-                                    Glide.with(ProfileActivity.this).load(Config.USER_IMAGE_URL + userDataJsonObject.getString("image")).asBitmap().placeholder(R.drawable.profile_pic)
+                                    Glide.with(ProfileActivity.this).load(Config.USER_IMAGE_URL
+                                            + userDataJsonObject.getString("image")).asBitmap().placeholder(R.drawable.profile_pic)
                                             .into(new SimpleTarget<Bitmap>() {
                                                 @Override
                                                 public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
@@ -424,6 +427,16 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
                                 if (!userDataJsonObject.getString("website").isEmpty()) {
                                     website.setText(userDataJsonObject.getString("website"));
                                     website.setVisibility(View.VISIBLE);
+                                    website.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            String url = website.getText().toString().trim();
+                                            if (!url.startsWith("http://") && !url.startsWith("https://"))
+                                                url = "http://" + url;
+                                            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                            startActivity(myIntent);
+                                        }
+                                    });
                                 }
                                 if (!userDataJsonObject.getString("state").isEmpty()) {
                                     location.setText(userDataJsonObject.getString("country") + ", " + userDataJsonObject.getString("state"));
@@ -489,8 +502,10 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
                                     feedItemVo.setmUserId(jsonObject.getString("user_id"));
                                     feedItemVo.setmDate(jsonObject.getString("date"));
                                     feedItemVo.setmUserName(jsonObject.getString("username"));
-                                    feedItemVo.setmUserImage(Config.USER_IMAGE_URL + jsonObject.getString("mypic"));
-                                    feedItemVo.setmContentImage(Config.FEED_IMAGE_URL + jsonObject.getString("image"));
+                                    feedItemVo.setmUserImage(jsonObject.getString("mypic").isEmpty() ? ""
+                                            : Config.USER_IMAGE_URL + jsonObject.getString("mypic"));
+                                    feedItemVo.setmContentImage(jsonObject.getString("image").isEmpty() ? ""
+                                            : Config.FEED_IMAGE_URL + jsonObject.getString("image"));
                                     feedItemVo.setmDescription(jsonObject.getString("caption"));
                                     feedItemVo.setmLikes(jsonObject.getInt("likes_count"));
                                     feedItemVo.setmCommentCount(jsonObject.getInt("comment_count"));

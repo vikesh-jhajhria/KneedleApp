@@ -1,6 +1,8 @@
 package com.kneedleapp;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -9,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -194,8 +197,10 @@ public class SearchResultActivity extends BaseActivity implements FeedAdapter.Pr
                                         feedItemVo.setmUserId(jsonObject.getString("user_id"));
                                         feedItemVo.setmDate(jsonObject.getString("date"));
                                         feedItemVo.setmUserName(jsonObject.getString("username"));
-                                        feedItemVo.setmUserImage(Config.USER_IMAGE_URL + jsonObject.getString("mypic"));
-                                        feedItemVo.setmContentImage(Config.FEED_IMAGE_URL + jsonObject.getString("image"));
+                                        feedItemVo.setmUserImage(jsonObject.getString("mypic").isEmpty() ? ""
+                                                : Config.USER_IMAGE_URL + jsonObject.getString("mypic"));
+                                        feedItemVo.setmContentImage(jsonObject.getString("image").isEmpty() ? ""
+                                                : Config.FEED_IMAGE_URL + jsonObject.getString("image"));
                                         feedItemVo.setmDescription(jsonObject.getString("caption"));
                                         feedItemVo.setmLikes(jsonObject.getInt("likes_count"));
                                         feedItemVo.setmCommentCount(jsonObject.getInt("comment_count"));
@@ -289,8 +294,10 @@ public class SearchResultActivity extends BaseActivity implements FeedAdapter.Pr
                                         feedItemVo.setmUserId(jsonObject.getString("user_id"));
                                         feedItemVo.setmDate(jsonObject.getString("date"));
                                         feedItemVo.setmUserName(jsonObject.getString("username"));
-                                        feedItemVo.setmUserImage(Config.USER_IMAGE_URL + jsonObject.getString("mypic"));
-                                        feedItemVo.setmContentImage(Config.FEED_IMAGE_URL + jsonObject.getString("image"));
+                                        feedItemVo.setmUserImage(jsonObject.getString("mypic").isEmpty() ? ""
+                                                : Config.USER_IMAGE_URL + jsonObject.getString("mypic"));
+                                        feedItemVo.setmContentImage(jsonObject.getString("image").isEmpty() ? ""
+                                                : Config.FEED_IMAGE_URL + jsonObject.getString("image"));
                                         feedItemVo.setmDescription(jsonObject.getString("caption"));
                                         feedItemVo.setmLikes(jsonObject.getInt("likes_count"));
                                         feedItemVo.setmCommentCount(jsonObject.getInt("comment_count"));
@@ -373,14 +380,37 @@ public class SearchResultActivity extends BaseActivity implements FeedAdapter.Pr
         feedqueue.add(requestFeed);
     }
 
+
     @Override
     public void getItem(int position, FeedAdapter.ViewHolder holder, boolean isLiked) {
-        Intent intent = new Intent(this, FullImageViewActivity.class);
-        intent.putExtra("USERNAME", mFeedList.get(position).getmFullName());
-        intent.putExtra("IMAGE", mFeedList.get(position).getmContentImage());
-        intent.putExtra("USERIMAGE", mFeedList.get(position).getmUserImage());
-        intent.putExtra("LIKES", mFeedList.get(position).getmLikes());
-        intent.putExtra("LIKEDORNOT", isLiked);
-        startActivity(intent);
+        Config.fullScreenFeedBitmap = null;
+        Config.fullScreenUserBitmap = null;
+        BitmapDrawable feedDrawable = ((BitmapDrawable) holder.imgContent.getDrawable());
+        if (feedDrawable != null) {
+            Config.fullScreenFeedBitmap = feedDrawable.getBitmap();
+            BitmapDrawable userDrawable = ((BitmapDrawable) holder.imgUser.getDrawable());
+            if(userDrawable != null) {
+                Config.fullScreenUserBitmap = userDrawable.getBitmap();
+            }
+            Intent intent = new Intent(this, FullImageViewActivity.class);
+            intent.putExtra("USERNAME", "@"+mFeedList.get(position).getmUserName());
+            intent.putExtra("IMAGE", mFeedList.get(position).getmContentImage());
+            intent.putExtra("USERIMAGE", mFeedList.get(position).getmUserImage());
+            intent.putExtra("LIKES", mFeedList.get(position).getmLikes());
+            intent.putExtra("LIKEDORNOT", isLiked);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this,
+                        new Pair<View, String>(holder.imgUser, "userimage"),
+                        new Pair<View, String>(holder.imgContent, "image"),
+                        new Pair<View, String>(holder.imgHeart, "heart"),
+                        new Pair<View, String>(holder.tvTitle, "title"),
+                        new Pair<View, String>(holder.tvLikes, "likes"));
+                startActivity(intent, options.toBundle());
+            } else {
+                startActivity(intent);
+            }
+        } else {
+            Toast.makeText(this, "Image Loading", Toast.LENGTH_SHORT).show();
+        }
     }
 }

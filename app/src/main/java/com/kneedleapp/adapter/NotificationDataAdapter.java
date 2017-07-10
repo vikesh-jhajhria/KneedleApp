@@ -3,6 +3,7 @@ package com.kneedleapp.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -56,7 +57,7 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
         try {
             SimpleDateFormat curFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
             date = curFormater.parse(mList.get(position).getTime());
-            headerId = Long.parseLong(date.getDate()+""+date.getMonth()+date.getYear());
+            headerId = Long.parseLong(""+date.getMonth()+date.getYear());
         } catch (Exception e) {}
 
         //Log.e("HEADER = ",headerId+"");
@@ -78,7 +79,7 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
 
 
         SimpleDateFormat curFormater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
-        SimpleDateFormat simpleDate = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat simpleDate = new SimpleDateFormat("MMMM-yyyy");
         Date date = null;
         try {
             date = curFormater.parse(mList.get(position).getTime());
@@ -103,24 +104,26 @@ public class NotificationDataAdapter extends RecyclerView.Adapter<RecyclerView.V
         final NotificationItemVo obj = mList.get(position);
         if (obj != null) {
             if (obj.getType() == BaseActivity.NotificationType.LIKE) {
-                ((NotificationDataViewHolder) holder).mTvNoti.setText(" liked your post.");
+                ((NotificationDataViewHolder) holder).mTvNoti.setText("liked your post.");
             } else if (obj.getType() == BaseActivity.NotificationType.COMMENT) {
-                ((NotificationDataViewHolder) holder).mTvNoti.setText(" commented : " + obj.getComment());
+                ((NotificationDataViewHolder) holder).mTvNoti.setText("commented: " + obj.getComment());
             } else if (obj.getType() == BaseActivity.NotificationType.FOLLOW) {
-                ((NotificationDataViewHolder) holder).mTvNoti.setText(" started following you");
+                ((NotificationDataViewHolder) holder).mTvNoti.setText("started following you");
             } else if (obj.getType() == BaseActivity.NotificationType.TAGGED) {
-                ((NotificationDataViewHolder) holder).mTvNoti.setText(" tagged you in a post.");
+                ((NotificationDataViewHolder) holder).mTvNoti.setText("tagged you in a post.");
             }
             ((NotificationDataViewHolder) holder).username.setText(obj.getUsername());
 
             Log.v("Img url", "position:" + position+" url="+obj.getImgUser());
+            ((NotificationDataViewHolder) holder).imgUser.setImageDrawable(context.getResources().getDrawable(R.drawable.default_feed));
             if (!obj.getImgUser().isEmpty()) {
-                Glide.with(context).load(obj.getImgUser()).asBitmap().placeholder(R.drawable.profile_pic)
+                Glide.with(context).load(obj.getImgUser()).asBitmap().placeholder(R.drawable.default_feed).error(R.drawable.default_feed)
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
                                 ((NotificationDataViewHolder) holder).imgUser.setImageBitmap(resource);
                             }
+
                         });
             } else Log.v("Img url", "position:" + position);
         }

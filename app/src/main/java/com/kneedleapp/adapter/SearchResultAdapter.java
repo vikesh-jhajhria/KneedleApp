@@ -52,13 +52,17 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         holder.fullname.setText(searchResultVo.getmFullName());
         holder.job.setText(searchResultVo.getmProfileType());
         holder.place.setText(searchResultVo.getmCityName());
-        Glide.with(context).load(Config.USER_IMAGE_URL + searchResultVo.getmImgUrl()).asBitmap().placeholder(R.drawable.profile_pic)
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
-                        holder.img.setImageBitmap(resource);
-                    }
-                });
+        holder.img.setImageDrawable(context.getResources().getDrawable(R.drawable.default_feed));
+
+        if(!searchResultVo.getmImgUrl().isEmpty()) {
+            Glide.with(context).load(Config.USER_IMAGE_URL + searchResultVo.getmImgUrl()).asBitmap().placeholder(R.drawable.default_feed)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                            holder.img.setImageBitmap(resource);
+                        }
+                    });
+        }
         holder.fullname.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

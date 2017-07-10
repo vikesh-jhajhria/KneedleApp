@@ -288,13 +288,16 @@ public class EditProfileActivity extends BaseActivity {
                                     ((ImageView) findViewById(R.id.img_femme)).setImageResource(R.drawable.female_red);
                                 }
 
-                                Glide.with(EditProfileActivity.this).load(Config.USER_IMAGE_URL + jsonObject.getString("image")).asBitmap().placeholder(R.drawable.profile_pic)
-                                        .into(new SimpleTarget<Bitmap>() {
-                                            @Override
-                                            public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
-                                                ((ImageView) findViewById(R.id.img_profile)).setImageBitmap(resource);
-                                            }
-                                        });
+                                if(!jsonObject.getString("image").isEmpty()) {
+                                    Glide.with(EditProfileActivity.this).load(Config.USER_IMAGE_URL
+                                            + jsonObject.getString("image")).asBitmap().placeholder(R.drawable.profile_pic)
+                                            .into(new SimpleTarget<Bitmap>() {
+                                                @Override
+                                                public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                                                    ((ImageView) findViewById(R.id.img_profile)).setImageBitmap(resource);
+                                                }
+                                            });
+                                }
                                 for (String pt : Config.PROFILE_TYPE) {
                                     if (pt.equalsIgnoreCase(profiletype)) {
                                         profileSpinner.setSelection(Config.PROFILE_TYPE.indexOf(pt));

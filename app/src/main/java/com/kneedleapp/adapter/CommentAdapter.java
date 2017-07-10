@@ -54,16 +54,19 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         final CommentVo obj = mList.get(position);
         holder.userName.setText(obj.getUserName());
         holder.userComment.setText(Utils.makeSpannable(mContext, obj.getmComment()));
-        //holder.time.setText(Utils.getTimeDifference(obj.getmDate()));
+        holder.time.setText(Utils.getTimeDifference(obj.getmDate()));
         holder.userComment.setMovementMethod(LinkMovementMethod.getInstance());
         holder.userComment.setHighlightColor(Color.TRANSPARENT);
-        Glide.with(mContext).load(Config.USER_IMAGE_URL + obj.getmUserImageUrl()).asBitmap().placeholder(R.drawable.profile_pic)
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
-                        holder.imgUser.setImageBitmap(resource);
-                    }
-                });
+        holder.imgUser.setImageDrawable(mContext.getResources().getDrawable(R.drawable.default_feed));
+        if(!obj.getmUserImageUrl().isEmpty()) {
+            Glide.with(mContext).load(Config.USER_IMAGE_URL + obj.getmUserImageUrl()).asBitmap().placeholder(R.drawable.default_feed)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                            holder.imgUser.setImageBitmap(resource);
+                        }
+                    });
+        }
         holder.imgUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
