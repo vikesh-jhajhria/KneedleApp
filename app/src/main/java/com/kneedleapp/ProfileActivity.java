@@ -134,6 +134,7 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
         findViewById(R.id.img_back).setOnClickListener(this);
         findViewById(R.id.img_setting).setOnClickListener(this);
         findViewById(R.id.img_more).setOnClickListener(this);
+        findViewById(R.id.img_chat).setOnClickListener(this);
 
         num_of_posts = (TextView) findViewById(R.id.txt_post_count);
         num_of_followers = (TextView) findViewById(R.id.txt_follower_count);
@@ -256,6 +257,11 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
                         .putExtra("USER_ID", mUserId)
                         .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
 
+                break;
+            case R.id.img_chat:
+                startActivity(new Intent(getApplicationContext(), ChatHomeActivity.class)
+                        .putExtra("USER_ID", mUserId)
+                        .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 break;
             case R.id.img_more:
                 int popupWidth = ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -391,7 +397,8 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
                                 }
                                 if (!mPrefernce.getUserId().equalsIgnoreCase(mUserId)) {
                                     findViewById(R.id.img_setting).setVisibility(View.INVISIBLE);
-                                    findViewById(R.id.img_more).setVisibility(View.VISIBLE);
+                                    //findViewById(R.id.img_more).setVisibility(View.VISIBLE);
+                                    findViewById(R.id.img_chat).setVisibility(View.VISIBLE);
                                     findViewById(R.id.txt_btn_edit).setVisibility(View.GONE);
                                     if (userDataJsonObject.getString("follow_status").equalsIgnoreCase("0")) {
                                         mFollowStatus = 0;
@@ -408,6 +415,7 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
                                     findViewById(R.id.txt_btn_edit).setVisibility(View.VISIBLE);
                                     findViewById(R.id.img_setting).setVisibility(View.VISIBLE);
                                     findViewById(R.id.img_more).setVisibility(View.INVISIBLE);
+                                    findViewById(R.id.img_chat).setVisibility(View.INVISIBLE);
                                 }
                                 String str = userDataJsonObject.getString("profiletype");
                                 if (!userDataJsonObject.getString("company_info").isEmpty()) {

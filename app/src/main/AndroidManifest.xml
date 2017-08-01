@@ -116,7 +116,7 @@
         <activity android:name=".PostEditActivity" />
         <activity android:name=".SearchResultActivity" />
         <activity android:name=".SettingActivity" />
-        <activity android:name=".MessageMain"></activity>
+        <activity android:name=".ChatHomeActivity"></activity>
     </application>
 
 </manifest>
