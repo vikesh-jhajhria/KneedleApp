@@ -397,8 +397,8 @@ public class ProfileActivity extends BaseActivity implements FeedAdapter.Profile
                                 }
                                 if (!mPrefernce.getUserId().equalsIgnoreCase(mUserId)) {
                                     findViewById(R.id.img_setting).setVisibility(View.INVISIBLE);
-                                    //findViewById(R.id.img_more).setVisibility(View.VISIBLE);
-                                    findViewById(R.id.img_chat).setVisibility(View.VISIBLE);
+                                    findViewById(R.id.img_more).setVisibility(View.VISIBLE);
+                                    //findViewById(R.id.img_chat).setVisibility(View.VISIBLE);
                                     findViewById(R.id.txt_btn_edit).setVisibility(View.GONE);
                                     if (userDataJsonObject.getString("follow_status").equalsIgnoreCase("0")) {
                                         mFollowStatus = 0;
